@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\ChessPiece.cs" />
     <None Include="Assets\Tiny Chess Stone Chess Piece\Readme Eng.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
