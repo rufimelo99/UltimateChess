@@ -65,6 +65,13 @@
   <ItemGroup>
     <Compile Include="Assets\BoardManager.cs" />
     <Compile Include="Assets\Scripts\ChessPiece.cs" />
+    <Compile Include="Assets\Scripts\HighligthsManager.cs" />
+    <Compile Include="Assets\Scripts\Pieces\BishopPiece.cs" />
+    <Compile Include="Assets\Scripts\Pieces\HorsePiece.cs" />
+    <Compile Include="Assets\Scripts\Pieces\KingPiece.cs" />
+    <Compile Include="Assets\Scripts\Pieces\PawnPiece.cs" />
+    <Compile Include="Assets\Scripts\Pieces\QueenPiece.cs" />
+    <Compile Include="Assets\Scripts\Pieces\TowerPiece.cs" />
     <None Include="Assets\Tiny Chess Stone Chess Piece\Readme Eng.txt" />
     <Reference Include="UnityEngine">
       <HintPath>C:/Program Files/Unity/Hub/Editor/2019.4.10f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

@@ -168,7 +168,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4145497599533960, guid: 0bc4bf91a3a9b19409613bea5318e33c, type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 4145497599533960, guid: 0bc4bf91a3a9b19409613bea5318e33c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -237,7 +237,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4296562232126276, guid: 704b4d82cd5c2d743b532e151cfbdd43, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4296562232126276, guid: 704b4d82cd5c2d743b532e151cfbdd43, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -294,7 +294,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4234120412219142, guid: 0e70a9941e0b4ec438e3f06fc4facd22, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4234120412219142, guid: 0e70a9941e0b4ec438e3f06fc4facd22, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -351,7 +351,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4296562232126276, guid: 704b4d82cd5c2d743b532e151cfbdd43, type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 4296562232126276, guid: 704b4d82cd5c2d743b532e151cfbdd43, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -504,7 +504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4145497599533960, guid: 0bd9b4747be9a8d45a0bc55057116f45, type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4145497599533960, guid: 0bd9b4747be9a8d45a0bc55057116f45, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -625,6 +625,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1002818681}
   - component: {fileID: 1002818680}
+  - component: {fileID: 1002818682}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -644,7 +645,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7158f17d35f3f7943a394c3da38e5f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chessPieces:
+  chessPiecesModels:
   - {fileID: 1562622190837322, guid: 62c53adad025f164292e09c4a5790a77, type: 3}
   - {fileID: 1564033256009494, guid: 4957843483d9e93419739a06271621fe, type: 3}
   - {fileID: 1239270685352430, guid: c77f218d9ab1f424384acc3b86c56de1, type: 3}
@@ -671,13 +672,12 @@ MonoBehaviour:
   - {fileID: 1109215888586288, guid: cab5f13ae783c0e47bebde00fd0357a5, type: 3}
   - {fileID: 1716085140368864, guid: 74c9f8e885fde444d8917ca97c841b4f, type: 3}
   - {fileID: 1140620360365506, guid: 445932ffe01267d40803b3b1e02ec9ac, type: 3}
-  - {fileID: 1353652469814562, guid: 9ddda65c1c1654147bbbdbdfcdb4881f, type: 3}
+  - {fileID: 1233361812545480, guid: 279db6381e10dfa4ea1b4074d833bfb8, type: 3}
   - {fileID: 1633224609000294, guid: 03825e973280c7e4788ee0d1339abcd0, type: 3}
   - {fileID: 1233361812545480, guid: 279db6381e10dfa4ea1b4074d833bfb8, type: 3}
-  - {fileID: 1353652469814562, guid: 9ddda65c1c1654147bbbdbdfcdb4881f, type: 3}
+  - {fileID: 1233361812545480, guid: 279db6381e10dfa4ea1b4074d833bfb8, type: 3}
   - {fileID: 1140620360365506, guid: 445932ffe01267d40803b3b1e02ec9ac, type: 3}
   - {fileID: 1716085140368864, guid: 74c9f8e885fde444d8917ca97c841b4f, type: 3}
-  activeChessPiece: {fileID: 0}
 --- !u!4 &1002818681
 Transform:
   m_ObjectHideFlags: 0
@@ -691,8 +691,23 @@ Transform:
   m_Children:
   - {fileID: 1062238962}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1002818682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1002818679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac4c8c74dce78904e98a46af74a9e001, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  highlightObject: {fileID: 8940350547258084397, guid: 45d74bbfd0669c046b934060e7b245ab,
+    type: 3}
+  highlights: []
 --- !u!1 &1062238961
 GameObject:
   m_ObjectHideFlags: 0
@@ -828,7 +843,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4234120412219142, guid: 0e70a9941e0b4ec438e3f06fc4facd22, type: 3}
       propertyPath: m_RootOrder
-      value: 9
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4234120412219142, guid: 0e70a9941e0b4ec438e3f06fc4facd22, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -854,6 +869,10 @@ PrefabInstance:
     - target: {fileID: 1634452787968558, guid: c364da1e00b6a954c9da291cba0e718f, type: 3}
       propertyPath: m_Name
       value: Chess Battlefield 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634452787968558, guid: c364da1e00b6a954c9da291cba0e718f, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4820578215151266, guid: c364da1e00b6a954c9da291cba0e718f, type: 3}
       propertyPath: m_LocalPosition.x
