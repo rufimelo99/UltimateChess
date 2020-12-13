@@ -21,6 +21,9 @@ public class BoardManager : MonoBehaviour
     public List<GameObject> chessPiecesModels;  //no need to initialize.. objects were inserted through the UI on the inspector
     private List<GameObject> activeChessPieceModel;
 
+    public int[] EnPassantMove { set; get; }
+
+
     private bool isWhiteTurn = true;    //first turn
 
     private void Start()
@@ -50,6 +53,26 @@ public class BoardManager : MonoBehaviour
         }
 
     }
+    private void FinishGame()
+    {
+        if (isWhiteTurn)
+        {
+            Debug.Log("You Win");
+        }
+        else 
+        {
+            Debug.Log("You Lost to an AI");
+        }
+        foreach (GameObject go in activeChessPieceModel) {
+            Destroy(go);
+        }
+        //reset game if needed
+        isWhiteTurn = true;
+        HighligthsManager.Instance.RemoveHighlights();
+        InitialSpawning();
+
+    }
+
     private void SelectPiece(int x, int z)
     {
         if (chessPieces[x, z] == null)
@@ -62,9 +85,24 @@ public class BoardManager : MonoBehaviour
             //check if the piece corresponds to the player... if not, exit
             return;
         }
+
+        bool hasAtLeastOneMove = false;
+        allowedMoves = chessPieces[x, z].PossibleMove();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++)
+            {
+                if (allowedMoves[i, j]) {
+                    hasAtLeastOneMove = true;
+                }
+            }
+        }
+
+        if (!hasAtLeastOneMove)
+        {
+            return;
+        }
+
         //Debug.Log("position");
-        //Debug.Log(chessPieces[x, z].CurrentX);
-        //Debug.Log(chessPieces[x, z].CurrentZ);
         allowedMoves = chessPieces[x, z].PossibleMove();
         activeChessPiece = chessPieces[x, z];
         HighligthsManager.Instance.AllowedMovesHighlight(allowedMoves);
@@ -76,21 +114,80 @@ public class BoardManager : MonoBehaviour
     }
     private void MovePiece(int x, int z)
     {
-        if (allowedMoves[x,z]) {
+        if (allowedMoves[x, z]) {
             ChessPiece enemyPiece = chessPieces[x, z];
             //capture a piece
-            if(enemyPiece!=null)
+            if (enemyPiece != null)
             {
                 //check if its the king? i dont think ill need it
-                if (enemyPiece.GetType() == typeof(KingPiece)) 
+                if (enemyPiece.GetType() == typeof(KingPiece))
                 {
                     //gg
+                    FinishGame();
                     return;
                 }
 
                 activeChessPieceModel.Remove(enemyPiece.gameObject);
                 Destroy(enemyPiece.gameObject);
             }
+
+            //actually did the 2 tiles movement
+            if (x == EnPassantMove[0] && z == EnPassantMove[1])
+            {
+                //remove black pawn->is white Turn
+                if (isWhiteTurn)
+                {
+                    enemyPiece = chessPieces[x, z - 1];
+                }
+                //remove white pawn->is black Turn
+                else
+                {
+                    enemyPiece = chessPieces[x, z + 1];
+                }
+                activeChessPieceModel.Remove(enemyPiece.gameObject);
+                Destroy(enemyPiece.gameObject);
+            }
+
+            //record possible en passant moves
+            EnPassantMove[0] = -1;
+            EnPassantMove[1] = -1;
+            if (activeChessPiece.GetType() == typeof(PawnPiece))
+            {
+                //trnaform pawn into other piece
+                //white team
+                if (z == 7)
+                {
+                    activeChessPieceModel.Remove(enemyPiece.gameObject);
+                    Destroy(activeChessPiece.gameObject);
+                    SpawnPiece(27, x, z);
+                    activeChessPiece = chessPieces[x, z];
+                }
+                //black team
+                if (z == 0)
+                {
+                    activeChessPieceModel.Remove(enemyPiece.gameObject);
+                    Destroy(activeChessPiece.gameObject);
+                    SpawnPiece(3, x, z);
+                    activeChessPiece = chessPieces[x, z];
+                }
+
+
+                //if movement is 2 tiles
+                if (activeChessPiece.CurrentZ == 1 && z == 3)
+                {
+                    EnPassantMove[0] = x;
+                    EnPassantMove[1] = z-1;
+                }
+                //if movement is 2 tiles
+                else if (activeChessPiece.CurrentZ == 6 && z == 4)
+                {
+                    EnPassantMove[0] = x;
+                    EnPassantMove[1] = z+1;
+                }
+            }
+
+
+
 
             chessPieces[activeChessPiece.CurrentX, activeChessPiece.CurrentZ] = null;
             activeChessPiece.setPosition(x,z);
@@ -104,9 +201,9 @@ public class BoardManager : MonoBehaviour
     }
 
     private void InitialSpawning() {
-        activeChessPieceModel = new List<GameObject> ();
+        activeChessPieceModel = new List<GameObject>();
         chessPieces = new ChessPiece[8, 8];
-
+        EnPassantMove = new int[2] { -1, -1 };
         //Spawn Black Towers
         SpawnPiece(0, 0, 7);
         SpawnPiece(7, 7, 7);
@@ -139,16 +236,16 @@ public class BoardManager : MonoBehaviour
         SpawnPiece(22, 6, 1);
         SpawnPiece(23, 7, 1);
 
-        //Spawn Black Towers
+        //Spawn white Towers
         SpawnPiece(24, 0, 0);
         SpawnPiece(31, 7, 0);
-        //Spawn Black Horses           
+        //Spawn white Horses           
         SpawnPiece(25, 1, 0);
         SpawnPiece(30, 6, 0);
-        //Spawn Black Bishops          
+        //Spawn white Bishops          
         SpawnPiece(26, 2, 0);
         SpawnPiece(29, 5, 0);
-        //Spawn Black Queen and King   
+        //Spawn white Queen and King   
         SpawnPiece(27, 3, 0);
         SpawnPiece(28, 4, 0);
 

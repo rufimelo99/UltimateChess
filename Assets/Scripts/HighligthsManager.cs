@@ -42,9 +42,9 @@ public class HighligthsManager : MonoBehaviour
                 {
                     GameObject go = GetHighlightObject();
                     go.SetActive(true);
-                    //slightly above?
+                    //slightly above on y to be above board tiles
                     //BoardManager.Instance.TILESIZE; ??
-                    go.transform.position = new Vector3(x+ TILE_SIZE/2, 0.23f,z + TILE_SIZE / 2);
+                    go.transform.position = new Vector3(x+ TILE_SIZE/2, 0.27f,z + TILE_SIZE / 2);
                 }
             }
         }

@@ -7,13 +7,22 @@ public class PawnPiece : ChessPiece
     public override bool[,] PossibleMove() {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece, enemyPiece2;
+
+        //check en passant moves
+        int[] e = BoardManager.Instance.EnPassantMove;
+
         //White Turn
         if (isWhite)
         {
             //Diagonals
             //Diagonal left
             if (CurrentX != 0 && CurrentZ != 7)
-            {                
+            {
+                //CHeck if En Passant Move is allowed
+                if (e[0] == CurrentX - 1 && e[1] == CurrentZ + 1) 
+                {
+                    possibleMovesMap[CurrentX - 1, CurrentZ + 1] = true;
+                }
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
@@ -23,6 +32,12 @@ public class PawnPiece : ChessPiece
             //Diagonal right
             if (CurrentX != 7 && CurrentZ != 7)
             {
+                //CHeck if En Passant Move is allowed
+                if (e[0] == CurrentX + 1 && e[1] == CurrentZ + 1)
+                {
+                    possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
+                }
+
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
@@ -57,21 +72,36 @@ public class PawnPiece : ChessPiece
         {
             //Diagonals
             //Diagonal right
-            if (CurrentX != 0 && CurrentZ != 0)
+            if (CurrentX != 7 && CurrentZ != 0)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 1];
+                //CHeck if En Passant Move is allowed
+                if (e[0] == CurrentX + 1 && e[1] == CurrentZ - 1)
+                {
+                    possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
+                }
+
+
+                enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)
                 {
-                    possibleMovesMap[CurrentX - 1, CurrentZ - 1] = true;
+                    possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
                 }
             }
             //Diagonal left
             if (CurrentX != 7 && CurrentZ != 7)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 1];
+
+                //Check if En Passant Move is allowed
+                if (e[0] == CurrentX - 1 && e[1] == CurrentZ - 1)
+                {
+                    possibleMovesMap[CurrentX -  1, CurrentZ - 1] = true;
+                }
+
+
+                enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)
                 {
-                    possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
+                    possibleMovesMap[CurrentX - 1, CurrentZ - 1] = true;
                 }
             }
             //1 forward
