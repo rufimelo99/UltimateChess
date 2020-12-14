@@ -23,12 +23,18 @@ public class BoardManager : MonoBehaviour
 
     public int[] EnPassantMove { set; get; }
 
+    public int[] WhiteKingPos { set; get; }
+    public int[] BlackKingPos { set; get; }
+
+    public bool WhiteinCheck = false;
+    public bool BlackinCheck = false;
 
     private bool isWhiteTurn = true;    //first turn
 
     private void Start()
     {
         InitialSpawning();
+        updateKingsCoords();
         Instance = this;
     }
     // Update is called once per frame
@@ -52,7 +58,70 @@ public class BoardManager : MonoBehaviour
             }
         }
 
+        //VerifyChecks();
     }
+
+
+    public void updateKingsCoords() {
+        foreach (ChessPiece piece in chessPieces)
+        {
+            if (piece != null && piece.GetType() == typeof(KingPiece))
+            {
+                //get white king position
+                if (piece.isWhite)
+                {
+                    WhiteKingPos[0] = piece.CurrentX;
+                    WhiteKingPos[1] = piece.CurrentZ;
+                }
+                //get black king position
+                else
+                {
+                    BlackKingPos[0] = piece.CurrentX;
+                    BlackKingPos[1] = piece.CurrentZ;
+                }
+            }
+        }
+    }
+    //bad implemented TODO
+    public bool VerifyChecks()
+    {
+       
+        //temp vars
+        bool blackisInCheck = true;
+        bool whiteisInCheck = true;
+        foreach (ChessPiece piece in chessPieces)
+        {
+            if (piece != null)
+            {
+                if (piece.isWhite)
+                {
+                    //cant do this
+                    bool[,] map = piece.PossibleMove();
+                    //Black in check
+                    if (map[BlackKingPos[0], BlackKingPos[1]] == true)
+                    {
+                        blackisInCheck = true;
+                    }
+                }
+                else
+                {
+                    bool[,] map = piece.PossibleMove();
+                    //White in check
+                    if (map[BlackKingPos[0], BlackKingPos[1]] == true)
+                    {
+                        whiteisInCheck = true;
+                    }
+                }
+            }
+        }
+        BlackinCheck = blackisInCheck;        
+        WhiteinCheck = whiteisInCheck;
+
+
+        return false;
+    }
+    
+
     private void FinishGame()
     {
         if (isWhiteTurn)
@@ -204,6 +273,15 @@ public class BoardManager : MonoBehaviour
         activeChessPieceModel = new List<GameObject>();
         chessPieces = new ChessPiece[8, 8];
         EnPassantMove = new int[2] { -1, -1 };
+
+        WhiteKingPos = new int[2] { -1, -1 };
+        BlackKingPos = new int[2] { -1, -1 };
+
+
+        //  WhiteKingPos = new int[2] { 4, 0 };
+        //  BlackKingPos = new int[2] { 4, 7 };
+
+
         //Spawn Black Towers
         SpawnPiece(0, 0, 7);
         SpawnPiece(7, 7, 7);
