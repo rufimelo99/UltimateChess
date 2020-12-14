@@ -6,6 +6,7 @@ public class HighligthsManager : MonoBehaviour
 {
     public static HighligthsManager Instance { set; get; }
     public GameObject highlightObject;
+    public GameObject OwnHighlight;
     public List<GameObject> highlights;
 
     //dupliucated..not ideally
@@ -25,10 +26,23 @@ public class HighligthsManager : MonoBehaviour
     {
         GameObject go = highlights.Find(g => !g.activeSelf);
 
-        if (go == null) {
+        if (go == null)
+        {
             go = Instantiate(highlightObject);
             highlights.Add(go);
-       
+
+        }
+        return go;
+    }
+    private GameObject GetHighlightObjectforOwnTile()
+    {
+        GameObject go = highlights.Find(g => !g.activeSelf);
+
+        if (go == null)
+        {
+            go = Instantiate(OwnHighlight);
+            highlights.Add(go);
+
         }
         return go;
     }
@@ -49,7 +63,12 @@ public class HighligthsManager : MonoBehaviour
             }
         }
     }
-
+    public void ownTileHighligth(int x, int z)
+    {
+        GameObject go = GetHighlightObjectforOwnTile();
+        go.SetActive(true);
+        go.transform.position = new Vector3(x + TILE_SIZE / 2, 0.27f, z + TILE_SIZE / 2);
+    }
     public void RemoveHighlights()
     {
        foreach(GameObject go in highlights)
