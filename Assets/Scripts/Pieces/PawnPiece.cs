@@ -89,7 +89,7 @@ public class PawnPiece : ChessPiece
                 }
             }
             //Diagonal left
-            if (CurrentX != 7 && CurrentZ != 7)
+            if (CurrentX != 0 && CurrentZ != 7)
             {
 
                 //Check if En Passant Move is allowed
