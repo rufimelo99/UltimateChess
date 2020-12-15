@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HorsePiece : ChessPiece
 {
-    
     public override bool[,] PossibleMove()
     {
         bool[,] possibleMovesMap = new bool[8, 8];
@@ -148,5 +147,4 @@ public class HorsePiece : ChessPiece
 
         return possibleMovesMap;
     }
-    
 }

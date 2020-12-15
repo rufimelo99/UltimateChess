@@ -26,11 +26,10 @@ public class HighligthsManager : MonoBehaviour
     {
         GameObject go = highlights.Find(g => !g.activeSelf);
 
-        if (go == null)
-        {
+        if (go == null) {
             go = Instantiate(highlightObject);
             highlights.Add(go);
-
+       
         }
         return go;
     }

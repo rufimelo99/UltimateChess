@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class PawnPiece : ChessPiece
 {
-    
     public override bool[,] PossibleMove() {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece, enemyPiece2;
 
+        //check en passant moves
+        int[] e = BoardManager.Instance.EnPassantMove;
+        int[] WhiteKingPosition = BoardManager.Instance.WhiteKingPos;
+        int[] BlackKingPosition = BoardManager.Instance.BlackKingPos;
         //White Turn
         if (isWhite)
         {
@@ -16,7 +19,11 @@ public class PawnPiece : ChessPiece
             //Diagonal left
             if (CurrentX != 0 && CurrentZ != 7)
             {
-                
+                //CHeck if En Passant Move is allowed
+                if (e[0] == CurrentX - 1 && e[1] == CurrentZ + 1) 
+                {
+                    possibleMovesMap[CurrentX - 1, CurrentZ + 1] = true;
+                }
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
@@ -26,7 +33,12 @@ public class PawnPiece : ChessPiece
             //Diagonal right
             if (CurrentX != 7 && CurrentZ != 7)
             {
-                
+                //CHeck if En Passant Move is allowed
+                if (e[0] == CurrentX + 1 && e[1] == CurrentZ + 1)
+                {
+                    possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
+                }
+
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
@@ -63,7 +75,11 @@ public class PawnPiece : ChessPiece
             //Diagonal right
             if (CurrentX != 7 && CurrentZ != 0)
             {
-               
+                //CHeck if En Passant Move is allowed
+                if (e[0] == CurrentX + 1 && e[1] == CurrentZ - 1)
+                {
+                    possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
+                }
 
 
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 1];
@@ -76,7 +92,12 @@ public class PawnPiece : ChessPiece
             if (CurrentX != 7 && CurrentZ != 7)
             {
 
-                
+                //Check if En Passant Move is allowed
+                if (e[0] == CurrentX - 1 && e[1] == CurrentZ - 1)
+                {
+                    possibleMovesMap[CurrentX -  1, CurrentZ - 1] = true;
+                }
+
 
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)

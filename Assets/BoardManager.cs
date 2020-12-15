@@ -4,72 +4,284 @@ using UnityEngine;
 
 public class BoardManager : MonoBehaviour
 {
-
     public static BoardManager Instance { set; get; }
     private bool[,] allowedMoves { set; get; }
-    private const float TILE_SIZE = 1.0f;
-    //Tile Selected atm
-    private int CurrentTileX = -1;
-    private int CurrentTileZ = -1;
-    //pieces in the board 
+
     public ChessPiece[,] chessPieces { set; get; }
     private ChessPiece activeChessPiece { set; get; }
 
-    private bool isWhiteTurn = true;    //first turn
+    //also declared in BoardHighlights -.-
+    private const float TILE_SIZE = 1.0f;
 
-    //history of the previous dispositions
-    public List<ChessPiece[,]> history { set; get; }
+    //Tile Selected atm
+    private int CurrentTileX = -1;
+    private int CurrentTileZ = -1;
 
-    public List<GameObject> chessPiecesModels; 
+    //pieces in the board 
+    public List<GameObject> chessPiecesModels;  //no need to initialize.. objects were inserted through the UI on the inspector
     private List<GameObject> activeChessPieceModel;
 
+    public int[] EnPassantMove { set; get; }
 
-   //history of the moves
-   public string[] record { set; get; }
+    public int[] WhiteKingPos { set; get; }
+    public int[] BlackKingPos { set; get; }
+
+    public bool WhiteinCheck = false;
+    public bool BlackinCheck = false;
+
+    private bool isWhiteTurn = true;    //first turn
 
     private void Start()
     {
-
         activeChessPieceModel = new List<GameObject>();
         chessPieces = new ChessPiece[8, 8];
-        InitialSpawning();
-        Instance = this;
+        EnPassantMove = new int[2] { -1, -1 };
 
-        movePiece("a", 1, "a", 4);
-        movePiece("b", 1, "a", 3);
+        WhiteKingPos = new int[2] { -1, -1 };
+        BlackKingPos = new int[2] { -1, -1 };
+
+
+
+        InitialSpawning();
+        //updateKingsCoords();
+        Instance = this;
     }
     // Update is called once per frame
     void Update()
     {
         UpdateSelection();
+        //Draw();
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (CurrentTileX >= 0 && CurrentTileZ >= 0)
+        if (Input.GetMouseButtonDown(0)) { 
+            if(CurrentTileX >= 0 && CurrentTileZ >= 0)
             {
                 if (activeChessPiece == null)
                 {
                     //select the piece
                     SelectPiece(CurrentTileX, CurrentTileZ);
                 }
-                else
-                {
+                else {
                     //move the piece
-                    if (allowedMoves[CurrentTileX, CurrentTileZ])
-                    {
-                        movePiece(convertColumnInttoString(activeChessPiece.CurrentX), activeChessPiece.CurrentZ, convertColumnInttoString(CurrentTileX), CurrentTileZ);
+                    MovePiece(convertColumnInttoString(activeChessPiece.CurrentX), activeChessPiece.CurrentZ, convertColumnInttoString(CurrentTileX), CurrentTileZ);
 
-                        UnselectPiece();
-                    }
-
-                    UnselectPiece();
                 }
-            }
-            else{
-                UnselectPiece(); 
             }
         }
 
+        //VerifyChecks();
+    }
+
+
+    public void updateKingsCoords() {
+        foreach (ChessPiece piece in chessPieces)
+        {
+            if (piece != null && piece.GetType() == typeof(KingPiece))
+            {
+                //get white king position
+                if (piece.isWhite)
+                {
+                    WhiteKingPos[0] = piece.CurrentX;
+                    WhiteKingPos[1] = piece.CurrentZ;
+                }
+                //get black king position
+                else
+                {
+                    BlackKingPos[0] = piece.CurrentX;
+                    BlackKingPos[1] = piece.CurrentZ;
+                }
+            }
+        }
+    }
+    //bad implemented TODO
+    public bool VerifyChecks()
+    {
+       
+        //temp vars
+        bool blackisInCheck = true;
+        bool whiteisInCheck = true;
+        foreach (ChessPiece piece in chessPieces)
+        {
+            if (piece != null)
+            {
+                if (piece.isWhite)
+                {
+                    //cant do this
+                    bool[,] map = piece.PossibleMove();
+                    //Black in check
+                    if (map[BlackKingPos[0], BlackKingPos[1]] == true)
+                    {
+                        blackisInCheck = true;
+                    }
+                }
+                else
+                {
+                    bool[,] map = piece.PossibleMove();
+                    //White in check
+                    if (map[BlackKingPos[0], BlackKingPos[1]] == true)
+                    {
+                        whiteisInCheck = true;
+                    }
+                }
+            }
+        }
+        BlackinCheck = blackisInCheck;        
+        WhiteinCheck = whiteisInCheck;
+
+
+        return false;
+    }
+    
+
+    private void FinishGame()
+    {
+        if (isWhiteTurn)
+        {
+            Debug.Log("You Win");
+        }
+        else 
+        {
+            Debug.Log("You Lost to an AI");
+        }
+        foreach (GameObject go in activeChessPieceModel) {
+            Destroy(go);
+        }
+        //reset game if needed
+        isWhiteTurn = true;
+        HighligthsManager.Instance.RemoveHighlights();
+        InitialSpawning();
+
+    }
+
+    private void SelectPiece(int x, int z)
+    {
+        if (chessPieces[x, z] == null)
+        {
+            //no corresponding piece 
+            return;
+        }
+        if (chessPieces[x, z].isWhite != isWhiteTurn)
+        {
+            //check if the piece corresponds to the player... if not, exit
+            return;
+        }
+
+        bool hasAtLeastOneMove = false;
+        allowedMoves = chessPieces[x, z].PossibleMove();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++)
+            {
+                if (allowedMoves[i, j]) {
+                    hasAtLeastOneMove = true;
+                }
+            }
+        }
+
+        if (!hasAtLeastOneMove)
+        {
+            return;
+        }
+
+        //Debug.Log("position");
+        allowedMoves = chessPieces[x, z].PossibleMove();
+        activeChessPiece = chessPieces[x, z];
+        HighligthsManager.Instance.ownTileHighligth(x, z);
+        HighligthsManager.Instance.AllowedMovesHighlight(allowedMoves);
+    }
+    private void UnselectPiece()
+    {
+        HighligthsManager.Instance.RemoveHighlights();
+        activeChessPiece = null;
+    }
+    private void MovePiece(string column, int line, string toColumn, int toLine)
+    {
+        int from_Column = convertColumnStringtoInt(column);
+        int to_Column = convertColumnStringtoInt(toColumn);
+
+
+        if (allowedMoves[to_Column, toLine]) {
+            ChessPiece enemyPiece = chessPieces[to_Column, toLine];
+            //capture a piece
+            if (enemyPiece != null)
+            {
+                //check if its the king? i dont think ill need it
+                if (enemyPiece.GetType() == typeof(KingPiece))
+                {
+                    //gg
+                    FinishGame();
+                    return;
+                }
+
+                activeChessPieceModel.Remove(enemyPiece.gameObject);
+                Destroy(enemyPiece.gameObject);
+            }
+
+            //actually did the 2 tiles movement
+            if (to_Column == EnPassantMove[0] && toLine == EnPassantMove[1])
+            {
+                //remove black pawn->is white Turn
+                if (isWhiteTurn)
+                {
+                    enemyPiece = chessPieces[to_Column, toLine - 1];
+                }
+                //remove white pawn->is black Turn
+                else
+                {
+                    enemyPiece = chessPieces[to_Column, toLine + 1];
+                }
+                activeChessPieceModel.Remove(enemyPiece.gameObject);
+                Destroy(enemyPiece.gameObject);
+            }
+
+            //record possible en passant moves
+            EnPassantMove[0] = -1;
+            EnPassantMove[1] = -1;
+            if (activeChessPiece.GetType() == typeof(PawnPiece))
+            {
+                //trnaform pawn into other piece
+                //white team
+                if (toLine == 7)
+                {
+                    activeChessPieceModel.Remove(enemyPiece.gameObject);
+                    Destroy(activeChessPiece.gameObject);
+                    SpawnPiece(column, toLine, "Q");
+                    activeChessPiece = chessPieces[to_Column, toLine];
+                }
+                //black team
+                if (toLine == 0)
+                {
+                    activeChessPieceModel.Remove(enemyPiece.gameObject);
+                    Destroy(activeChessPiece.gameObject);
+                    SpawnPiece(column, toLine, "q");
+                    activeChessPiece = chessPieces[to_Column, toLine];
+                }
+
+
+                //if movement is 2 tiles
+                if (activeChessPiece.CurrentZ == 1 && toLine == 3)
+                {
+                    EnPassantMove[0] = to_Column;
+                    EnPassantMove[1] = toLine - 1;
+                }
+                //if movement is 2 tiles
+                else if (activeChessPiece.CurrentZ == 6 && toLine == 4)
+                {
+                    EnPassantMove[0] = to_Column;
+                    EnPassantMove[1] = toLine + 1;
+                }
+            }
+
+
+
+
+            chessPieces[activeChessPiece.CurrentX, activeChessPiece.CurrentZ] = null;
+            activeChessPiece.setPosition(to_Column, toLine);
+            activeChessPiece.transform.position = GetTileCenter(toColumn, toLine);
+            chessPieces[to_Column, toLine] = activeChessPiece;
+
+            //change Turn
+            isWhiteTurn = !isWhiteTurn;
+        }
+        UnselectPiece();
     }
 
     public void InitialSpawning()
@@ -93,7 +305,7 @@ public class BoardManager : MonoBehaviour
         SpawnPiece("h", 2, "P");
 
         //Black Pieces
-       
+
         SpawnPiece("a", 8, "r");
         SpawnPiece("b", 8, "n");
         SpawnPiece("c", 8, "b");
@@ -114,74 +326,9 @@ public class BoardManager : MonoBehaviour
         //history.Add(chessPieces);
     }
 
-    private void FinishGame()
-    {
-        if (isWhiteTurn)
-        {
-            Debug.Log("You Win");
-        }
-        else
-        {
-            Debug.Log("You Lost to an AI");
-        }
-        foreach (GameObject go in activeChessPieceModel)
-        {
-            Destroy(go);
-        }
-        //reset game if needed
-        isWhiteTurn = true;
-        HighligthsManager.Instance.RemoveHighlights();
-        InitialSpawning();
-
-    }
-    private void SelectPiece(int x, int z)
-    {
-        if (chessPieces[x, z] == null)
-        {
-            //no corresponding piece 
-            return;
-        }
-        if (chessPieces[x, z].isWhite != isWhiteTurn)
-        {
-            //check if the piece corresponds to the player... if not, exit
-
-            return;
-        }
-
-        bool hasAtLeastOneMove = false;
-        allowedMoves = chessPieces[x, z].PossibleMove();
-        for (int i = 0; i < 8; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (allowedMoves[i, j])
-                {
-                    hasAtLeastOneMove = true;
-                }
-            }
-        }
-
-        if (!hasAtLeastOneMove)
-        {
-            return;
-        }
-
-        //Debug.Log("position");
-        allowedMoves = chessPieces[x, z].PossibleMove();
-        activeChessPiece = chessPieces[x, z];
-        HighligthsManager.Instance.AllowedMovesHighlight(allowedMoves);
-        HighligthsManager.Instance.ownTileHighligth(x, z);
-
-    }
-    private void UnselectPiece()
-    {
-        HighligthsManager.Instance.RemoveHighlights();
-        activeChessPiece = null;
-    }
     void UpdateSelection()
     {
-        if (!Camera.main)
-        {
+        if (!Camera.main) {
             return;
         }
         RaycastHit hit;
@@ -197,79 +344,28 @@ public class BoardManager : MonoBehaviour
         {
             CurrentTileX = -1;
             CurrentTileZ = -1;
-
         }
     }
+    
+
     private void SpawnPiece(string x, int z, string piece)
     {
-        int indexInModelsArray = convertPieceNotationToIndex(piece);
-        GameObject go = Instantiate(chessPiecesModels[indexInModelsArray], GetTileCenter(x, z-1), Quaternion.identity) as GameObject;
-        go.transform.SetParent(transform);
-      
-        chessPieces[convertColumnStringtoInt(x), z-1] = go.GetComponent<ChessPiece>();
+        //Debug.Log(chessPiecesModels.Count);
+        //gotta lokk into Quarternions to spawn pieces facing the right way (Quaternion.Euler(0,180,0)?)
 
-        chessPieces[convertColumnStringtoInt(x), z-1].setPosition(convertColumnStringtoInt(x), z-1);
+        int indexInModelsArray = convertPieceNotationToIndex(piece);
+        GameObject go = Instantiate(chessPiecesModels[indexInModelsArray], GetTileCenter(x, z - 1), Quaternion.identity) as GameObject;
+        go.transform.SetParent(transform);
+
+        chessPieces[convertColumnStringtoInt(x), z - 1] = go.GetComponent<ChessPiece>();
+
+        //Debug.Log("x"+x);
+        //Debug.Log("z" + z);
+        chessPieces[convertColumnStringtoInt(x), z - 1].setPosition(convertColumnStringtoInt(x), z - 1);
+        //Debug.Log("CurrentX" + chessPieces[x, z].CurrentX);
+        //Debug.Log("CurrentZ" + chessPieces[x, z].CurrentZ);
         activeChessPieceModel.Add(go);
 
-    }
-
-    private void movePiece(string column, int line, string toColumn, int toLine)
-    {
-        int from_Column = convertColumnStringtoInt(column);
-        int to_Column = convertColumnStringtoInt(toColumn);
-
-        
-            ChessPiece enemyPiece = chessPieces[to_Column, toLine];
-            if (enemyPiece != null)
-            {
-                // check if its the king? i dont think ill need it
-                if (enemyPiece.GetType() == typeof(KingPiece))
-                {
-                    //gg
-                    FinishGame();
-                    return;
-                }
-               
-                if (activeChessPiece.GetType() == typeof(PawnPiece))
-                {
-                    //trnaform pawn into other piece
-                    //white team
-                    if (toLine == 7)
-                    {
-                        activeChessPieceModel.Remove(enemyPiece.gameObject);
-                        Destroy(activeChessPiece.gameObject);
-                        SpawnPiece(column, toLine, "Q");
-                        activeChessPiece = chessPieces[to_Column, toLine];
-                    }
-                    //black team
-                    if (toLine == 0)
-                    {
-                        activeChessPieceModel.Remove(enemyPiece.gameObject);
-                        Destroy(activeChessPiece.gameObject);
-                        SpawnPiece(column, toLine, "q");
-                        activeChessPiece = chessPieces[to_Column, toLine];
-                    }
-
-
-                    
-                }
-
-
-                activeChessPieceModel.Remove(enemyPiece.gameObject);
-                Destroy(enemyPiece.gameObject);
-            }
-
-            activeChessPiece = chessPieces[from_Column, line];
-            chessPieces[from_Column, line] = null;
-            activeChessPiece.setPosition(to_Column, toLine);
-            activeChessPiece.transform.position = GetTileCenter(toColumn, toLine);
-            chessPieces[to_Column, toLine] = activeChessPiece;
-
-            //change Turn
-            isWhiteTurn = !isWhiteTurn;
-            activeChessPiece = null;
-        
-        //history.Add(chessPieces);
     }
     private Vector3 GetTileCenter(string x, int z)
     {
@@ -309,7 +405,6 @@ public class BoardManager : MonoBehaviour
         origin.z += (TILE_SIZE * z) + TILE_SIZE / 2;
         return origin;
     }
-
     //receives piece notation and returns the index of the piece in the chessPiecesModels
     private int convertPieceNotationToIndex(string notation)
     {
@@ -390,7 +485,7 @@ public class BoardManager : MonoBehaviour
                 return "b";
             case 2:
                 return "c";
-            case 3 :
+            case 3:
                 return "d";
             case 4:
                 return "e";
@@ -405,4 +500,36 @@ public class BoardManager : MonoBehaviour
         }
 
     }
+
+
+    //debug only
+    /*
+    private void Draw()
+    {
+        Vector3 widthLine  = Vector3.right    * 8;
+        Vector3 heigthLine = Vector3.forward  * 8;
+
+
+        for (int i = 0; i <= 8; i++)
+        {
+            Vector3 start = Vector3.forward * i;
+            Debug.DrawLine(start, start+widthLine);
+            for (int j = 0; j <= 8; j++)
+            {
+                start = Vector3.right * j;
+                Debug.DrawLine(start, start +heigthLine );
+
+            }
+        }
+        //Draw Selection
+        if (CurrentTileX >= 0 && CurrentTileZ >= 0) {
+            Debug.DrawLine(
+                    Vector3.forward * CurrentTileZ + Vector3.right * CurrentTileX,
+                    Vector3.forward * (CurrentTileZ + 1) + Vector3.right * (CurrentTileX + 1),
+                    Color.red
+                );
+        }
+
+    }
+    */
 }

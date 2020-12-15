@@ -3,11 +3,7 @@ guid: ac4c8c74dce78904e98a46af74a9e001
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences:
-  - highlightObject: {fileID: 8940350547258084397, guid: 45d74bbfd0669c046b934060e7b245ab,
-      type: 3}
-  - OwnHighlight: {fileID: 905431877689520291, guid: 1c6fafdf271f51b48b14f99e783b4ed1,
-      type: 3}
+  defaultReferences: []
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
