@@ -5,68 +5,130 @@ using UnityEngine;
 public class BoardManager : MonoBehaviour
 {
     public static BoardManager Instance { set; get; }
-    private bool[,] allowedMoves { set; get; }
-
-    public ChessPiece[,] chessPieces { set; get; }
-    private ChessPiece activeChessPiece { set; get; }
-
-    //also declared in BoardHighlights -.-
-    private const float TILE_SIZE = 1.0f;
-
-    //Tile Selected atm
-    private int CurrentTileX = -1;
-    private int CurrentTileZ = -1;
-
-    //pieces in the board 
-    public List<GameObject> chessPiecesModels;  //no need to initialize.. objects were inserted through the UI on the inspector
-    private List<GameObject> activeChessPieceModel;
+    public ChessPlayer[] players;
 
     public int[] EnPassantMove { set; get; }
-
     public int[] WhiteKingPos { set; get; }
     public int[] BlackKingPos { set; get; }
 
     public bool WhiteinCheck = false;
     public bool BlackinCheck = false;
+    public ChessPiece[,] chessPieces { set; get; }
+    //pieces in the board 
+    public List<GameObject> chessPiecesModels;  //no need to initialize.. objects were inserted through the UI on the inspector
 
-    private bool isWhiteTurn = true;    //first turn
+    //also declared in BoardHighlights -.-
+    private const float TILE_SIZE = 1.0f;
+    //Tile Selected atm
+    private int CurrentTileX = -1;
+    private int CurrentTileZ = -1;
+    private List<GameObject> activeChessPieceModel;
+    public ChessPiece activeChessPiece { set; get; }
+    public bool isWhiteTurn = true;    //first turn
+    public bool[,] allowedMoves { set; get; }
+
 
     private void Start()
     {
         activeChessPieceModel = new List<GameObject>();
         chessPieces = new ChessPiece[8, 8];
         EnPassantMove = new int[2] { -1, -1 };
-
         WhiteKingPos = new int[2] { -1, -1 };
         BlackKingPos = new int[2] { -1, -1 };
 
 
-
         InitialSpawning();
-        //updateKingsCoords();
         Instance = this;
+        UpdatePlayersPerceptionOfPieces();
+
+
+
     }
+    void UpdatePlayersPerceptionOfPieces()
+    {
+        foreach (ChessPlayer pl in players)
+        {
+            if (pl != null)
+            {
+                pl.UpdateOwnPieces();
+
+            }
+        }
+    }
+
+
     // Update is called once per frame
     void Update()
     {
-        UpdateSelection();
-        //Draw();
 
-        if (Input.GetMouseButtonDown(0)) { 
-            if(CurrentTileX >= 0 && CurrentTileZ >= 0)
+        Instance = this;
+        if (isWhiteTurn)
+        {
+            //AI playing
+            if (players[0] == null)
             {
-                if (activeChessPiece == null)
-                {
-                    //select the piece
-                    SelectPiece(CurrentTileX, CurrentTileZ);
-                }
-                else {
-                    //move the piece
-                    MovePiece(convertColumnInttoString(activeChessPiece.CurrentX), activeChessPiece.CurrentZ, convertColumnInttoString(CurrentTileX), CurrentTileZ);
+                UpdateSelection();
+                //Draw();
 
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (CurrentTileX >= 0 && CurrentTileZ >= 0)
+                    {
+                        if (activeChessPiece == null)
+                        {
+                            //select the piece
+                            SelectPiece(CurrentTileX, CurrentTileZ);
+                        }
+                        else
+                        {
+                            //move the piece
+                            MovePiece(convertColumnInttoString(activeChessPiece.CurrentX), activeChessPiece.CurrentZ, convertColumnInttoString(CurrentTileX), CurrentTileZ);
+
+                        }
+                    }
                 }
             }
+            else
+            {
+                //Debug.Log("White is AI... it should play -.-");
+                //AI playing
+                players[0].chooseMove();
+            }
         }
+        else
+        {
+            //AI playing for Black
+            if (players[1] == null)
+            {
+                UpdateSelection();
+                //Draw();
+
+                if (Input.GetMouseButtonDown(0))
+                {
+                    if (CurrentTileX >= 0 && CurrentTileZ >= 0)
+                    {
+                        if (activeChessPiece == null)
+                        {
+                            //select the piece
+                            SelectPiece(CurrentTileX, CurrentTileZ);
+                        }
+                        else
+                        {
+                            //move the piece
+                            MovePiece(convertColumnInttoString(activeChessPiece.CurrentX), activeChessPiece.CurrentZ, convertColumnInttoString(CurrentTileX), CurrentTileZ);
+
+                        }
+                    }
+                }
+            }
+            else
+            {
+                //Debug.Log("Black is AI... it should play -.-");
+                //AI playing
+                players[1].chooseMove();
+            }
+        }
+
 
         //VerifyChecks();
     }
@@ -136,11 +198,11 @@ public class BoardManager : MonoBehaviour
     {
         if (isWhiteTurn)
         {
-            Debug.Log("You Win");
+            Debug.Log("White Win");
         }
         else 
         {
-            Debug.Log("You Lost to an AI");
+            Debug.Log("Black Win");
         }
         foreach (GameObject go in activeChessPieceModel) {
             Destroy(go);
@@ -149,6 +211,7 @@ public class BoardManager : MonoBehaviour
         isWhiteTurn = true;
         HighligthsManager.Instance.RemoveHighlights();
         InitialSpawning();
+        UpdatePlayersPerceptionOfPieces();
 
     }
 
@@ -192,7 +255,7 @@ public class BoardManager : MonoBehaviour
         HighligthsManager.Instance.RemoveHighlights();
         activeChessPiece = null;
     }
-    private void MovePiece(string column, int line, string toColumn, int toLine)
+    public void MovePiece(string column, int line, string toColumn, int toLine)
     {
         int from_Column = convertColumnStringtoInt(column);
         int to_Column = convertColumnStringtoInt(toColumn);
@@ -229,7 +292,7 @@ public class BoardManager : MonoBehaviour
                     enemyPiece = chessPieces[to_Column, toLine + 1];
                 }
                 activeChessPieceModel.Remove(enemyPiece.gameObject);
-                Destroy(enemyPiece.gameObject);
+                Destroy(enemyPiece.gameObject); 
             }
 
             //record possible en passant moves
@@ -281,6 +344,7 @@ public class BoardManager : MonoBehaviour
             //change Turn
             isWhiteTurn = !isWhiteTurn;
         }
+        UpdatePlayersPerceptionOfPieces();
         UnselectPiece();
     }
 
@@ -348,7 +412,7 @@ public class BoardManager : MonoBehaviour
     }
     
 
-    private void SpawnPiece(string x, int z, string piece)
+    public void SpawnPiece(string x, int z, string piece)
     {
         //Debug.Log(chessPiecesModels.Count);
         //gotta lokk into Quarternions to spawn pieces facing the right way (Quaternion.Euler(0,180,0)?)
@@ -406,7 +470,7 @@ public class BoardManager : MonoBehaviour
         return origin;
     }
     //receives piece notation and returns the index of the piece in the chessPiecesModels
-    private int convertPieceNotationToIndex(string notation)
+    public int convertPieceNotationToIndex(string notation)
     {
         //small Leters ->Black
         //Capital Letter ->white
@@ -450,7 +514,7 @@ public class BoardManager : MonoBehaviour
     }
 
     //converts columns string into a int
-    private int convertColumnStringtoInt(string column)
+    public int convertColumnStringtoInt(string column)
     {
         switch (column)
         {
@@ -475,7 +539,7 @@ public class BoardManager : MonoBehaviour
         }
 
     }
-    private string convertColumnInttoString(int column)
+    public string convertColumnInttoString(int column)
     {
         switch (column)
         {
@@ -501,6 +565,10 @@ public class BoardManager : MonoBehaviour
 
     }
 
+    public ChessPiece[,] getchessPieces()
+    {
+        return chessPieces;
+    }
 
     //debug only
     /*
