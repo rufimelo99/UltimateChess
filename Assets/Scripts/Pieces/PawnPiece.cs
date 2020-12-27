@@ -10,8 +10,6 @@ public class PawnPiece : ChessPiece
 
         //check en passant moves
         int[] e = BoardManager.Instance.EnPassantMove;
-        int[] WhiteKingPosition = BoardManager.Instance.WhiteKingPos;
-        int[] BlackKingPosition = BoardManager.Instance.BlackKingPos;
         //White Turn
         if (isWhite)
         {

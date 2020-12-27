@@ -9,10 +9,6 @@ public class HighligthsManager : MonoBehaviour
     public GameObject OwnHighlight;
     public List<GameObject> highlights;
 
-    //dupliucated..not ideally
-    private const float TILE_SIZE = 1.0f;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -57,7 +53,7 @@ public class HighligthsManager : MonoBehaviour
                     go.SetActive(true);
                     //slightly above on y to be above board tiles
                     //BoardManager.Instance.TILESIZE; ??
-                    go.transform.position = new Vector3(x+ TILE_SIZE/2, 0.27f,z + TILE_SIZE / 2);
+                    go.transform.position = new Vector3(x+ BoardManager.Instance.TILE_SIZE /2, 0.27f,z + BoardManager.Instance.TILE_SIZE / 2);
                 }
             }
         }
@@ -66,7 +62,7 @@ public class HighligthsManager : MonoBehaviour
     {
         GameObject go = GetHighlightObjectforOwnTile();
         go.SetActive(true);
-        go.transform.position = new Vector3(x + TILE_SIZE / 2, 0.27f, z + TILE_SIZE / 2);
+        go.transform.position = new Vector3(x + BoardManager.Instance.TILE_SIZE / 2, 0.27f, z + BoardManager.Instance.TILE_SIZE / 2);
     }
     public void RemoveHighlights()
     {
