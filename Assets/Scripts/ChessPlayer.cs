@@ -29,10 +29,8 @@ public class ChessPlayer : MonoBehaviour
         }
         
     }
-    public void chooseRandomMove()
+    public void chooseMove()
     {
-        //TODO
-        //dont think the castling and the en passant are being read here
         if (BoardManager.Instance.isWhiteTurn == isWhitePlayer)
         {
             bool actionExecuted = false;
@@ -69,7 +67,7 @@ public class ChessPlayer : MonoBehaviour
                     int toZ = mov[indexMovement][1];
                     Debug.Log(toX);
                     Debug.Log(toZ);
-                    BoardManager.Instance.MovePiece(x, z, toX, toZ);
+                    BoardManager.Instance.MovePiece(BoardManager.Instance.convertColumnInttoString(x), z, BoardManager.Instance.convertColumnInttoString(toX), toZ);
                     
 
 
