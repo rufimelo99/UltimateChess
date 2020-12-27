@@ -392,12 +392,12 @@ internal class TextureFormatUtils
                 format == TextureFormat.ETC_RGB4Crunched ||
                 #endif
                 format == TextureFormat.ETC2_RGB ||
-                format == TextureFormat.ASTC_RGB_4x4 ||
-                format == TextureFormat.ASTC_RGB_5x5 ||
-                format == TextureFormat.ASTC_RGB_6x6 ||
-                format == TextureFormat.ASTC_RGB_8x8 ||
-                format == TextureFormat.ASTC_RGB_10x10 ||
-                format == TextureFormat.ASTC_RGB_12x12 ||
+                format == TextureFormat.ASTC_4x4 ||
+                format == TextureFormat.ASTC_5x5 ||
+                format == TextureFormat.ASTC_6x6 ||
+                format == TextureFormat.ASTC_8x8 ||
+                format == TextureFormat.ASTC_10x10 ||
+                format == TextureFormat.ASTC_12x12 ||
                 format == TextureFormat.BC6H;
     }
 
