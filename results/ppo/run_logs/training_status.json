@@ -2,17 +2,17 @@
     "BadChessPlayer": {
         "checkpoints": [
             {
-                "steps": 240,
-                "file_path": "results\\ppo\\BadChessPlayer\\BadChessPlayer-240.onnx",
-                "reward": 40.35000228881836,
-                "creation_time": 1609044767.4950888
+                "steps": 312,
+                "file_path": "results\\ppo\\BadChessPlayer\\BadChessPlayer-312.onnx",
+                "reward": 36.08749867975712,
+                "creation_time": 1609046732.2876375
             }
         ],
         "final_checkpoint": {
-            "steps": 240,
+            "steps": 312,
             "file_path": "results\\ppo\\BadChessPlayer.onnx",
-            "reward": 40.35000228881836,
-            "creation_time": 1609044767.4950888
+            "reward": 36.08749867975712,
+            "creation_time": 1609046732.2876375
         }
     },
     "metadata": {

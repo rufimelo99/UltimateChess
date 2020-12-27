@@ -5,15 +5,15 @@ m_ProjectFiles:
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637445152764660457
-    m_Hash: 1497587723
+      ticks: 637446430896732952
+    m_Hash: 1136297556
   m_LockFileStatus:
     m_FilePath: C:/Users/Rui/Documents/GitHub/UltimateChess/Packages/packages-lock.json
     m_PathExists: 1
     m_ContentTrackingEnabled: 1
     m_ModificationDate:
       serializedVersion: 2
-      ticks: 637445152936869481
+      ticks: 637446432140312554
     m_Hash: 4212439663
 m_EmbeddedPackageManifests:
   m_ManifestsStatus: {}
