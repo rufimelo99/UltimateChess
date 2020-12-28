@@ -13,3 +13,11 @@ https://www.geeksforgeeks.org/design-a-chess-game/
 
 ![UltimateCHess2](https://user-images.githubusercontent.com/44201826/102122430-5e3e4b00-3e3d-11eb-9814-3c8ebdeb32f3.PNG)
 14/12/2020
+
+
+28/12/2020
+Simulates already and tries to learn
+![2](https://user-images.githubusercontent.com/44201826/103246378-2c5bd700-495b-11eb-98c7-cc71dfbbfbb0.PNG)
+![Capture](https://user-images.githubusercontent.com/44201826/103246341-0df5db80-495b-11eb-864b-2fa791b5086f.PNG)
+
+
