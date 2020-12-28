@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class KingPiece : ChessPiece
 {
+    /// <summary>
+    /// kings can move 1 unit in each direction
+    /// the main restrictions are:
+    /// The positions of the pieces (must be inside the board)
+    /// can not go into a own piece
+    /// </summary>
+    /// <returns>bidemensional boolean array with the possible moves</returns>
     public override bool[,] PossibleMove()
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
-
-
         //TODO
         //to be optimazed later
         //left side tiles
@@ -162,9 +167,7 @@ public class KingPiece : ChessPiece
             {
                 possibleMovesMap[CurrentX + 2, CurrentZ] = true;
             }
-
         }
-
         //TODO check problem
         return possibleMovesMap;
     }

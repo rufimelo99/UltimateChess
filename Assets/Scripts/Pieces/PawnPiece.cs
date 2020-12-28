@@ -4,10 +4,17 @@ using UnityEngine;
 
 public class PawnPiece : ChessPiece
 {
+    /// <summary>
+    /// pawns can move 1unit in front or 2 if never moved
+    /// can also eat 1 unit in diagonal to the front and apply the en passant
+    /// the main restrictions are:
+    /// The positions of the pieces (must be inside the board)
+    /// can not go into a own piece
+    /// </summary>
+    /// <returns>bidemensional boolean array with the possible moves</returns>
     public override bool[,] PossibleMove() {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece, enemyPiece2;
-
         //check en passant moves
         int[] e = BoardManager.Instance.EnPassantMove;
         //White Turn
@@ -36,7 +43,6 @@ public class PawnPiece : ChessPiece
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
                 }
-
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
@@ -63,8 +69,6 @@ public class PawnPiece : ChessPiece
                     }
                 }
             }
-            
-
         }
         //Black Turn
         else
@@ -78,8 +82,6 @@ public class PawnPiece : ChessPiece
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
                 }
-
-
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)
                 {
@@ -89,14 +91,11 @@ public class PawnPiece : ChessPiece
             //Diagonal left
             if (CurrentX != 0 && CurrentZ != 7)
             {
-
                 //Check if En Passant Move is allowed
                 if (e[0] == CurrentX - 1 && e[1] == CurrentZ - 1)
                 {
                     possibleMovesMap[CurrentX -  1, CurrentZ - 1] = true;
                 }
-
-
                 enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)
                 {
@@ -123,9 +122,7 @@ public class PawnPiece : ChessPiece
                     }
                 }
             }
-           
         }
-
         return possibleMovesMap;
     }
 }

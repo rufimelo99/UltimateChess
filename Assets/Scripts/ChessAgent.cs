@@ -6,10 +6,21 @@ using Unity.MLAgents.Sensors;
 
 public class ChessAgent : Agent
 {
-
+    /// <summary>
+    /// boolean editable in the UI inspector
+    /// </summary>
     public bool isWhitePlayer;
+    /// <summary>
+    /// since this game interacts with two agents, i needed to reward when a king would be eaten
+    /// </summary>
     private bool KingeatenNextMove = false;
-    //Reward values
+    /// <summary>
+    /// Reward Values.. changed over time
+    /// -actions
+    /// -eat pieces
+    /// -penalize for missing pieces ? (except extra queens)
+    /// little incentive to castling since it is a powerful move
+    /// </summary>
     const float invalidAction = -0.1f;   //try for now
     const float validAction = 0.1f;
     const float wonGame = 100.0f;
@@ -46,7 +57,6 @@ public class ChessAgent : Agent
     int otherRookX1;
     int otherRookZ1;
 
-
     //Horses/Knights Positions
     int horseX0;
     int horseZ0;
@@ -56,7 +66,6 @@ public class ChessAgent : Agent
     int otherHorseZ0;
     int otherHorseX1;
     int otherHorseZ1;
-
 
     //bishops Positions
     int bishopX0;
@@ -73,7 +82,6 @@ public class ChessAgent : Agent
     int queenZ;
     int otherQueenX;
     int otherQueenZ;
-
 
     //need to add eventual Pieces: extra queens->extreme case 8 extra queens from each +player
     int extraQueenX0;
@@ -143,7 +151,6 @@ public class ChessAgent : Agent
     int otherPawnX7;
     int otherPawnZ7;
 
-
     public void getPiecesPositions()
     {
         //initialize Kings Positions
@@ -176,7 +183,6 @@ public class ChessAgent : Agent
         bool oneOwnHorseTook = false;
         bool oneOtherHorseTook = false;
 
-
         //initialize bishops positions
         bishopX0 = -1;
         bishopZ0 = -1;
@@ -189,13 +195,11 @@ public class ChessAgent : Agent
         bool oneOwnBishopTook = false;
         bool oneOtherBishopTook = false;
 
-
         //initialize queens
         queenX = -1;
         queenZ = -1;
         otherQueenX = -1;
         otherQueenZ = -1;
-
 
         //extra queens
         extraQueenX0 = -1;
@@ -247,9 +251,8 @@ public class ChessAgent : Agent
         bool sevenOtherQueenTook = false;
         bool eightOtherQueenTook = false; 
 
-
-         //pawns  
-         pawnX0 = -1;
+        //pawns  
+        pawnX0 = -1;
         pawnZ0 = -1;
         pawnX1 = -1;
         pawnZ1 = -1;
@@ -295,7 +298,6 @@ public class ChessAgent : Agent
         bool sixOtherPawnTook = false;
         bool sevenOwnPawnTook = false;
         bool sevenOtherPawnTook = false;
-
         foreach (ChessPiece cp in BoardManager.Instance.chessPieces)
         {
             if (cp != null)
@@ -309,7 +311,6 @@ public class ChessAgent : Agent
                     }
                     else
                     {
-
                         otherkingX = cp.CurrentX;
                         otherkingZ = cp.CurrentZ;
                     }
@@ -322,7 +323,6 @@ public class ChessAgent : Agent
                         {
                             rookX1 = cp.CurrentX;
                             rookZ1 = cp.CurrentZ;
-
                         }
                         else
                         {
@@ -344,7 +344,6 @@ public class ChessAgent : Agent
                             otherRookX0 = cp.CurrentX;
                             otherRookZ0 = cp.CurrentZ;
                             oneOtherTowerTook = true;
-
                         }
                     }
                 }
@@ -356,7 +355,6 @@ public class ChessAgent : Agent
                         {
                             horseX1 = cp.CurrentX;
                             horseZ1 = cp.CurrentZ;
-
                         }
                         else
                         {
@@ -371,14 +369,12 @@ public class ChessAgent : Agent
                         {
                             otherHorseX1 = cp.CurrentX;
                             otherHorseZ1 = cp.CurrentZ;
-
                         }
                         else
                         {
                             otherHorseX0 = cp.CurrentX;
                             otherHorseZ0 = cp.CurrentZ;
                             oneOtherHorseTook = true;
-
                         }
                     }
                 }
@@ -390,7 +386,6 @@ public class ChessAgent : Agent
                         {
                             bishopX1 = cp.CurrentX;
                             bishopZ1 = cp.CurrentZ;
-
                         }
                         else
                         {
@@ -405,14 +400,12 @@ public class ChessAgent : Agent
                         {
                             otherBishopX1 = cp.CurrentX;
                             otherBishopZ1 = cp.CurrentZ;
-
                         }
                         else
                         {
                             otherBishopX0 = cp.CurrentX;
                             otherBishopZ0 = cp.CurrentZ;
                             oneOtherBishopTook = true;
-
                         }
                     }
                 }
@@ -424,7 +417,6 @@ public class ChessAgent : Agent
                         {
                             extraQueenX7 = cp.CurrentX;
                             extraQueenZ7 = cp.CurrentZ;
-
                         }
                         else if (sevenOwnQueenTook)
                         {
@@ -464,11 +456,9 @@ public class ChessAgent : Agent
                         }
                         else if (oneOwnQueenTook)
                         {
-
                             extraQueenX0 = cp.CurrentX;
                             extraQueenZ0 = cp.CurrentZ;
                             twoOwnQueenTook = true;
-
                         }
                         else
                         {
@@ -543,57 +533,45 @@ public class ChessAgent : Agent
                     {
                         if (sevenOwnPawnTook)
                         {
-
                             pawnX7 = cp.CurrentX;
                             pawnZ7 = cp.CurrentZ;
 
                         }
                         else if (sixOwnPawnTook)
                         {
-
                             pawnX6 = cp.CurrentX;
                             pawnZ6 = cp.CurrentZ;
                             sevenOwnPawnTook = true;
-
                         }
                         else if (fiveOwnPawnTook)
                         {
-
                             pawnX5 = cp.CurrentX;
                             pawnZ5 = cp.CurrentZ;
                             sixOwnPawnTook = true;
-
                         }
                         else if (fourOwnPawnTook)
                         {
-
                             pawnX4 = cp.CurrentX;
                             pawnZ4 = cp.CurrentZ;
                             fiveOwnPawnTook = true;
-
                         }
                         else if (threeOwnPawnTook)
                         {
-
                             pawnX3 = cp.CurrentX;
                             pawnZ3 = cp.CurrentZ;
                             fourOwnPawnTook = true;
-
                         }
                         else if (twoOwnPawnTook)
                         {
                             pawnX2 = cp.CurrentX;
                             pawnZ2 = cp.CurrentZ;
                             threeOwnPawnTook = true;
-
                         }
                         else if (oneOwnPawnTook)
                         {
-
                             pawnX1 = cp.CurrentX;
                             pawnZ1 = cp.CurrentZ;
                             twoOwnPawnTook = true;
-
                         }
                         else
                         {
@@ -606,57 +584,44 @@ public class ChessAgent : Agent
                     {
                         if (sevenOtherPawnTook)
                         {
-
                             otherPawnX7 = cp.CurrentX;
                             otherPawnZ7 = cp.CurrentZ;
-
                         }
                         else if (sixOtherPawnTook)
                         {
-
                             otherPawnX6 = cp.CurrentX;
                             otherPawnZ6 = cp.CurrentZ;
                             sevenOtherPawnTook = true;
-
                         }
                         else if (fiveOtherPawnTook)
                         {
-
                             otherPawnX5 = cp.CurrentX;
                             otherPawnZ5 = cp.CurrentZ;
                             sixOtherPawnTook = true;
-
                         }
                         else if (fourOtherPawnTook)
                         {
-
                             otherPawnX4 = cp.CurrentX;
                             otherPawnZ4 = cp.CurrentZ;
                             fiveOtherPawnTook = true;
-
                         }
                         else if (threeOtherPawnTook)
                         {
-
                             otherPawnX3 = cp.CurrentX;
                             otherPawnZ3 = cp.CurrentZ;
                             fourOtherPawnTook = true;
-
                         }
                         else if (twoOtherPawnTook)
                         {
                             otherPawnX2 = cp.CurrentX;
                             otherPawnZ2 = cp.CurrentZ;
                             threeOtherPawnTook = true;
-
                         }
                         else if (oneOtherPawnTook)
                         {
-
                             otherPawnX1 = cp.CurrentX;
                             otherPawnZ1 = cp.CurrentZ;
                             twoOtherPawnTook = true;
-
                         }
                         else
                         {
@@ -666,21 +631,24 @@ public class ChessAgent : Agent
                         }
                     }
                 }
-
             }
         }
     }
-
+    /// <summary>
+    /// method called just i dont get warning messages... i dont know fully how to do heuristic since i can not attach a key for each possible action
+    /// </summary>
     public override void Heuristic(float[] actionsOut)
     {
         base.Heuristic(actionsOut);
     }
     public override void OnEpisodeBegin()
     {
-        Debug.Log("Begining of a new episode");
         KingeatenNextMove = false;
     }
-
+    /// <summary>
+    /// Observations of all the x and z position of all the pieces (including potencial queens)
+    /// </summary>
+    /// <param name="sensor"></param>
     public override void CollectObservations(VectorSensor sensor)
     {
         //according to vecotr size
@@ -711,7 +679,6 @@ public class ChessAgent : Agent
         sensor.AddObservation(horseZ1);
         sensor.AddObservation(otherHorseX1);
         sensor.AddObservation(otherHorseZ1);
-
 
         //bishops +8 observations
         sensor.AddObservation(bishopX0);
@@ -797,17 +764,22 @@ public class ChessAgent : Agent
         sensor.AddObservation(otherPawnX7);
         sensor.AddObservation(otherPawnZ7);
 
-
         //total observations:
         //96 observations
     }
-
+    /// <summary>
+    /// Function that permits to check if a certain move is possible
+    /// it calls the Board Manager and checks if the piece on position (initialX,initialZ) can move to (toX,toZ)
+    /// </summary>
+    /// <param name="initialX">Current x piece position</param>
+    /// <param name="initialZ">Current z piece position</param>
+    /// <param name="toX">to where it should move on the x axis</param>
+    /// <param name="toZ">to where it should move on the z axis</param>
     private void verifyMove(int initialX, int initialZ, int toX, int toZ)
     {
         //initialX and initialZ corresponds to the position of the particulkar piece that is trying toi move
         BoardManager.Instance.allowedMoves = BoardManager.Instance.chessPieces[initialX, initialZ].PossibleMove();
         BoardManager.Instance.activeChessPiece = BoardManager.Instance.chessPieces[initialX, initialZ];
-
         //is it possible move there
         if (toX > -1 && toX < 8 && toZ > -1 && toZ < 8)
         {
@@ -825,18 +797,17 @@ public class ChessAgent : Agent
             else
             {
                 AddReward(invalidAction);
-                //RequestDecision();
             }
-
         }
         else
         {
             AddReward(invalidAction);
-           //RequestDecision();
         }
     }
 
-    //behaviours
+    /// <summary>
+    /// Behaviors functions that try to check and attribute if a piece of y type can do certain action given an action (number)
+    /// </summary>
     //0 -> not move; 1-> left; 2->left+up; ...
     private void kingBehaviour(float action, int king_X, int king_Z)
     {
@@ -857,20 +828,16 @@ public class ChessAgent : Agent
                 toZ = king_Z + 1;
                 verifyMove(king_X, king_Z, toX, toZ);
                 break;
-
             case 4:
                 toX = king_X + 1;
                 toZ = king_Z + 1;
                 verifyMove(king_X, king_Z, toX, toZ);
                 break;
-
             case 5:
                 toX = king_X + 1;
                 toZ = king_Z;
-
                 verifyMove(king_X, king_Z, toX, toZ);
                 break;
-
             case 6:
                 toX = king_X + 1;
                 toZ = king_Z - 1;
@@ -879,20 +846,17 @@ public class ChessAgent : Agent
             case 7:
                 toX = king_X;
                 toZ = king_Z - 1;
-
                 verifyMove(king_X, king_Z, toX, toZ);
                 break;
             case 8:
                 toX = king_X - 1;
                 toZ = king_Z - 1;
-
                 verifyMove(king_X, king_Z, toX, toZ);
                 break;
             case 9:
                 //castling left 
                 toX = king_X - 3;
                 toZ = king_Z;
-
                 verifyMove(king_X, king_Z, toX, toZ);
                 //training porposes
                 AddReward(incentiveToCastling);
@@ -901,7 +865,6 @@ public class ChessAgent : Agent
                 //castling right 
                 toX = king_X +2;
                 toZ = king_Z;
-
                 verifyMove(king_X, king_Z, toX, toZ);
                 //training porposes
                 AddReward(incentiveToCastling);
@@ -909,9 +872,7 @@ public class ChessAgent : Agent
             default:
                 break;
         }
-
     }
-
     //0 -> not move; 1-> left 1unit; 2->left 2 units; ...7-> left 7 units; 8->up 1 unit; ....
     private void towerBehaviour(float action, int tower_X, int tower_Z)
     {
@@ -1069,7 +1030,6 @@ public class ChessAgent : Agent
             AddReward(rookPieceMissing);
         }
     }
-
     //0 -> not move; 1-> 2left+1up; 2->2up+1left; ...
     private void knightBehaviour(float action, int knight_X, int knight_Z)
     {
@@ -1120,14 +1080,12 @@ public class ChessAgent : Agent
                 default:
                     break;
             }
-
         }
         else
         {
             AddReward(knightPieceMissing);
         }
     }
-
     //0 -> not move; 1-> 1left+1up; 2->2up+2left; ...
     private void bishopBehaviour(float action, int bishop_X, int bishop_Z)
     {
@@ -1278,15 +1236,13 @@ public class ChessAgent : Agent
                 default:
                     break;
             }
-
         }
         else
         {
             AddReward(bishopPieceMissing);
         }
     }
-
-    //fisrt 29 are the tower movement and the rest corresponds to the bishop
+    //fisrt 28 are the tower movement and the rest corresponds to the bishop
     private void queenBehaviour(float action, int queen_X, int queen_Z, bool isExtra)
     {
         if (queen_X != -1 && queen_Z != -1)
@@ -1576,7 +1532,6 @@ public class ChessAgent : Agent
                 default:
                     break;
             }
-
         }
         else
         {
@@ -1587,7 +1542,6 @@ public class ChessAgent : Agent
             }
         }
     }
-
     //0 -> not move; 1-> 1up; 2->2up+; 3-> eat left and up;....
     private void pawnBehaviour(float action, int pawn_X, int pawn_Z)
     {
@@ -1596,7 +1550,6 @@ public class ChessAgent : Agent
             case 1:
                 int toX = -1;
                 int toZ = -1;
-
                 if (isWhitePlayer)
                 {
                     toX = pawn_X;
@@ -1609,7 +1562,6 @@ public class ChessAgent : Agent
                 }
                 verifyMove(pawn_X, pawn_Z, toX, toZ);
                 break;
-
             case 2:
                 if (isWhitePlayer)
                 {
@@ -1623,7 +1575,6 @@ public class ChessAgent : Agent
                 }
                 verifyMove(pawn_X, pawn_Z, toX, toZ);
                 break;
-
             case 3:
                 if (isWhitePlayer)
                 {
@@ -1632,13 +1583,11 @@ public class ChessAgent : Agent
                 }
                 else
                 {
-
                     toX = pawn_X - 1;
                     toZ = pawn_Z - 1;
                 }
                 verifyMove(pawn_X, pawn_Z, toX, toZ);
                 break;
-
             case 4:
                 if (isWhitePlayer)
                 {
@@ -1647,13 +1596,11 @@ public class ChessAgent : Agent
                 }
                 else
                 {
-
                     toX = pawn_X + 1;
                     toZ = pawn_Z - 1;
                 }
                 verifyMove(pawn_X, pawn_Z, toX, toZ);
                 break;
-
             default:
                 break;
         }
@@ -1672,173 +1619,223 @@ public class ChessAgent : Agent
     ///    
     /// 2nd iteration:
     ///  branch 0 with all the possibilities
-    ///     -> king behavior:          11  different possibilities
-    ///     -> tower behavior:         29  different possibilities * 2
-    ///     -> horse behavior:         9   different possibilities * 2
-    ///     -> bishop behavior:        29  different possibilities * 2
-    ///     -> queen behavior:         57  different possibilities 
-    ///     -> pawn behavior:          5   different possibilities * 8
-    ///     -> extra queen behavior:   57  different possibilities * 8
+    ///     -> king behavior:          10  different possibilities
+    ///     -> tower behavior:         28  different possibilities * 2
+    ///     -> horse behavior:         8   different possibilities * 2
+    ///     -> bishop behavior:        28  different possibilities * 2
+    ///     -> queen behavior:         56  different possibilities 
+    ///     -> pawn behavior:          4   different possibilities * 8
+    ///     -> extra queen behavior:   56  different possibilities * 8
     /// </summary>
 
     public override void OnActionReceived(float[] vectorAction)
     {
-
         if (verifyIsLost())
         {
             EndEpisode();
             BoardManager.Instance.ResetGame();
         }
-
         if (BoardManager.Instance.isWhiteTurn == isWhitePlayer)
         {
-            // Perform actions based on a vector of numbers
-            
-            //movement of each pawn
-
-            if (vectorAction[16] != 0 && pawnX1 != -1 && pawnZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX1, pawnZ1))
-            {
-                pawnBehaviour(vectorAction[16], pawnX1, pawnZ1);
+            //number max of the generated action is the max on the last condition+1 ->675
+            //king behavior:            9  different possibilities
+            if (vectorAction[0] >= 0 && vectorAction[0] <= 9)
+            {   
+                if(kingX != -1 && kingZ != -1 && BoardManager.Instance.hasOnePossibleMove(kingX, kingZ))
+                {
+                    kingBehaviour(vectorAction[0]+1, kingX, kingZ);
+                }
             }
-            else if (vectorAction[17] != 0 && pawnX2 != -1 && pawnZ2 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX2, pawnZ2))
+            //tower 0 behavior:         28  different possibilities
+            else if (vectorAction[0] >= 10 && vectorAction[0] <= 37)
             {
-                pawnBehaviour(vectorAction[17], pawnX2, pawnZ2);
+                if (rookX0 != -1 && rookZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(rookX0, rookZ0))
+                {
+                    towerBehaviour(vectorAction[0] - 9, rookX0, rookZ0);
+                }
             }
-            else if (vectorAction[18] != 0 && pawnX3 != -1 && pawnZ3 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX3, pawnZ3))
+            //tower 1 behavior:         28  different possibilities
+            else if (vectorAction[0] >= 38 && vectorAction[0] <= 65)
             {
-                pawnBehaviour(vectorAction[18], pawnX3, pawnZ3);
+                if (rookX1 != -1 && rookZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(rookX1, rookZ1))
+                {
+                    towerBehaviour(vectorAction[0] - 37, rookX1, rookZ1);
+                }
             }
-            else if (vectorAction[19] != 0 && pawnX4 != -1 && pawnZ4 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX4, pawnZ4))
+            //horse 0 behavior:         8  different possibilities
+            else if (vectorAction[0] >= 66 && vectorAction[0] <= 73)
             {
-                //Debug.Log("pawn");
-                pawnBehaviour(vectorAction[19], pawnX4, pawnZ4);
+                if (horseX0 != -1 && horseZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(horseX0, horseZ0))
+                {
+                    knightBehaviour(vectorAction[0] - 65, horseX0, horseZ0);
+                }
             }
-            else if (vectorAction[20] != 0 && pawnX5 != -1 && pawnZ5 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX5, pawnZ5))
+            //horse 1 behavior:         8  different possibilities
+            else if (vectorAction[0] >= 74 && vectorAction[0] <= 81)
             {
-               //Debug.Log("pawn");
-                pawnBehaviour(vectorAction[20], pawnX5, pawnZ5);
+                if (horseX1 != -1 && horseZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(horseX1, horseZ1))
+                {
+                    knightBehaviour(vectorAction[0] - 73, horseX1, horseZ1);
+                }
             }
-            else if (vectorAction[21] != 0 && pawnX6 != -1 && pawnZ6 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX6, pawnZ6))
+            //bishop 0 behavior:        28  different possibilities
+            else if (vectorAction[0] >= 82 && vectorAction[0] <= 109)
             {
-                //Debug.Log("pawn");
-                pawnBehaviour(vectorAction[21], pawnX6, pawnZ6);
+                if (bishopX0 != -1 && bishopZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(bishopX0, bishopZ0))
+                {
+                    bishopBehaviour(vectorAction[0] - 84, bishopX0, bishopZ0);
+                }
             }
-            else if (vectorAction[22] != 0 && pawnX7 != -1 && pawnZ7 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX7, pawnZ7))
+            //bishop 1 behavior:        28  different possibilities
+            else if (vectorAction[0] >= 110 && vectorAction[0] <= 137)
             {
-                //Debug.Log("pawn");
-                pawnBehaviour(vectorAction[22], pawnX7, pawnZ7);
+                if (bishopX1 != -1 && bishopZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(bishopX1, bishopZ1))
+                {
+                    bishopBehaviour(vectorAction[0] - 109, bishopX1, bishopZ1);
+                }
             }
-            else if (vectorAction[23] != 0 && pawnX0 != -1 && pawnZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX0, pawnZ0))
+            //queen behavior:           56  different possibilities
+            else if (vectorAction[0] >= 138 && vectorAction[0] <= 193)
             {
-                //Debug.Log("pawn");
-                pawnBehaviour(vectorAction[23], pawnX0, pawnZ0);
+                if (queenX != -1 && queenZ != -1 && BoardManager.Instance.hasOnePossibleMove(queenX, queenZ))
+                {
+                    queenBehaviour(vectorAction[0] - 137, queenX, queenZ, false);
+                }
             }
-            //vectorAction[1] can reflect the movement of the Rook 0
-            else if (vectorAction[1] != 0 && rookX0 != -1 && rookZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(rookX0, rookZ0))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 194 && vectorAction[0] <= 197)
             {
-                //Debug.Log("vectorAction[1]");
-                towerBehaviour(vectorAction[1], rookX0, rookZ0);
+                if (pawnX0 != -1 && pawnZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX0, pawnZ0))
+                {
+                    pawnBehaviour(vectorAction[0] - 193, pawnX0, pawnZ0);
+                }
             }
-            //vectorAction[2] can reflect the movement of the Rook 1
-            else if (vectorAction[2] != 0 && rookX1 != -1 && rookZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(rookX1, rookZ1))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 198 && vectorAction[0] <= 201)
             {
-                //Debug.Log("vectorAction[2]");
-                towerBehaviour(vectorAction[2], rookX1, rookZ1);
+                if (pawnX1 != -1 && pawnZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX1, pawnZ1))
+                {
+                    pawnBehaviour(vectorAction[0] - 197, pawnX1, pawnZ1);
+                }
             }
-            //vectorAction[3] can reflect the movement of the hrose/knight 0
-            else if (vectorAction[3] != 0 && horseX0 != -1 && horseZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(horseX0, horseZ0))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 202 && vectorAction[0] <= 205)
             {
-               // Debug.Log("vectorAction[3]");
-                knightBehaviour(vectorAction[3], horseX0, horseZ0);
+                if (pawnX2 != -1 && pawnZ2 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX2, pawnZ2))
+                {
+                    pawnBehaviour(vectorAction[0] - 201, pawnX2, pawnZ2);
+                }
             }
-            //vectorAction[4] can reflect the movement of the hrose/knight 1
-            else if (vectorAction[4] != 0 && horseX1 != -1 && horseZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(horseX1, horseZ1))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 206 && vectorAction[0] <= 209)
             {
-                //Debug.Log("vectorAction[4]");
-                knightBehaviour(vectorAction[4], horseX1, horseZ1);
+                if (pawnX3 != -1 && pawnZ3 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX3, pawnZ3))
+                {
+                    pawnBehaviour(vectorAction[0] - 205, pawnX3, pawnZ3);
+                }
             }
-            //vectorAction[5] can reflect the movement of the bishop 0
-            else if (vectorAction[5] != 0 && bishopX0 != -1 && bishopZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(bishopX0, bishopZ0))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 210 && vectorAction[0] <= 213)
             {
-               // Debug.Log("vectorAction[5]");
-                bishopBehaviour(vectorAction[5], bishopX0, bishopZ0);
+                if (pawnX4 != -1 && pawnZ4 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX4, pawnZ4))
+                {
+                    pawnBehaviour(vectorAction[0] - 209, pawnX4, pawnZ4);
+                }
             }
-            //vectorAction[6] can reflect the movement of the bishop 1
-            else if (vectorAction[6] != 0 && bishopX1 != -1 && bishopZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(bishopX1, bishopZ1))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 214 && vectorAction[0] <= 217)
             {
-                //Debug.Log("vectorAction[6]");
-                bishopBehaviour(vectorAction[6], bishopX1, bishopZ1);
+                if (pawnX5 != -1 && pawnZ5 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX5, pawnZ5))
+                {
+                    pawnBehaviour(vectorAction[0] - 213, pawnX5, pawnZ5);
+                }
             }
-            //vectorAction[7] can reflect the movement of the queeen
-            else if (vectorAction[7] != 0 && queenX != -1 && queenZ != -1 && BoardManager.Instance.hasOnePossibleMove(queenX, queenZ))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 218 && vectorAction[0] <= 221)
             {
-                //Debug.Log("vectorAction[7]: "+vectorAction[7]);
-                queenBehaviour(vectorAction[7], queenX, queenZ, false);
+                if (pawnX6 != -1 && pawnZ6 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX6, pawnZ6))
+                {
+                    pawnBehaviour(vectorAction[0] - 217, pawnX6, pawnZ6);
+                }
             }
-            //vectorAction[8] can reflect the movement of the extra queeen
-            else if (vectorAction[8] != 0 && extraQueenX0 != -1 && extraQueenZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX0, extraQueenZ0))
+            //pawn behavior:            4  different possibilities
+            else if (vectorAction[0] >= 222 && vectorAction[0] <= 225)
             {
-                //Debug.Log("vectorAction[8]");
-                queenBehaviour(vectorAction[8], extraQueenX0, extraQueenZ0, true);
+                if (pawnX7 != -1 && pawnZ7 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX7, pawnZ7))
+                {
+                    pawnBehaviour(vectorAction[0] - 221, pawnX7, pawnZ7);
+                }
             }
-            //vectorAction[9] can reflect the movement of the extra extra queeen
-            else if (vectorAction[9] != 0 && extraQueenX1 != -1 && extraQueenZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX1, extraQueenZ1))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 226 && vectorAction[0] <= 281)
             {
-                /// Debug.Log("vectorAction[9]");
-                queenBehaviour(vectorAction[9], extraQueenX1, extraQueenZ1, true);
+                if (extraQueenX0 != -1 && extraQueenZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX0, extraQueenZ0))
+                {
+                    queenBehaviour(vectorAction[0] - 225, extraQueenX0, extraQueenZ0, true);
+                }
             }
-            //vectorAction[10] can reflect the movement of the extra extra queeen
-            else if (vectorAction[10] != 0 && extraQueenX2 != -1 && extraQueenZ2 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX2, extraQueenZ2))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 282 && vectorAction[0] <= 337)
             {
-                /// Debug.Log("vectorAction[10]");
-                queenBehaviour(vectorAction[10], extraQueenX2, extraQueenZ2, true);
+                if (extraQueenX1 != -1 && extraQueenZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX1, extraQueenZ1))
+                {
+                    queenBehaviour(vectorAction[0] - 281, extraQueenX1, extraQueenZ1, true);
+                }
             }
-            //vectorAction[11] can reflect the movement of the extra extra queeen
-            else if (vectorAction[11] != 0 && extraQueenX3 != -1 && extraQueenZ3 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX3, extraQueenZ3))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 338 && vectorAction[0] <= 393)
             {
-                /// Debug.Log("vectorAction[10]");
-                queenBehaviour(vectorAction[11], extraQueenX3, extraQueenZ3, true);
+                if (extraQueenX2 != -1 && extraQueenZ2 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX2, extraQueenZ2))
+                {
+                    queenBehaviour(vectorAction[0] - 337, extraQueenX2, extraQueenZ2, true);
+                }
             }
-            //vectorAction[12] can reflect the movement of the extra extra queeen
-            else if (vectorAction[12] != 0 && extraQueenX4 != -1 && extraQueenZ4 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX4, extraQueenZ4))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 394 && vectorAction[0] <= 449)
             {
-                /// Debug.Log("vectorAction[10]");
-                queenBehaviour(vectorAction[12], extraQueenX4, extraQueenZ4, true);
+                if (extraQueenX3 != -1 && extraQueenZ3 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX3, extraQueenZ3))
+                {
+                    queenBehaviour(vectorAction[0] - 393, extraQueenX3, extraQueenZ3, true);
+                }
             }
-            //vectorAction[13] can reflect the movement of the extra extra queeen
-            else if (vectorAction[13] != 0 && extraQueenX5 != -1 && extraQueenZ5 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX5, extraQueenZ5))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 450 && vectorAction[0] <= 505)
             {
-                queenBehaviour(vectorAction[13], extraQueenX5, extraQueenZ5, true);
+                if (extraQueenX4 != -1 && extraQueenZ4 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX4, extraQueenZ4))
+                {
+                    queenBehaviour(vectorAction[0] - 449, extraQueenX4, extraQueenZ4, true);
+                }
             }
-            //vectorAction[10] can reflect the movement of the extra extra queeen
-            else if (vectorAction[14] != 0 && extraQueenX6 != -1 && extraQueenZ6 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX6, extraQueenZ6))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 506 && vectorAction[0] <= 561)
             {
-                /// Debug.Log("vectorAction[10]");
-                queenBehaviour(vectorAction[14], extraQueenX6, extraQueenZ6, true);
+                if (extraQueenX5 != -1 && extraQueenZ5 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX5, extraQueenZ5))
+                {
+                    queenBehaviour(vectorAction[0] - 505, extraQueenX5, extraQueenZ5, true);
+                }
             }
-            //vectorAction[10] can reflect the movement of the extra extra queeen
-            else if (vectorAction[15] != 0 && extraQueenX7 != -1 && extraQueenZ7 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX7, extraQueenZ7))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 562 && vectorAction[0] <= 617)
             {
-                /// Debug.Log("vectorAction[10]");
-                queenBehaviour(vectorAction[15], extraQueenX7, extraQueenZ7, true);
+                if (extraQueenX6 != -1 && extraQueenZ6 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX6, extraQueenZ6))
+                {
+                    queenBehaviour(vectorAction[0] - 561, extraQueenX6, extraQueenZ6, true);
+                }
             }
-            //vectorAction[0] can reflect the movement of the King
-            else if (vectorAction[0] != 0 && kingX != -1 && kingZ != -1 && BoardManager.Instance.hasOnePossibleMove(kingX, kingZ))
+            //extra queen behavior:     56  different possibilities
+            else if (vectorAction[0] >= 618 && vectorAction[0] <= 674)
             {
-                //Debug.Log("vectorAction[0]");
-                kingBehaviour(vectorAction[0], kingX, kingZ);
+                if (extraQueenX7 != -1 && extraQueenZ7 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX7, extraQueenZ7))
+                {
+                    queenBehaviour(vectorAction[0] - 617, extraQueenX7, extraQueenZ7, true);
+                }
             }
         }
-
         AddReward(doNothing/ MaxStep);
     }
-
-    public void AgentLost()
-    {
-        AddReward(lostGame);
-        EndEpisode();
-    }
-
+    /// <summary>
+    /// checks if certain movement will eat a piece so we can reward the agent
+    /// </summary>
     public void checkIfEatsPiece(int toX, int toZ)
     {
         if (toX > -1 && toZ > -1)
@@ -1875,17 +1872,18 @@ public class ChessAgent : Agent
 
         }
     }
-    
+    /// <summary>
+    /// simple functiont to verify if the agent lost
+    /// </summary>
+    /// <returns></returns>
     public bool verifyIsLost()
     {
         if (!(kingX != -1 && kingZ != -1))
         {
+            AddReward(lostGame);
+            EndEpisode();
             return true;
         }
         return false;
     }
-    
-    
-
-
 }

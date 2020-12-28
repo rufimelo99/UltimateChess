@@ -59,7 +59,6 @@
     <Compile Include="Assets\Scripts\ChessAgent.cs" />
     <Compile Include="Assets\Scripts\ChessPiece.cs" />
     <Compile Include="Assets\Scripts\HighligthsManager.cs" />
-    <Compile Include="Assets\Scripts\ChessPlayer.cs" />
     <Compile Include="Assets\Scripts\Pieces\TowerPiece.cs" />
     <Compile Include="Assets\Scripts\Pieces\HorsePiece.cs" />
     <Compile Include="Assets\BoardManager.cs" />

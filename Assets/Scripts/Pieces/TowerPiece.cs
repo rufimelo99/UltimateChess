@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class TowerPiece : ChessPiece
 {
+     /// <summary>
+     /// tower can move straigth as much as it can 
+     /// the main restrictions are:
+     /// The positions of the pieces (must be inside the board)
+     /// can not go into a own piece
+     /// can not jumo over pieces
+     /// </summary>
+     /// <returns>bidemensional boolean array with the possible moves</returns>
     public override bool[,] PossibleMove()
     {
         bool[,] possibleMovesMap = new bool[8, 8];
-
         ChessPiece enemyPiece;
         int amountOfMovesInXDirection;
-
         //up
         amountOfMovesInXDirection = CurrentZ;
         while (true)
@@ -20,8 +26,6 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
@@ -46,8 +50,6 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
@@ -72,8 +74,6 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-
-
             enemyPiece = BoardManager.Instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
             if (enemyPiece == null)
             {
@@ -113,7 +113,6 @@ public class TowerPiece : ChessPiece
                 break;
             }
         }
-
         return possibleMovesMap;
     }
 }

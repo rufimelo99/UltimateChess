@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class QueenPiece : ChessPiece
 {
+    /// <summary>
+    /// queens can move in diagonal or straigth as much as she can (bishop + tower behavior)
+    /// the main restrictions are:
+    /// The positions of the pieces (must be inside the board)
+    /// can not go into a own piece
+    /// can not jumo over pieces
+    /// </summary>
+    /// <returns>bidemensional boolean array with the possible moves</returns>
     public override bool[,] PossibleMove()
     {
         bool[,] possibleMovesMap = new bool[8, 8];
-
-
         ChessPiece enemyPiece;
-        
         int amountOfMovesInXDirection;
-
         //up
         amountOfMovesInXDirection = CurrentZ;
         while (true)
@@ -22,8 +26,6 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
@@ -48,8 +50,6 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
@@ -74,8 +74,6 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-
-
             enemyPiece = BoardManager.Instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
             if (enemyPiece == null)
             {
@@ -115,14 +113,9 @@ public class QueenPiece : ChessPiece
                 break;
             }
         }
-
-
-
         //bishop part
-        
         int posX;
         int posZ;
-
         //diagonals
         posX = CurrentX;
         posZ = CurrentZ;
@@ -208,8 +201,6 @@ public class QueenPiece : ChessPiece
                 break;
             }
         }
-
-
         return possibleMovesMap;
     }
 }

@@ -8,6 +8,10 @@ public class BoardManager : MonoBehaviour
     [HideInInspector]
     public bool isWhiteTurn = true;
     /// <summary>
+    /// just for training purposes so we can have multiple scenes
+    /// </summary>
+    public int yOffset;
+    /// <summary>
     /// Both whitePlayer and blackPlayers are variables that, for now, can only be edited through the unity UI
     /// They represent each player. if filled with an ChessAgent Object, there is an AI behind that player.
     /// Otherwise, in case of being null, it means that player is, in fact, human
@@ -230,7 +234,6 @@ public class BoardManager : MonoBehaviour
             //check if the piece corresponds to the player... if not, exit
             return;
         }
-
         bool hasAtLeastOneMove = false;
         allowedMoves = chessPieces[x, z].PossibleMove();
         for (int i = 0; i < 8; i++) {
@@ -241,13 +244,10 @@ public class BoardManager : MonoBehaviour
                 }
             }
         }
-
         if (!hasAtLeastOneMove)
         {
             return;
         }
-
-        //Debug.Log("position");
         allowedMoves = chessPieces[x, z].PossibleMove();
         activeChessPiece = chessPieces[x, z];
         HighligthsManager.Instance.ownTileHighligth(x, z);
@@ -388,8 +388,8 @@ public class BoardManager : MonoBehaviour
 
         SpawnPiece(5, 0, "B");
         SpawnPiece(2, 0, "B");
-        
-         SpawnPiece(0, 1, "P");
+
+        SpawnPiece(0, 1, "P");
          SpawnPiece(1, 1, "P");
          SpawnPiece(2, 1, "P");
          SpawnPiece(3, 1, "P");
@@ -399,13 +399,13 @@ public class BoardManager : MonoBehaviour
          SpawnPiece(7, 1, "P");
          
         SpawnPiece(3, 0, "Q");
-        SpawnPiece(4, 0, "K");
+       SpawnPiece(4, 0, "K");
 
 
         //Black Pieces
-        
+       
         SpawnPiece(0, 7, "r");
-        SpawnPiece(7, 7, "r");
+        SpawnPiece(7, 7, "r"); 
         SpawnPiece(1, 7, "n");
         SpawnPiece(6, 7, "n");
         SpawnPiece(5, 7, "b");
@@ -456,21 +456,18 @@ public class BoardManager : MonoBehaviour
         //GameObject go = Instantiate(chessPiecesModels[indexInModelsArray], GetTileCenter(x, z - 1), Quaternion.identity) as GameObject;
         GameObject go = Instantiate(chessPiecesModels[indexInModelsArray], GetTileCenter(x, z), Quaternion.Euler(0, 90, 0)) as GameObject;
         go.transform.SetParent(transform);
-
         chessPieces[x, z] = go.GetComponent<ChessPiece>();
-
         chessPieces[x, z].setPosition(x, z);
         activeChessPieceModel.Add(go);
-
     }
     /// <summary>
     /// returns the actual center of a tile in the board so we can place a Prefab correctly
     /// </summary>
     private Vector3 GetTileCenter(int x, int z)
     {
-       
         Vector3 origin = Vector3.zero;
         origin.x += (TILE_SIZE * x) + TILE_SIZE / 2;
+        origin.y = yOffset;
         origin.z += (TILE_SIZE * z) + TILE_SIZE / 2;
         return origin;
     }
@@ -572,14 +569,12 @@ public class BoardManager : MonoBehaviour
                 didBlackRook1EverMoved = true;
             }
         }
-
         if (didWhiteKingEverMoved == false)
         {
             if (chessPieces[4, 0] == null || chessPieces[4, 0].GetType() != typeof(KingPiece))
             {
                 didWhiteKingEverMoved = true;
             }
-
         }
         if (didBlackKingEverMoved == false)
         {
@@ -587,7 +582,6 @@ public class BoardManager : MonoBehaviour
             {
                 didBlackKingEverMoved = true;
             }
-
         }
     }
 }

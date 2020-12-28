@@ -4,14 +4,20 @@ using UnityEngine;
 
 public class BishopPiece : ChessPiece
 {
+    /// <summary>
+    /// bishops can move in diagonals
+    /// the main restrictions are:
+    /// The positions of the pieces (must be inside the board)
+    /// can not go over pieces
+    /// can not go into a own piece
+    /// </summary>
+    /// <returns>bidemensional boolean array with the possible moves</returns>
     public override bool[,] PossibleMove()
     {
         bool[,] possibleMovesMap = new bool[8, 8];
-
         ChessPiece enemyPiece;
         int posX;
         int posZ;
-
         //diagonals
         posX = CurrentX;
         posZ = CurrentZ;
@@ -97,9 +103,6 @@ public class BishopPiece : ChessPiece
                 break;
             }
         }
-
-
-
         return possibleMovesMap;
     }
 }

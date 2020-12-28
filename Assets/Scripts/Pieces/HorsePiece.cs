@@ -4,15 +4,20 @@ using UnityEngine;
 
 public class HorsePiece : ChessPiece
 {
+    /// <summary>
+    /// horses can move in L shape moves
+    /// the main restrictions are:
+    /// The positions of the pieces (must be inside the board)
+    /// can not go into a own piece
+    /// </summary>
+    /// <returns>bidemensional boolean array with the possible moves</returns>
     public override bool[,] PossibleMove()
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
-
         //diagonal leftup+left
         if (CurrentX - 2 >= 0 && CurrentZ + 1 <= 7)
         {
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ + 1];
             if (enemyPiece == null)
             {
@@ -74,12 +79,9 @@ public class HorsePiece : ChessPiece
                 }
             }
         }
-
-
         //diagonal rightup+right
         if (CurrentX + 2 <= 7 && CurrentZ + 1 <= 7)
         {
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ + 1];
             if (enemyPiece == null)
             {
@@ -96,7 +98,6 @@ public class HorsePiece : ChessPiece
         //diagonal rightup+up
         if (CurrentX + 1 <= 7 && CurrentZ + 2 <= 7)
         {
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 2];
             if (enemyPiece == null)
             {
@@ -113,7 +114,6 @@ public class HorsePiece : ChessPiece
         //diagonal rightdown+right
         if (CurrentX + 2 <= 7 && CurrentZ - 1 > 0)
         {
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ - 1];
             if (enemyPiece == null)
             {
@@ -130,7 +130,6 @@ public class HorsePiece : ChessPiece
         //diagonal rightdown+down
         if (CurrentX + 1 <= 7 && CurrentZ - 2 > 0)
         {
-
             enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 2];
             if (enemyPiece == null)
             {
@@ -144,7 +143,6 @@ public class HorsePiece : ChessPiece
                 }
             }
         }
-
         return possibleMovesMap;
     }
 }
