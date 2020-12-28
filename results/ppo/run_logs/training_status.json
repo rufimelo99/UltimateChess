@@ -1,0 +1,30 @@
+{
+    "ChessNoob": {
+        "checkpoints": [
+            {
+                "steps": 102483,
+                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-102483.onnx",
+                "reward": 15.193453370501581,
+                "creation_time": 1609197120.8281753
+            },
+            {
+                "steps": 106999,
+                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-106999.onnx",
+                "reward": 10.432214446365833,
+                "creation_time": 1609197476.0034168
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 106999,
+            "file_path": "results\\ppo\\ChessNoob.onnx",
+            "reward": 10.432214446365833,
+            "creation_time": 1609197476.0034168
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.2.0",
+        "mlagents_version": "0.23.0",
+        "torch_version": "1.6.0",
+        "tensorflow_version": -1
+    }
+}
