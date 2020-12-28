@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 72
-    NumStackedVectorObservations: 1
-    VectorActionSize: 0b0000001d0000001d00000009000000090000001d0000001d0000003900000039000000390000000500000005000000050000000500000005000000050000000500000005000000
+    VectorObservationSize: 96
+    NumStackedVectorObservations: 5
+    VectorActionSize: 0b0000001d0000001d00000009000000090000001d0000001d0000003900000039000000390000003900000039000000390000003900000039000000390000000b0000000b0000000b0000000b0000000b0000000b0000000b0000000b000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
@@ -71,5 +71,5 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
+  MaxStep: 50000
   isWhitePlayer: 0

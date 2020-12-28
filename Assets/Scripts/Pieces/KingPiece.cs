@@ -9,9 +9,9 @@ public class KingPiece : ChessPiece
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
 
+
         //TODO
         //to be optimazed later
-
         //left side tiles
         if (CurrentX - 1 >= 0)
         {
@@ -140,7 +140,30 @@ public class KingPiece : ChessPiece
                 }
             }
         }
+        //castling
+        if (isWhite)
+        {
+            if (!BoardManager.Instance.didWhiteKingEverMoved && !BoardManager.Instance.didWhiteRook0EverMoved && BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 3, CurrentZ] == null)
+            {
+                possibleMovesMap[CurrentX - 3, CurrentZ] = true;
+            }
+            if (!BoardManager.Instance.didWhiteKingEverMoved && !BoardManager.Instance.didWhiteRook1EverMoved && BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ] == null)
+            {
+                possibleMovesMap[CurrentX + 2, CurrentZ] = true;
+            }
+        }
+        else
+        {
+            if (!BoardManager.Instance.didBlackKingEverMoved && !BoardManager.Instance.didBlackRook0EverMoved && BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 3, CurrentZ] == null)
+            {
+                possibleMovesMap[CurrentX - 3, CurrentZ] = true;
+            }
+            if (!BoardManager.Instance.didBlackKingEverMoved && !BoardManager.Instance.didBlackRook1EverMoved && BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ] == null)
+            {
+                possibleMovesMap[CurrentX + 2, CurrentZ] = true;
+            }
 
+        }
 
         //TODO check problem
         return possibleMovesMap;
