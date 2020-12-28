@@ -5,3 +5,6 @@ UserSettings/
 ProjectSettings/
 Library/
 obj/
+*.vsconfig
+*.sln
+*.csproj
