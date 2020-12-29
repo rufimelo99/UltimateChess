@@ -204,6 +204,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2090420704}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &195734661 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+    type: 3}
+  m_PrefabInstance: {fileID: 3047147700904747405}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09bed5c4d138b9f4fa45457407fac3cc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &301168288 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4145497599533960, guid: 0bc4bf91a3a9b19409613bea5318e33c,
@@ -865,7 +877,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhiteTurn: 1
-  whitePlayer: {fileID: 1210914393}
+  whitePlayer: {fileID: 195734661}
   blackPlayer: {fileID: 889225764}
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
@@ -1095,18 +1107,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0e70a9941e0b4ec438e3f06fc4facd22, type: 3}
---- !u!114 &1210914393 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
-    type: 3}
-  m_PrefabInstance: {fileID: 3047147700904747405}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09bed5c4d138b9f4fa45457407fac3cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1210914395 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3047147702115530710, guid: e443c17b949ea0a4db87cd15e15d3ed0,
@@ -1354,6 +1354,36 @@ PrefabInstance:
       propertyPath: useTables
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: strengthKing
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: strengthPawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: strengthRook
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: strengthHorse
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: strengthQueen
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: strengthBishop
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3047147702115530709, guid: e443c17b949ea0a4db87cd15e15d3ed0,
         type: 3}
       propertyPath: m_Name
@@ -1487,6 +1517,36 @@ PrefabInstance:
         type: 3}
       propertyPath: useTables
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: strengthKing
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: strengthPawn
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: strengthRook
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: strengthHorse
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: strengthQueen
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: strengthBishop
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4690459375619487179, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
         type: 3}
