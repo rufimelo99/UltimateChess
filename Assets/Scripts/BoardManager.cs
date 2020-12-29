@@ -8,10 +8,6 @@ public class BoardManager : MonoBehaviour
     [HideInInspector]
     public bool isWhiteTurn = true;
     /// <summary>
-    /// just for training purposes so we can have multiple scenes
-    /// </summary>
-    public int yOffset;
-    /// <summary>
     /// Both whitePlayer and blackPlayers are variables that, for now, can only be edited through the unity UI
     /// They represent each player. if filled with an ChessAgent Object, there is an AI behind that player.
     /// Otherwise, in case of being null, it means that player is, in fact, human
@@ -467,7 +463,6 @@ public class BoardManager : MonoBehaviour
     {
         Vector3 origin = Vector3.zero;
         origin.x += (TILE_SIZE * x) + TILE_SIZE / 2;
-        origin.y = yOffset;
         origin.z += (TILE_SIZE * z) + TILE_SIZE / 2;
         return origin;
     }

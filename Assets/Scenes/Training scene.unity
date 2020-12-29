@@ -865,7 +865,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhiteTurn: 1
-  yOffset: 0
   whitePlayer: {fileID: 1210914393}
   blackPlayer: {fileID: 889225764}
   didWhiteRook0EverMoved: 0
@@ -1350,6 +1349,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1002818681}
     m_Modifications:
+    - target: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: useTables
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3047147702115530709, guid: e443c17b949ea0a4db87cd15e15d3ed0,
         type: 3}
       propertyPath: m_Name
@@ -1409,6 +1413,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3047147702115530711, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: m_BehaviorName
+      value: Hikaru
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e443c17b949ea0a4db87cd15e15d3ed0, type: 3}
@@ -1473,6 +1482,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487178, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: useTables
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4690459375619487179, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: m_BehaviorName
+      value: Hikaru
       objectReference: {fileID: 0}
     - target: {fileID: 4690459375619487181, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
         type: 3}
