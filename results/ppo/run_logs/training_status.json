@@ -12,13 +12,19 @@
                 "file_path": "results\\ppo\\ChessNoob\\ChessNoob-106999.onnx",
                 "reward": 10.432214446365833,
                 "creation_time": 1609197476.0034168
+            },
+            {
+                "steps": 309503,
+                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-309503.onnx",
+                "reward": 11.026796557940543,
+                "creation_time": 1609219576.4114933
             }
         ],
         "final_checkpoint": {
-            "steps": 106999,
+            "steps": 309503,
             "file_path": "results\\ppo\\ChessNoob.onnx",
-            "reward": 10.432214446365833,
-            "creation_time": 1609197476.0034168
+            "reward": 11.026796557940543,
+            "creation_time": 1609219576.4114933
         }
     },
     "metadata": {
