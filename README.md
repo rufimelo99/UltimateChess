@@ -21,3 +21,5 @@ Simulates already and tries to learn
 ![Capture](https://user-images.githubusercontent.com/44201826/103246341-0df5db80-495b-11eb-864b-2fa791b5086f.PNG)
 
 
+For tensorboard
+(unity_envIAJ) C:\Users\Rui\Documents\GitHub\UltimateChess>tensorboard --logdir=results --port 6006

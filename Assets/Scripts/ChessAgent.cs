@@ -1638,7 +1638,7 @@ public class ChessAgent : Agent
         if (BoardManager.Instance.isWhiteTurn == isWhitePlayer)
         {
             //number max of the generated action is the max on the last condition+1 ->675
-            //king behavior:            9  different possibilities
+            //king behavior:            10  different possibilities
             if (vectorAction[0] >= 0 && vectorAction[0] <= 9)
             {   
                 if(kingX != -1 && kingZ != -1 && BoardManager.Instance.hasOnePossibleMove(kingX, kingZ))
