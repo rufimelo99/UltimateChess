@@ -21,8 +21,8 @@ Simulates already and tries to learn
 ![Capture](https://user-images.githubusercontent.com/44201826/103246341-0df5db80-495b-11eb-864b-2fa791b5086f.PNG)
 
 ## Menus
-![simple menu](https://user-images.githubusercontent.com/44201826/103302056-a1321e00-49fa-11eb-8c2d-7393466a7319.PNG)
-![menu2](https://user-images.githubusercontent.com/44201826/103302060-a2634b00-49fa-11eb-84c8-7d9fb8598e0b.PNG)
+![simple menu](https://user-images.githubusercontent.com/44201826/103304672-26b8cc80-4a01-11eb-9e03-f2f5409aa71a.PNG)
+![menu2](https://user-images.githubusercontent.com/44201826/103304676-27516300-4a01-11eb-870b-5e8f6d5e33d2.PNG)
 
 For tensorboard
 (unity_envIAJ) C:\Users\Rui\Documents\GitHub\UltimateChess>tensorboard --logdir=results --port 6006
