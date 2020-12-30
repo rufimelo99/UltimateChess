@@ -64,7 +64,8 @@ This is a quick section in order to enable the training section and visualize th
 ### Prerequisites
 
 Unity is required to run this project, obviously and so is the installation of the toolkit.
-(For preference use, it was created an environment using Anaconda for training purposes).
+For preference use, it was created an environment using Anaconda for training purposes and later on tensorboard for tracking the learning process.
+`tensorboard --logdir=results --port 6006`
 
 <!-- USAGE EXAMPLES -->
 ## Usage
@@ -129,6 +130,7 @@ After a few hundred thousand simulations, the agent has already developing the k
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+
 The bididimensional arrays were not designed by me at all. From what I understood it is something used alongside chess engines.
 Alongside the project that might be situations where the the Knight is mentioned and Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
