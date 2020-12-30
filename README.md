@@ -54,15 +54,11 @@ Knowing this, the goal became building a Chess Game and create an agent that wou
 * [Anaconda](https://www.anaconda.com)
 
 
-<!-- GETTING STARTED -->
-## Getting Started
-
-This is a quick section in order to enable the training section and visualize the project fully.
-
 ### Prerequisites
 
 Unity is required to run this project, obviously and so is the installation of the toolkit.
 For preferencial use, an environment was created using Anaconda for training purposes and later on tensorboard for tracking the learning process.
+
 `tensorboard --logdir=results --port 6006`
 
 <!-- USAGE EXAMPLES -->
