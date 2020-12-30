@@ -122,7 +122,7 @@ Those strengths were set according to a [relative value](https://en.wikipedia.or
 With the goal of optimizing the learning experience, some extra rewards systems were added.
 The reward `incentiveToCastling` with the value of `1.0f` intends to incentivize the agent to perform the castling movement which is a very powerful movement.
 After a few hundred thousand simulations, the agent already "develops" the knights/horses more frequently, but it also advances the king further in the map. In order to try to control this phenomenom and improve the overall positioning and valorization of the pieces, some bidimensional arrays were added that, combined with a relative value of each piece, allow the agent to learn more correctly. 
-These bidimensional arrays basically give a value for each position of a certain piece on the board. For instance, as referred before, if there is a king on the opposite side of the board, it would be really bad for that player. On the other hand, if it was on the own side of the table, it should be better. 
+These bidimensional arrays basically give a value for each position of a certain piece on the board. For instance, as referred before, if there is a king on the opposite side of the board, it would be really bad for that player. On the other hand, if it was on the own side of the board, it should be better. 
 **Example:**
 | |  |  |  |	|  |  |  |
 |--|--| -- |--  |--|--|--| -- |
@@ -138,7 +138,7 @@ These bidimensional arrays basically give a value for each position of a certain
 
 *(King Piece's Table)* 
 
-This way, it enables the agent to learn which position are more helpful or not and returns a reward. Also, it penalizes if the agent lets the opponent with a meaningful piece on a strong position.
+This way, it enables the agent to learn which positions are more helpful or not and returns a reward. Also, it penalizes if the agent lets the opponent have a meaningful piece on a strong position.
 
 
 <!-- ACKNOWLEDGEMENTS -->
