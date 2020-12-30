@@ -145,7 +145,7 @@ This way, it enables the agent to learn which positions are more helpful or not 
 ## Acknowledgements
 
 The bididimensional arrays were not designed by me at all. From what I understood it is something used alongside chess engines.
-Alongside the project that might be situations where the the Knight is mentioned and Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
+Over the project there might be situations where the Knight is mentioned as Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
 **Limitations**
 This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). Also ending game conditions are not implemented and pawns can only spawn queens.
