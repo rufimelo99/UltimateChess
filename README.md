@@ -62,7 +62,7 @@ This is a quick section in order to enable the training section and visualize th
 ### Prerequisites
 
 Unity is required to run this project, obviously and so is the installation of the toolkit.
-For preference use, it was created an environment using Anaconda for training purposes and later on tensorboard for tracking the learning process.
+For preferencial use, an environment was created using Anaconda for training purposes and later on tensorboard for tracking the learning process.
 `tensorboard --logdir=results --port 6006`
 
 <!-- USAGE EXAMPLES -->
