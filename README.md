@@ -115,12 +115,12 @@ Ultimately, it receives a larger reward depending if it wins or loses:
 `public float strengthQueen       = 9.0f;`
 `public float strengthKing        = 50.0f;`
 
-Those strengths are according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece. The rewards of eating a piece of certain strength is divided by 10, in order to incentivize the agent to eat opposite pieces.
+Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece. The rewards of eating a piece of certain strength is divided by 10, in order to incentivize the agent to eat opposite pieces.
 
-<!-- USAGE EXAMPLES -->
+
 ## Improved Rewards System
-With the goal of optimizing the learning experience, it was added some rewards systems.
-The reward `incentiveToCastling` with the value of `1.0f` intends to incentivize the agent to do the castling movement which is a very powerful movement.
+With the goal of optimizing the learning experience, some extra rewards systems were added.
+The reward `incentiveToCastling` with the value of `1.0f` intends to incentivize the agent to perform the castling movement which is a very powerful movement.
 After a few hundred thousand simulations, the agent has already developing the knights/horses more frequently, but it would advance the king too further in the map. In order to try to control it and improve the overall positioning and valorization of the pieces, it was added some bidimensional arrays that, combined with a relative value of each piece, allows for the agent to learn more correctly. 
 These bidimensional arrays basically give a value for each position of a certain piece on the board.  For instance, as referred before, if there is a king on the opposite side of the it would be really bad for that player. On the other hand, if it was on the own side of the table, it should be better. 
 **Example:**
