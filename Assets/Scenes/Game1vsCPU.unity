@@ -551,22 +551,10 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 5b38c020751e2644db52e69b7c9f65cb,
+      objectReference: {fileID: 5022602860645237092, guid: 05ae94ec3ff72a5429f77b87b6ce78da,
         type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e443c17b949ea0a4db87cd15e15d3ed0, type: 3}
---- !u!114 &611362527 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3047147702115530708, guid: e443c17b949ea0a4db87cd15e15d3ed0,
-    type: 3}
-  m_PrefabInstance: {fileID: 611362526}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 09bed5c4d138b9f4fa45457407fac3cc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &611362528 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3047147702115530710, guid: e443c17b949ea0a4db87cd15e15d3ed0,
@@ -797,7 +785,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: 5b38c020751e2644db52e69b7c9f65cb,
+      objectReference: {fileID: 5022602860645237092, guid: 05ae94ec3ff72a5429f77b87b6ce78da,
         type: 3}
     - target: {fileID: 4690459375619487181, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
         type: 3}
@@ -1314,8 +1302,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isWhiteTurn: 1
-  yOffset: 0
-  whitePlayer: {fileID: 611362527}
+  whitePlayer: {fileID: 0}
   blackPlayer: {fileID: 0}
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0

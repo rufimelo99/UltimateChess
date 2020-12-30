@@ -1,18 +1,46 @@
 {
-    "ChessNoob": {
+    "Hikaru": {
         "checkpoints": [
             {
-                "steps": 90038,
-                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-90038.onnx",
-                "reward": -823.1370513439178,
-                "creation_time": 1609301453.1828952
+                "steps": 28665,
+                "file_path": "results\\ppo\\Hikaru\\Hikaru-28665.onnx",
+                "reward": -64969.29988861084,
+                "creation_time": 1609308604.6581905
+            },
+            {
+                "steps": 29433,
+                "file_path": "results\\ppo\\Hikaru\\Hikaru-29433.onnx",
+                "reward": null,
+                "creation_time": 1609308987.7465925
+            },
+            {
+                "steps": 29817,
+                "file_path": "results\\ppo\\Hikaru\\Hikaru-29817.onnx",
+                "reward": null,
+                "creation_time": 1609309153.463878
             }
         ],
         "final_checkpoint": {
-            "steps": 90038,
+            "steps": 29817,
+            "file_path": "results\\ppo\\Hikaru.onnx",
+            "reward": null,
+            "creation_time": 1609309153.463878
+        }
+    },
+    "ChessNoob": {
+        "checkpoints": [
+            {
+                "steps": 23013,
+                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-23013.onnx",
+                "reward": -37070.68302154541,
+                "creation_time": 1609308604.811236
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 23013,
             "file_path": "results\\ppo\\ChessNoob.onnx",
-            "reward": -823.1370513439178,
-            "creation_time": 1609301453.1828952
+            "reward": -37070.68302154541,
+            "creation_time": 1609308604.811236
         }
     },
     "metadata": {

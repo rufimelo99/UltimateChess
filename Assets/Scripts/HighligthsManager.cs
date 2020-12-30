@@ -12,11 +12,14 @@ public class HighligthsManager : MonoBehaviour
     public GameObject OwnHighlight;
     [HideInInspector]
     public List<GameObject> highlights;
-
+    public int offset=0;
     void Start()
     {
         Instance = this;
         highlights = new List<GameObject>();
+
+        offset = BoardManager.Instance.offsetY;
+
     }
     /// <summary>
     /// Following 2 functions simply returns the prefabs
@@ -53,7 +56,7 @@ public class HighligthsManager : MonoBehaviour
                     GameObject go = GetHighlightObject();
                     go.SetActive(true);
                     //slightly above on y to be above board tiles
-                    go.transform.position = new Vector3(x+ BoardManager.Instance.TILE_SIZE /2, 0.27f,z + BoardManager.Instance.TILE_SIZE / 2);
+                    go.transform.position = new Vector3(x+ BoardManager.Instance.TILE_SIZE /2, 0.27f+offset,z + BoardManager.Instance.TILE_SIZE / 2);
                 }
             }
         }
@@ -65,7 +68,7 @@ public class HighligthsManager : MonoBehaviour
     {
         GameObject go = GetHighlightObjectforOwnTile();
         go.SetActive(true);
-        go.transform.position = new Vector3(x + BoardManager.Instance.TILE_SIZE / 2, 0.27f, z + BoardManager.Instance.TILE_SIZE / 2);
+        go.transform.position = new Vector3(x + BoardManager.Instance.TILE_SIZE / 2, 0.27f + offset, z + BoardManager.Instance.TILE_SIZE / 2);
     }
     /// <summary>
     /// function that removes all highlights

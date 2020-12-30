@@ -67,7 +67,7 @@ public class ChessAgent : Agent
                                                     {  0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f,  0.0f}
                                                     };
 
-    float[,] tableBishopWhite = new float[8, 8] {        { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
+    float[,] tableBishopWhite = new float[8, 8] {   { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
                                                     { -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f},
                                                     { -1.0f,  0.0f,  0.5f,  1.0f,  1.0f,  0.5f,  0.0f, -1.0f},
                                                     { -1.0f,  0.5f,  0.5f,  1.0f,  1.0f,  0.5f,  0.5f, -1.0f},
@@ -1732,11 +1732,6 @@ public class ChessAgent : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        if (verifyIsLost())
-        {
-            EndEpisode();
-            BoardManager.Instance.ResetGame();
-        }
         if (BoardManager.Instance.isWhiteTurn == isWhitePlayer)
         {
             //number max of the generated action is the max on the last condition+1 ->675
@@ -2220,14 +2215,5 @@ public class ChessAgent : Agent
     /// simple functiont to verify if the agent lost
     /// </summary>
     /// <returns></returns>
-    public bool verifyIsLost()
-    {
-        if (!(kingX != -1 && kingZ != -1))
-        {
-            AddReward(lostGame);
-            EndEpisode();
-            return true;
-        }
-        return false;
-    }
+    
 }

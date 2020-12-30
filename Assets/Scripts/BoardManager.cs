@@ -14,6 +14,7 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public ChessAgent whitePlayer;
     public ChessAgent blackPlayer;
+    public int offsetY = 0;
     /// <summary>
     /// Variables used for Castling Movement
     /// Castling consists in almost "swapping" a rook with the king
@@ -178,19 +179,27 @@ public class BoardManager : MonoBehaviour
         {
             Debug.Log("White Win");
             //white win
+            if(blackPlayer != null)
+            {
+                blackPlayer.AddReward(-200.0f);
+                blackPlayer.EndEpisode();
+            }
         }
         else 
         {
             Debug.Log("Black Win");
             //black win
+            if (whitePlayer != null)
+            {
+                whitePlayer.AddReward(-200.0f);
+                whitePlayer.EndEpisode();
+            }
         }
         foreach (GameObject go in activeChessPieceModel) {
             Destroy(go);
         }
-        if( whitePlayer == null || blackPlayer == null)
-        {
-            ResetGame();
-        }
+        ResetGame();
+        
     }
     /// <summary>
     /// Proceeds to reset some vars and delets pieces once again if needed to (need for the training)
@@ -463,6 +472,7 @@ public class BoardManager : MonoBehaviour
     {
         Vector3 origin = Vector3.zero;
         origin.x += (TILE_SIZE * x) + TILE_SIZE / 2;
+        origin.y = offsetY;
         origin.z += (TILE_SIZE * z) + TILE_SIZE / 2;
         return origin;
     }
