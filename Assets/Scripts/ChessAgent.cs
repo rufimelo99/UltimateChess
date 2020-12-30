@@ -23,16 +23,9 @@ public class ChessAgent : Agent
     /// </summary>
     public float invalidAction = -0.1f;   //try for now
     public float validAction = 0.5f;
-    public float wonGame = 2000.0f;
-    public float lostGame = -2000.0f;
-    public float doNothing = -0.1f;
+    public float wonGame = 200.0f;
+    public float lostGame = -200.0f;
     
-    public float ateRook = 5.0f;
-    public float ateKnight = 5.0f;
-    public float ateBishop = 5.0f;
-    public float ateQueen = 20.0f;
-    public float atePawn = 1.0f;
-
     //extra incentive for castling
     public float incentiveToCastling = 1.0f;
 
@@ -1885,200 +1878,199 @@ public class ChessAgent : Agent
             {
                 if (kingX != -1 && kingZ != -1)
                 {
-                    AddReward(tableKing[kingX, kingZ] * strengthKing * 10);
+                    AddReward(tableKing[kingX, kingZ] * strengthKing );
                 }
                 if (otherkingX != -1 && otherkingZ != -1)
                 {
-                    AddReward(tableKing[otherkingX, otherkingZ] * -strengthKing * 10);
+                    AddReward(tableKing[otherkingX, otherkingZ] * -strengthKing );
                 }
                 if (rookX0 != -1 && rookZ0 != -1)
                 {
-                    AddReward(tableRook[rookX0, rookZ0] * strengthRook * 10);
+                    AddReward(tableRook[rookX0, rookZ0] * strengthRook );
                 }
                 if (otherRookX0 != -1 && otherRookZ0 != -1)
                 {
-                    AddReward(tableRook[otherRookX0, otherRookZ0] * -strengthRook * 10);
+                    AddReward(tableRook[otherRookX0, otherRookZ0] * -strengthRook );
                 }
                 if (rookX1 != -1 && rookZ1 != -1)
                 {
-                    AddReward(tableRook[rookX1, rookZ1] * strengthRook * 10);
+                    AddReward(tableRook[rookX1, rookZ1] * strengthRook );
                 }
                 if (otherRookX1 != -1 && otherRookZ1 != -1)
                 {
-                    AddReward(tableRook[otherRookX1, otherRookZ1] * -strengthRook * 10);
+                    AddReward(tableRook[otherRookX1, otherRookZ1] * -strengthRook );
                 }
                 if (horseX0 != -1 && horseZ0 != -1)
                 {
-                    AddReward(tableHorse[horseX0, horseZ0] * strengthHorse * 10);
+                    AddReward(tableHorse[horseX0, horseZ0] * strengthHorse );
                 }
                 if (otherHorseX0 != -1 && otherHorseZ0 != -1)
                 {
-                    AddReward(tableHorse[otherHorseX0, otherHorseZ0] * -strengthHorse * 10);
+                    AddReward(tableHorse[otherHorseX0, otherHorseZ0] * -strengthHorse );
                 }
                 if (horseX1 != -1 && horseZ1 != -1)
                 {
-                    AddReward(tableHorse[horseX1, horseZ1] * strengthHorse * 10);
+                    AddReward(tableHorse[horseX1, horseZ1] * strengthHorse );
                 }
                 if (otherHorseX1 != -1 && otherHorseZ1 != -1)
                 {
-                    AddReward(tableHorse[otherHorseX1, otherHorseZ1] * -strengthHorse * 10);
+                    AddReward(tableHorse[otherHorseX1, otherHorseZ1] * -strengthHorse );
                 }
                 if (bishopX0 != -1 && bishopZ0 != -1)
                 {
-                    AddReward(tableHorse[bishopX0, bishopZ0] * strengthBishop * 10);
+                    AddReward(tableHorse[bishopX0, bishopZ0] * strengthBishop );
                 }
                 if (otherBishopX0 != -1 && otherBishopZ0 != -1)
                 {
-                    AddReward(tableHorse[otherBishopX0, otherBishopZ0] * -strengthBishop * 10);
+                    AddReward(tableHorse[otherBishopX0, otherBishopZ0] * -strengthBishop );
                 }
                 if (bishopX1 != -1 && bishopZ1 != -1)
                 {
-                    AddReward(tableBishop[bishopX1, bishopZ1] * strengthBishop * 10);
+                    AddReward(tableBishop[bishopX1, bishopZ1] * strengthBishop );
                 }
                 if (otherBishopX1 != -1 && otherBishopZ1 != -1)
                 {
-                    AddReward(tableBishop[otherBishopX1, otherBishopZ1] * -strengthBishop * 10);
+                    AddReward(tableBishop[otherBishopX1, otherBishopZ1] * -strengthBishop );
                 }
                 if (pawnX0 != -1 && pawnZ0 != -1)
                 {
-                    AddReward(tablePawn[pawnX0, pawnZ0] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX0, pawnZ0] * strengthPawn );
                 }
                 if (otherPawnX0 != -1 && otherPawnZ0 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX0, otherPawnZ0] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX0, otherPawnZ0] * -strengthPawn );
                 }
                 if (pawnX1 != -1 && pawnZ1 != -1)
                 {
-                    AddReward(tablePawn[pawnX1, pawnZ1] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX1, pawnZ1] * strengthPawn );
                 }
                 if (otherPawnX1 != -1 && otherPawnZ1 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX1, otherPawnZ1] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX1, otherPawnZ1] * -strengthPawn );
                 }
                 if (pawnX2 != -1 && pawnZ2 != -1)
                 {
-                    AddReward(tablePawn[pawnX2, pawnZ2] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX2, pawnZ2] * strengthPawn );
                 }
                 if (otherPawnX2 != -1 && otherPawnZ2 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX2, otherPawnZ2] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX2, otherPawnZ2] * -strengthPawn );
                 }
                 if (pawnX3 != -1 && pawnZ3 != -1)
                 {
-                    AddReward(tablePawn[pawnX3, pawnZ3] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX3, pawnZ3] * strengthPawn );
                 }
                 if (otherPawnX3 != -1 && otherPawnZ3 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX3, otherPawnZ3] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX3, otherPawnZ3] * -strengthPawn );
                 }
                 if (pawnX4 != -1 && pawnZ4 != -1)
                 {
-                    AddReward(tablePawn[pawnX4, pawnZ4] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX4, pawnZ4] * strengthPawn );
                 }
                 if (otherPawnX4 != -1 && otherPawnZ4 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX4, otherPawnZ4] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX4, otherPawnZ4] * -strengthPawn );
                 }
                 if (pawnX5 != -1 && pawnZ5 != -1)
                 {
-                    AddReward(tablePawn[pawnX5, pawnZ5] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX5, pawnZ5] * strengthPawn );
                 }
                 if (otherPawnX5 != -1 && otherPawnZ5 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX5, otherPawnZ5] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX5, otherPawnZ5] * -strengthPawn );
                 }
                 if (pawnX6 != -1 && pawnZ6 != -1)
                 {
-                    AddReward(tablePawn[pawnX6, pawnZ6] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX6, pawnZ6] * strengthPawn );
                 }
                 if (otherPawnX6 != -1 && otherPawnZ6 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX6, otherPawnZ6] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX6, otherPawnZ6] * -strengthPawn );
                 }
                 if (pawnX7 != -1 && pawnZ7 != -1)
                 {
-                    AddReward(tablePawn[pawnX7, pawnZ7] * strengthPawn * 10);
+                    AddReward(tablePawn[pawnX7, pawnZ7] * strengthPawn );
                 }
                 if (otherPawnX7 != -1 && otherPawnZ7 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX7, otherPawnZ7] * -strengthPawn * 10);
+                    AddReward(tablePawn[otherPawnX7, otherPawnZ7] * -strengthPawn );
                 }
                 if (queenX != -1 && queenZ != -1)
                 {
-                    AddReward(tableQueen[queenX, queenZ] * strengthQueen * 10);
+                    AddReward(tableQueen[queenX, queenZ] * strengthQueen );
                 }
                 if (otherQueenX != -1 && otherQueenZ != -1)
                 {
-                    AddReward(tableQueen[otherQueenX, otherQueenZ] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherQueenX, otherQueenZ] * -strengthQueen );
                 }
                 if (extraQueenX0 != -1 && extraQueenZ0 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX0, extraQueenZ0] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX0, extraQueenZ0] * strengthQueen );
                 }
                 if (extraQueenX1 != -1 && extraQueenZ1 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX1, extraQueenZ1] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX1, extraQueenZ1] * strengthQueen );
                 }
                 if (extraQueenX2 != -1 && extraQueenZ2 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX2, extraQueenZ2] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX2, extraQueenZ2] * strengthQueen );
                 }
                 if (extraQueenX3 != -1 && extraQueenZ3 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX3, extraQueenZ3] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX3, extraQueenZ3] * strengthQueen );
                 }
                 if (extraQueenX4 != -1 && extraQueenZ4 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX4, extraQueenZ4] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX4, extraQueenZ4] * strengthQueen );
                 }
                 if (extraQueenX5 != -1 && extraQueenZ5 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX5, extraQueenZ5] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX5, extraQueenZ5] * strengthQueen );
                 }
                 if (extraQueenX6 != -1 && extraQueenZ6 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX6, extraQueenZ6] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX6, extraQueenZ6] * strengthQueen );
                 }
                 if (extraQueenX7 != -1 && extraQueenZ7 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX7, extraQueenZ7] * strengthQueen * 10);
+                    AddReward(tableQueen[extraQueenX7, extraQueenZ7] * strengthQueen );
                 }
                 if (otherExtraQueenX0 != -1 && otherExtraQueenZ0 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX0, otherExtraQueenZ0] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX0, otherExtraQueenZ0] * -strengthQueen );
                 }
                 if (otherExtraQueenX1 != -1 && otherExtraQueenZ1 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX1, otherExtraQueenZ1] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX1, otherExtraQueenZ1] * -strengthQueen );
                 }
                 if (otherExtraQueenX2 != -1 && otherExtraQueenZ2 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX2, otherExtraQueenZ2] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX2, otherExtraQueenZ2] * -strengthQueen );
                 }
                 if (otherExtraQueenX3 != -1 && otherExtraQueenZ3 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX3, otherExtraQueenZ3] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX3, otherExtraQueenZ3] * -strengthQueen );
                 }
                 if (otherExtraQueenX4 != -1 && otherExtraQueenZ4 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX4, otherExtraQueenZ4] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX4, otherExtraQueenZ4] * -strengthQueen );
                 }
                 if (otherExtraQueenX5 != -1 && otherExtraQueenZ5 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX5, otherExtraQueenZ5] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX5, otherExtraQueenZ5] * -strengthQueen );
                 }
                 if (otherExtraQueenX6 != -1 && otherExtraQueenZ6 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX6, otherExtraQueenZ6] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX6, otherExtraQueenZ6] * -strengthQueen );
                 }
                 if (otherExtraQueenX7 != -1 && otherExtraQueenZ7 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX7, otherExtraQueenZ7] * -strengthQueen * 10);
+                    AddReward(tableQueen[otherExtraQueenX7, otherExtraQueenZ7] * -strengthQueen );
                 }
 
             }
         }
-        AddReward(doNothing/ MaxStep);
     }
     /// <summary>
     /// checks if certain movement will eat a piece so we can reward the agent
@@ -2097,23 +2089,23 @@ public class ChessAgent : Agent
                 }
                 else if (enemyPiece.GetType() == typeof(TowerPiece))
                 {
-                    AddReward(ateRook);
+                    AddReward(strengthRook / 10);
                 }
                 else if (enemyPiece.GetType() == typeof(HorsePiece))
                 {
-                    AddReward(ateKnight);
+                    AddReward(strengthHorse / 10);
                 }
                 else if (enemyPiece.GetType() == typeof(BishopPiece))
                 {
-                    AddReward(ateBishop);
+                    AddReward(strengthBishop / 10);
                 }
                 else if (enemyPiece.GetType() == typeof(QueenPiece))
                 {
-                    AddReward(ateQueen);
+                    AddReward(strengthQueen / 10);
                 }
                 else if (enemyPiece.GetType() == typeof(PawnPiece))
                 {
-                    AddReward(atePawn);
+                    AddReward(strengthPawn / 10);
                 }
             }
 

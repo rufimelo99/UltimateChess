@@ -2,29 +2,17 @@
     "ChessNoob": {
         "checkpoints": [
             {
-                "steps": 102483,
-                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-102483.onnx",
-                "reward": 15.193453370501581,
-                "creation_time": 1609197120.8281753
-            },
-            {
-                "steps": 106999,
-                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-106999.onnx",
-                "reward": 10.432214446365833,
-                "creation_time": 1609197476.0034168
-            },
-            {
-                "steps": 309503,
-                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-309503.onnx",
-                "reward": 11.026796557940543,
-                "creation_time": 1609219576.4114933
+                "steps": 6182,
+                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-6182.onnx",
+                "reward": 29323.274911880493,
+                "creation_time": 1609299274.810709
             }
         ],
         "final_checkpoint": {
-            "steps": 309503,
+            "steps": 6182,
             "file_path": "results\\ppo\\ChessNoob.onnx",
-            "reward": 11.026796557940543,
-            "creation_time": 1609219576.4114933
+            "reward": 29323.274911880493,
+            "creation_time": 1609299274.810709
         }
     },
     "metadata": {

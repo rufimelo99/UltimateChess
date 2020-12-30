@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4690459375619487176}
   - component: {fileID: 4690459375619487179}
-  - component: {fileID: 4690459375619487178}
+  - component: {fileID: -2049708504179953643}
   m_Layer: 0
   m_Name: chessAgentBlack
   m_TagString: Untagged
@@ -56,7 +56,7 @@ MonoBehaviour:
   m_BehaviorName: ChessNoob
   TeamId: 0
   m_UseChildSensors: 1
---- !u!114 &4690459375619487178
+--- !u!114 &-2049708504179953643
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,5 +71,23 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 50000
+  MaxStep: 0
   isWhitePlayer: 0
+  invalidAction: -0.1
+  validAction: 0.5
+  wonGame: 200
+  lostGame: -200
+  doNothing: -0.1
+  ateRook: 0.5
+  ateKnight: 0.3
+  ateBishop: 0.3
+  ateQueen: 0.9
+  atePawn: 0.1
+  incentiveToCastling: 1
+  strengthPawn: 1
+  strengthHorse: 3
+  strengthBishop: 3
+  strengthRook: 5
+  strengthQueen: 9
+  strengthKing: 50
+  useTables: 1
