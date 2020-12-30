@@ -63,7 +63,7 @@ For preferencial use, an environment was created using Anaconda for training pur
 
 <!-- USAGE EXAMPLES -->
 ## Usage
-The Project has a simple menu that allows the user to choose to either play against other user on the same computer by simply clicking on a tile and select where to move that piece. It is shown some highlights on the floor to help the user to know where that same piece can, in fact, move.
+The Project has a simple menu that allows the user to choose to either play against another user on the same computer. The game proceeds by simply clicking on a tile and select where to move that piece. It is shown some highlights on the floor to help the user to know where that same piece can, in fact, move.
 
 ![simple menu](https://user-images.githubusercontent.com/44201826/103315976-07309c80-4a1f-11eb-99cf-dfe677c6378e.PNG)
 
