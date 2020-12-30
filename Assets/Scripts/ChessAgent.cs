@@ -39,7 +39,7 @@ public class ChessAgent : Agent
 
     public bool useTables = false;
 
-    float[,] tableKing = new float[8, 8] {          { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
+    float[,] tableKingWhite = new float[8, 8] {          { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
@@ -48,7 +48,7 @@ public class ChessAgent : Agent
                                                     {  2.0f,  0.0f,   0.0f,   0.0f,   0.0f,   0.0f,   0.0f ,  2.0f },
                                                     {  2.0f,  3.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  3.0f ,  2.0f } };
 
-    float[,] tableQueen = new float[8, 8] {         { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f },
+    float[,] tableQueenWhite = new float[8, 8] {         { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f },
                                                     { -1.0f,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f , -1.0f },
                                                     { -1.0f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -1.0f },
                                                     { -0.5f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -0.5f },
@@ -57,7 +57,7 @@ public class ChessAgent : Agent
                                                     { -1.0f,  0.0f ,  0.5f ,  0.0f ,  0.0f ,  0.0f ,  0.0f , -1.0f },
                                                     { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f }};
 
-    float[,] tableRook = new float[8, 8] {          {  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f},
+    float[,] tableRookWhite = new float[8, 8] {          {  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f},
                                                     {  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,  0.5f},
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
@@ -67,7 +67,7 @@ public class ChessAgent : Agent
                                                     {  0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f,  0.0f}
                                                     };
 
-    float[,] tableBishop = new float[8, 8] {        { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
+    float[,] tableBishopWhite = new float[8, 8] {        { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
                                                     { -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f},
                                                     { -1.0f,  0.0f,  0.5f,  1.0f,  1.0f,  0.5f,  0.0f, -1.0f},
                                                     { -1.0f,  0.5f,  0.5f,  1.0f,  1.0f,  0.5f,  0.5f, -1.0f},
@@ -77,7 +77,7 @@ public class ChessAgent : Agent
                                                     { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f}
                                                     };
 
-    float[,] tableHorse = new float[8, 8] {         { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
+    float[,] tableHorseWhite = new float[8, 8] {         { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
                                                     { -4.0f, -2.0f,  0.0f,  0.0f,  0.0f,  0.0f, -2.0f, -4.0f},
                                                     { -3.0f,  0.0f,  1.0f,  1.5f,  1.5f,  1.0f,  0.0f, -3.0f},
                                                     { -3.0f,  0.5f,  1.5f,  2.0f,  2.0f,  1.5f,  0.5f, -3.0f},
@@ -87,7 +87,7 @@ public class ChessAgent : Agent
                                                     { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f}
                                                     };
 
-    float[,] tablePawn = new float[8, 8] {          { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
+    float[,] tablePawnWhite = new float[8, 8] {          { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
                                                     { 5.0f,  5.0f,  5.0f,  5.0f,  5.0f,  5.0f,  5.0f, 5.0f},
                                                     { 1.0f,  1.0f,  2.0f,  3.0f,  3.0f,  2.0f,  1.0f, 1.0f},
                                                     { 0.5f,  0.5f,  1.0f,  2.5f,  2.5f,  1.0f,  0.5f, 0.5f},
@@ -95,6 +95,66 @@ public class ChessAgent : Agent
                                                     { 0.5f, -0.5f, -1.0f,  0.0f,  0.0f, -1.0f, -0.5f, 0.5f},
                                                     { 0.5f,  1.0f,  1.0f, -2.0f, -2.0f,  1.0f,  1.0f, 0.5f},
                                                     { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f}
+                                                    };
+
+    //the board is not relative.. i have to invert the tables
+    float[,] tableKingBlack = new float[8, 8] {     {  2.0f,  3.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  3.0f ,  2.0f }, 
+                                                    { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
+                                                    { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
+                                                    { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
+                                                    { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
+                                                    { -2.0f, -3.0f , -3.0f , -4.0f , -4.0f , -3.0f , -3.0f , -2.0f },
+                                                    { -1.0f, -2.0f , -2.0f , -2.0f , -2.0f , -2.0f , -2.0f , -1.0f },
+                                                    {  2.0f,  0.0f,   0.0f,   0.0f,   0.0f,   0.0f,   0.0f ,  2.0f }};
+
+    float[,] tableQueenBlack = new float[8, 8] {    { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f },
+                                                    { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f },
+                                                    { -1.0f,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f , -1.0f },
+                                                    { -1.0f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -1.0f },
+                                                    { -0.5f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -0.5f },
+                                                    { -0.5f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -0.5f },
+                                                    { -0.5f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -0.5f },
+                                                    { -1.0f,  0.0f ,  0.5f ,  0.0f ,  0.0f ,  0.0f ,  0.0f , -1.0f }};
+
+    float[,] tableRookBlack = new float[8, 8] {     {  0.0f, 0.0f, 0.0f, 0.5f, 0.5f, 0.0f, 0.0f,  0.0f},
+                                                    {  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f},
+                                                    {  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,  0.5f},
+                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
+                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
+                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
+                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
+                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f}
+                                                    };
+
+    float[,] tableBishopBlack = new float[8, 8] {   
+                                                    { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
+                                                    { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
+                                                    { -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f},
+                                                    { -1.0f,  0.0f,  0.5f,  1.0f,  1.0f,  0.5f,  0.0f, -1.0f},
+                                                    { -1.0f,  0.5f,  0.5f,  1.0f,  1.0f,  0.5f,  0.5f, -1.0f},
+                                                    { -1.0f,  0.0f,  1.0f,  1.0f,  1.0f,  1.0f,  0.0f, -1.0f},
+                                                    { -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f},
+                                                    { -1.0f,  0.5f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f, -1.0f}
+                                                    };
+
+    float[,] tableHorseBlack = new float[8, 8] {    { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
+                                                    { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
+                                                    { -4.0f, -2.0f,  0.0f,  0.0f,  0.0f,  0.0f, -2.0f, -4.0f},
+                                                    { -3.0f,  0.0f,  1.0f,  1.5f,  1.5f,  1.0f,  0.0f, -3.0f},
+                                                    { -3.0f,  0.5f,  1.5f,  2.0f,  2.0f,  1.5f,  0.5f, -3.0f},
+                                                    { -3.0f,  0.0f,  1.5f,  2.0f,  2.0f,  1.5f,  0.0f, -3.0f},
+                                                    { -3.0f,  0.5f,  1.0f,  1.5f,  1.5f,  1.0f,  0.5f, -3.0f},
+                                                    { -4.0f, -2.0f,  0.0f,  0.5f,  0.5f,  0.0f, -2.0f, -4.0f}
+                                                    };
+
+    float[,] tablePawnBlack = new float[8, 8] {     { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
+                                                    { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
+                                                    { 5.0f,  5.0f,  5.0f,  5.0f,  5.0f,  5.0f,  5.0f, 5.0f},
+                                                    { 1.0f,  1.0f,  2.0f,  3.0f,  3.0f,  2.0f,  1.0f, 1.0f},
+                                                    { 0.5f,  0.5f,  1.0f,  2.5f,  2.5f,  1.0f,  0.5f, 0.5f},
+                                                    { 0.0f,  0.0f,  0.0f,  2.0f,  2.0f,  0.0f,  0.0f, 0.0f},
+                                                    { 0.5f, -0.5f, -1.0f,  0.0f,  0.0f, -1.0f, -0.5f, 0.5f},
+                                                    { 0.5f,  1.0f,  1.0f, -2.0f, -2.0f,  1.0f,  1.0f, 0.5f}
                                                     };
 
 
@@ -1876,13 +1936,58 @@ public class ChessAgent : Agent
             //evaluate positioning of the pieces on the board
             if (useTables)
             {
+                float[,] tableKing = new float[8, 8];
+                float[,] tableOppositeKing = new float[8, 8];
+                float[,] tableQueen = new float[8, 8];
+                float[,] tableOppositeQueen = new float[8, 8];
+                float[,] tableHorse = new float[8, 8];
+                float[,] tableOppositeHorse = new float[8, 8];
+                float[,] tableRook = new float[8, 8];
+                float[,] tableOppositeRook = new float[8, 8];
+                float[,] tableBishop = new float[8, 8];
+                float[,] tableOppositeBishop = new float[8, 8];
+                float[,] tablePawn = new float[8, 8];
+                float[,] tableOppositePawn = new float[8, 8];
+                if (isWhitePlayer)
+                {
+                    tableKing = tableKingWhite;
+                    tableOppositeKing = tableKingBlack;
+                    tableQueen = tableQueenWhite;
+                    tableOppositeQueen = tableQueenBlack;
+                    tableHorse = tableHorseWhite;
+                    tableOppositeHorse = tableHorseBlack;
+                    tableRook = tableRookWhite;
+                    tableOppositeRook = tableRookBlack;
+                    tableBishop = tableBishopWhite;
+                    tableOppositeBishop = tableBishopBlack;
+                    tablePawn = tablePawnWhite;
+                    tableOppositePawn = tablePawnBlack;
+                }
+                else
+                {
+                    tableKing = tableKingBlack;
+                    tableOppositeKing = tableKingWhite;
+                    tableQueen = tableQueenBlack;
+                    tableOppositeQueen = tableQueenWhite;
+                    tableHorse = tableHorseBlack;
+                    tableOppositeHorse = tableHorseWhite;
+                    tableRook =  tableRookBlack;
+                    tableOppositeRook =tableRookWhite;
+                    tableBishop = tableBishopBlack;
+                    tableOppositeBishop = tableBishopWhite;
+                    tablePawn = tablePawnBlack;
+                    tableOppositePawn = tablePawnWhite;
+                }
+
+
+
                 if (kingX != -1 && kingZ != -1)
                 {
                     AddReward(tableKing[kingX, kingZ] * strengthKing );
                 }
                 if (otherkingX != -1 && otherkingZ != -1)
                 {
-                    AddReward(tableKing[otherkingX, otherkingZ] * -strengthKing );
+                    AddReward(tableOppositeKing[otherkingX, otherkingZ] * -strengthKing );
                 }
                 if (rookX0 != -1 && rookZ0 != -1)
                 {
@@ -1890,7 +1995,7 @@ public class ChessAgent : Agent
                 }
                 if (otherRookX0 != -1 && otherRookZ0 != -1)
                 {
-                    AddReward(tableRook[otherRookX0, otherRookZ0] * -strengthRook );
+                    AddReward(tableOppositeRook[otherRookX0, otherRookZ0] * -strengthRook );
                 }
                 if (rookX1 != -1 && rookZ1 != -1)
                 {
@@ -1898,7 +2003,7 @@ public class ChessAgent : Agent
                 }
                 if (otherRookX1 != -1 && otherRookZ1 != -1)
                 {
-                    AddReward(tableRook[otherRookX1, otherRookZ1] * -strengthRook );
+                    AddReward(tableOppositeRook[otherRookX1, otherRookZ1] * -strengthRook );
                 }
                 if (horseX0 != -1 && horseZ0 != -1)
                 {
@@ -1906,7 +2011,7 @@ public class ChessAgent : Agent
                 }
                 if (otherHorseX0 != -1 && otherHorseZ0 != -1)
                 {
-                    AddReward(tableHorse[otherHorseX0, otherHorseZ0] * -strengthHorse );
+                    AddReward(tableOppositeHorse[otherHorseX0, otherHorseZ0] * -strengthHorse );
                 }
                 if (horseX1 != -1 && horseZ1 != -1)
                 {
@@ -1914,15 +2019,15 @@ public class ChessAgent : Agent
                 }
                 if (otherHorseX1 != -1 && otherHorseZ1 != -1)
                 {
-                    AddReward(tableHorse[otherHorseX1, otherHorseZ1] * -strengthHorse );
+                    AddReward(tableOppositeHorse[otherHorseX1, otherHorseZ1] * -strengthHorse );
                 }
                 if (bishopX0 != -1 && bishopZ0 != -1)
                 {
-                    AddReward(tableHorse[bishopX0, bishopZ0] * strengthBishop );
+                    AddReward(tableBishop[bishopX0, bishopZ0] * strengthBishop );
                 }
                 if (otherBishopX0 != -1 && otherBishopZ0 != -1)
                 {
-                    AddReward(tableHorse[otherBishopX0, otherBishopZ0] * -strengthBishop );
+                    AddReward(tableOppositeBishop[otherBishopX0, otherBishopZ0] * -strengthBishop );
                 }
                 if (bishopX1 != -1 && bishopZ1 != -1)
                 {
@@ -1930,7 +2035,7 @@ public class ChessAgent : Agent
                 }
                 if (otherBishopX1 != -1 && otherBishopZ1 != -1)
                 {
-                    AddReward(tableBishop[otherBishopX1, otherBishopZ1] * -strengthBishop );
+                    AddReward(tableOppositeBishop[otherBishopX1, otherBishopZ1] * -strengthBishop );
                 }
                 if (pawnX0 != -1 && pawnZ0 != -1)
                 {
@@ -1938,7 +2043,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX0 != -1 && otherPawnZ0 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX0, otherPawnZ0] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX0, otherPawnZ0] * -strengthPawn );
                 }
                 if (pawnX1 != -1 && pawnZ1 != -1)
                 {
@@ -1946,7 +2051,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX1 != -1 && otherPawnZ1 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX1, otherPawnZ1] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX1, otherPawnZ1] * -strengthPawn );
                 }
                 if (pawnX2 != -1 && pawnZ2 != -1)
                 {
@@ -1954,7 +2059,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX2 != -1 && otherPawnZ2 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX2, otherPawnZ2] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX2, otherPawnZ2] * -strengthPawn );
                 }
                 if (pawnX3 != -1 && pawnZ3 != -1)
                 {
@@ -1962,7 +2067,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX3 != -1 && otherPawnZ3 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX3, otherPawnZ3] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX3, otherPawnZ3] * -strengthPawn );
                 }
                 if (pawnX4 != -1 && pawnZ4 != -1)
                 {
@@ -1970,7 +2075,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX4 != -1 && otherPawnZ4 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX4, otherPawnZ4] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX4, otherPawnZ4] * -strengthPawn );
                 }
                 if (pawnX5 != -1 && pawnZ5 != -1)
                 {
@@ -1978,7 +2083,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX5 != -1 && otherPawnZ5 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX5, otherPawnZ5] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX5, otherPawnZ5] * -strengthPawn );
                 }
                 if (pawnX6 != -1 && pawnZ6 != -1)
                 {
@@ -1986,7 +2091,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX6 != -1 && otherPawnZ6 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX6, otherPawnZ6] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX6, otherPawnZ6] * -strengthPawn );
                 }
                 if (pawnX7 != -1 && pawnZ7 != -1)
                 {
@@ -1994,7 +2099,7 @@ public class ChessAgent : Agent
                 }
                 if (otherPawnX7 != -1 && otherPawnZ7 != -1)
                 {
-                    AddReward(tablePawn[otherPawnX7, otherPawnZ7] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX7, otherPawnZ7] * -strengthPawn );
                 }
                 if (queenX != -1 && queenZ != -1)
                 {
@@ -2002,7 +2107,7 @@ public class ChessAgent : Agent
                 }
                 if (otherQueenX != -1 && otherQueenZ != -1)
                 {
-                    AddReward(tableQueen[otherQueenX, otherQueenZ] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherQueenX, otherQueenZ] * -strengthQueen );
                 }
                 if (extraQueenX0 != -1 && extraQueenZ0 != -1)
                 {
@@ -2038,35 +2143,35 @@ public class ChessAgent : Agent
                 }
                 if (otherExtraQueenX0 != -1 && otherExtraQueenZ0 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX0, otherExtraQueenZ0] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX0, otherExtraQueenZ0] * -strengthQueen );
                 }
                 if (otherExtraQueenX1 != -1 && otherExtraQueenZ1 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX1, otherExtraQueenZ1] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX1, otherExtraQueenZ1] * -strengthQueen );
                 }
                 if (otherExtraQueenX2 != -1 && otherExtraQueenZ2 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX2, otherExtraQueenZ2] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX2, otherExtraQueenZ2] * -strengthQueen );
                 }
                 if (otherExtraQueenX3 != -1 && otherExtraQueenZ3 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX3, otherExtraQueenZ3] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX3, otherExtraQueenZ3] * -strengthQueen );
                 }
                 if (otherExtraQueenX4 != -1 && otherExtraQueenZ4 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX4, otherExtraQueenZ4] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX4, otherExtraQueenZ4] * -strengthQueen );
                 }
                 if (otherExtraQueenX5 != -1 && otherExtraQueenZ5 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX5, otherExtraQueenZ5] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX5, otherExtraQueenZ5] * -strengthQueen );
                 }
                 if (otherExtraQueenX6 != -1 && otherExtraQueenZ6 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX6, otherExtraQueenZ6] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX6, otherExtraQueenZ6] * -strengthQueen );
                 }
                 if (otherExtraQueenX7 != -1 && otherExtraQueenZ7 != -1)
                 {
-                    AddReward(tableQueen[otherExtraQueenX7, otherExtraQueenZ7] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX7, otherExtraQueenZ7] * -strengthQueen );
                 }
 
             }

@@ -64,26 +64,30 @@ This is a quick section in order to enable the training section and visualize th
 ### Prerequisites
 
 Unity is required to run this project, obviously and so is the installation of the toolkit.
-(For preference use, it was created an environment using Anaconda for training purposes).
+For preference use, it was created an environment using Anaconda for training purposes and later on tensorboard for tracking the learning process.
+`tensorboard --logdir=results --port 6006`
 
 <!-- USAGE EXAMPLES -->
 ## Usage
 The Project has a simple menu that allows the user to choose to either play against other user on the same computer by simply clicking on a tile and select where to move that piece. It is shown some highlights on the floor to help the user to know where that same piece can, in fact, move.
+
 ![simple menu](https://user-images.githubusercontent.com/44201826/103315976-07309c80-4a1f-11eb-99cf-dfe677c6378e.PNG)
 
-![UltimateCHess](https://user-images.githubusercontent.com/44201826/101942929-343d1c80-3be2-11eb-8822-d3be842d4c07.PNG)
-
-
 ![UltimateCHess2](https://user-images.githubusercontent.com/44201826/102122430-5e3e4b00-3e3d-11eb-9814-3c8ebdeb32f3.PNG)
+
 
 <!-- USAGE EXAMPLES -->
 ## Training the Agent
 
 In order to train the agent, it is needed to change the scene in the Scene folder to `Training scene`.
 Then, assuming that all prerequisites are fulfilled, on the terminal it is needed to go to the Project folder and insert one of the following commands depending if it is either the first time, or it is intended to resume the training or overwrite the training done until now.
+
 `mlagents-learn`
+
 `mlagents-learn --resume`
+
 `mlagents-learn --force`
+
 After that, all is left is to press the play button on Unity.
 There are some variables in the Inspector to adjust the training for the agent:
 ![Capture](https://user-images.githubusercontent.com/44201826/103316721-44962980-4a21-11eb-9d45-3790bd8b12bf.PNG)
@@ -122,10 +126,26 @@ Those rewards are multiple ( `/10`) of the [relative value](https://en.wikipedia
 With the goal of optimizing the learning experience, it was added some rewards systems.
 The reward `incentiveToCastling` with the value of `1.0f` intends to incentivize the agent to do the castling movement which is a very powerful movement.
 After a few hundred thousand simulations, the agent has already developing the knights/horses more frequently, but it would advance the king too further in the map. In order to try to control it and improve the overall positioning and valorization of the pieces, it was added some bidimensional arrays that, combined with a relative value of each piece, allows for the agent to learn more correctly. 
+These bidimensional arrays basically give a value for each position of a certain piece on the board.  For instance, as referred before, if there is a king on the opposite side of the it would be really bad for that player. On the other hand, if it was on the own side of the table, it should be better. 
+**Example:**
+|  |  |  |  |	|  |  |  |
+|--|--| -- |--  |--|--|--| -- |
+| -3.0 | -4.0 | -4.0 |-5.0  |-5.0| -4.0 | -4.0 |-3.0  |
+| -3.0 | -4.0 | -4.0 |-5.0  |-5.0| -4.0 | -4.0 |-3.0  |
+| -3.0 | -4.0 | -4.0 |-5.0  |-5.0| -4.0 | -4.0 |-3.0  |
+| -3.0 | -4.0 | -4.0 |-5.0  |-5.0| -4.0 | -4.0 |-3.0  |
+| -2.0 | -3.0 | -3.0 |-2.0  |-4.0| -3.0 | -3.0 |-2.0  |
+| -1.0 | -2.0 | -2.0 |-2.0  |-2.0| -2.0 | -2.0 |-1.0  |
+| 2.0 | 0.0 |  0.0 |  0.0 |  0.0 |  0.0 |  0.0 |  2.0 | 
+| 2.0 | 3.0 |  0.0 |  0.0 |  0.0 |  0.0 |  3.0 |  2.0 | 
+*(King Piece's Table)*
+
+This way, it enables the agent to learn which position are more helpful or not and returns a reward. Also, it penalizes if the agent lets the opponent with a meaningful piece on a strong position.
 
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+
 The bididimensional arrays were not designed by me at all. From what I understood it is something used alongside chess engines.
 Alongside the project that might be situations where the the Knight is mentioned and Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 

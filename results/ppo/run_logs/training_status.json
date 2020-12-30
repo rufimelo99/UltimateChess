@@ -2,17 +2,17 @@
     "ChessNoob": {
         "checkpoints": [
             {
-                "steps": 6182,
-                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-6182.onnx",
-                "reward": 29323.274911880493,
-                "creation_time": 1609299274.810709
+                "steps": 90038,
+                "file_path": "results\\ppo\\ChessNoob\\ChessNoob-90038.onnx",
+                "reward": -823.1370513439178,
+                "creation_time": 1609301453.1828952
             }
         ],
         "final_checkpoint": {
-            "steps": 6182,
+            "steps": 90038,
             "file_path": "results\\ppo\\ChessNoob.onnx",
-            "reward": 29323.274911880493,
-            "creation_time": 1609299274.810709
+            "reward": -823.1370513439178,
+            "creation_time": 1609301453.1828952
         }
     },
     "metadata": {
