@@ -94,7 +94,7 @@ Firstly, it will be explained briefly how the learning process works.
 Shortly, the agent has episodes and, in each episode it will perform a certain number of observations (all the positions of the pieces) and it will try to generate an action.
 Knowing that the number of observations made needs to be always the same, it was decided that the agent will receive the positions of all the pieces on the board ( it would be -1 in case of non existence) plus 8 possible queens for each player. These extra queens represent queens that can show up when a pawn reaches a tile on the opposite side of the board, summing up to **96** observations each time. (Technically, it should not appear 8 queens at any given time, but there is no way to control that. )
 When it comes to generating an action, at the position `0` of the `vectorAction` contains one of all the possible moves that could appear.
-Since also the size of `vectorAction[0]` must be always the same, this means that, for instance, for a Pawn, it must be always 4 possibilities "stored" in that size, even if it can perform one of those movements. All summed up, the result is **676** different possibilities for actions.
+Also, since the size of `vectorAction[0]` must be always the same, this means that, for instance, for a Pawn, there must be always 4 possibilities "stored" in that `vectorAction` position (even if it can perform one of those movements). All summed up, the result is **676** different possibilities for actions.
 
 There are a bunch of reward values given to the agent throughout its episode:
 `public float invalidAction = -0.1f;`
