@@ -73,7 +73,7 @@ The Project has a simple menu that allows the user to choose to either play agai
 <!-- USAGE EXAMPLES -->
 ## Training the Agent
 
-In order to train the agent, it is needed to change the scene in the Scene folder to `Training scene`.
+In order to train the agent, it is necessary to change the scene in the Scene folder to `Training scene`.
 Then, assuming that all prerequisites are fulfilled, on the terminal it is needed to go to the Project folder and insert one of the following commands depending if it is either the first time, or it is intended to resume the training or overwrite the training done until now.
 
 `mlagents-learn`
