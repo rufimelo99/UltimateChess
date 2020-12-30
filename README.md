@@ -69,9 +69,11 @@ Unity is required to run this project, obviously and so is the installation of t
 <!-- USAGE EXAMPLES -->
 ## Usage
 The Project has a simple menu that allows the user to choose to either play against other user on the same computer by simply clicking on a tile and select where to move that piece. It is shown some highlights on the floor to help the user to know where that same piece can, in fact, move.
+
 ![simple menu](https://user-images.githubusercontent.com/44201826/103315976-07309c80-4a1f-11eb-99cf-dfe677c6378e.PNG)
 
 ![UltimateCHess2](https://user-images.githubusercontent.com/44201826/102122430-5e3e4b00-3e3d-11eb-9814-3c8ebdeb32f3.PNG)
+
 
 <!-- USAGE EXAMPLES -->
 ## Training the Agent
