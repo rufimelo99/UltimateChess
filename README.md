@@ -49,8 +49,6 @@ The fourth project focus in the use of Unity’s Deep Reinforcement Learning SDK
 Knowing this, the goal became building a Chess Game and create an agent that would learn how to play that same game using the Unity Machine Learning Agents Toolkit (_ML_-_Agents_).
 
 ### Built With
-
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 * [Unity](https://unity.com)
 * [ML-Agents](https://github.com/Unity-Technologies/ml-agents)
 * [Anaconda](https://www.anaconda.com)
