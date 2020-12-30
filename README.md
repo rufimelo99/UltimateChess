@@ -94,7 +94,7 @@ Firstly, it will be explained briefly how the learning process works.
 Shortly, the agent has episodes and, in each episode it will perform a certain number of observations (all the positions of the pieces) and it will try to generate an action.
 Knowing that the number of observations made needs to be always the same, it was decided that the agent will receive the positions of all the pieces on the board ( it would be -1 in case of non existence) plus 8 possible queens for each player. These extra queens represent queens that can show up when a pawn reaches a tile on the opposite side of the board, summing up to **96** observations each time. (Technically, it should not appear 8 queens at any given time, but there is no way to control that. )
 When it comes to generating an action, at the position `0` of the `vectorAction` contains one of all the possible moves that could appear.
-Also, since the size of `vectorAction[0]` must be always the same, this means that, for instance, for a Pawn, there must be always 4 possibilities "stored" in that `vectorAction` position (even if it can perform one of those movements). All summed up, the result is **676** different possibilities for actions.
+Also, since the size of `vectorAction[0]` must be always the same, this means that, for instance, for a Pawn, there must be always 4 possibilities "stored" in that `vectorAction` position (even if it can only perform one of those movements). All summed up, the result is **676** different possibilities for actions.
 
 There are a bunch of reward values given to the agent throughout its episode:
 `public float invalidAction = -0.1f;`
@@ -103,17 +103,19 @@ There are a bunch of reward values given to the agent throughout its episode:
 `public float lostGame = -200.0f;`
 `public float doNothing = -0.1f;`
 
-`invalidAction` is a reward given in order for the agent to learn that a particular movement is not valid. For instance, if `vectorAction[0]` has a value of 1 while a King is on *a8*, representing that the King should move one tile up and one tile to the left, is invalid and, consequentially, it should penalize the agent. On the other hand, there is a compensation if it makes a valid move: `validAction`. 
+`invalidAction` is a reward given in order for the agent to learn that a particular movement is not valid. For instance, if `vectorAction[0]` has a value of 1 while a King is on *a8*, representing that the King should move one tile up and one tile to the left, it is invalid and, consequentially, should penalize the agent. On the other hand, there is a compensation by making a valid move: `validAction`. 
 Ultimately, it receives a larger reward depending if it wins or loses:
 `wonGame` and `lostGame`.
-In order to incentivize the agent to eat opposite pieces, there are some rewards with that same purpose.
-  `public float strengthPawn        = 1.0f;`
-  `public float strengthHorse       = 3.0f;`
-  `public float strengthBishop      = 3.0f;`
-  `public float strengthRook        = 5.0f;`
-  `public float strengthQueen       = 9.0f;`
-  `public float strengthKing        = 50.0f;`
-Those rewards are multiple ( `/10`) of the [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece.
+
+
+`public float strengthPawn        = 1.0f;`
+`public float strengthHorse       = 3.0f;`
+`public float strengthBishop      = 3.0f;`
+`public float strengthRook        = 5.0f;`
+`public float strengthQueen       = 9.0f;`
+`public float strengthKing        = 50.0f;`
+
+Those strengths are according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece. The rewards of eating a piece of certain strength is divided by 10, in order to incentivize the agent to eat opposite pieces.
 
 <!-- USAGE EXAMPLES -->
 ## Improved Rewards System
