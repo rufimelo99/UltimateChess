@@ -82,18 +82,18 @@ Then, assuming that all prerequisites are fulfilled, on the terminal it is neces
 
 `mlagents-learn --force`
 
-After that, all is left is to press the play button on Unity.
+After that, all that is left is to press the play button on Unity.
 There are some variables in the Inspector to adjust the training for the agent:
 ![Capture](https://user-images.githubusercontent.com/44201826/103316721-44962980-4a21-11eb-9d45-3790bd8b12bf.PNG)
 
 
 <!-- USAGE EXAMPLES -->
 ## Rewards System
-In order to allow the agent to learn sequentially, it needs to receive some rewards and adjust its actions according to the observations that it received.
-Firstly, It will be explained briefly how does the learning process work.
-Shortly, the agent has episodes and, in each episode it will received a certain number of observations (all the positions of the pieces) and it will try to generate an action.
-Knowing that the number of observations received needs to be always the same, it was decided that the agent will receive the positions of all the pieces on the board ( it would be -1 in case of non existence) plus 8 possible queens for each player. These extra queens represents queens that can show up when a pawn reaches a tile on the opposite side of the board, summing up to **96** observations each time. (Technically, it should not appear 8 queens at any given time, but there is no way to control that. )
-When it comes to generate an action, at the position `0` of the `vectorAction` it has all the possible moves that could happen.
+In order to allow the agent to learn sequentially, it needs to receive some rewards and adjust its actions according to the observations made.
+Firstly, it will be explained briefly how the learning process works.
+Shortly, the agent has episodes and, in each episode it will perform a certain number of observations (all the positions of the pieces) and it will try to generate an action.
+Knowing that the number of observations made needs to be always the same, it was decided that the agent will receive the positions of all the pieces on the board ( it would be -1 in case of non existence) plus 8 possible queens for each player. These extra queens represent queens that can show up when a pawn reaches a tile on the opposite side of the board, summing up to **96** observations each time. (Technically, it should not appear 8 queens at any given time, but there is no way to control that. )
+When it comes to generating an action, at the position `0` of the `vectorAction` contains one of all the possible moves that could appear.
 Since also the size of `vectorAction[0]` must be always the same, this means that, for instance, for a Pawn, it must be always 4 possibilities "stored" in that size, even if it can perform one of those movements. All summed up, the result is **676** different possibilities for actions.
 
 There are a bunch of reward values given to the agent throughout its episode:
@@ -146,4 +146,4 @@ The bididimensional arrays were not designed by me at all. From what I understoo
 Alongside the project that might be situations where the the Knight is mentioned and Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
 **Limitations**
-This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). Also ending game conditions are not implemented.
+This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). Also ending game conditions are not implemented and pawns can only spawn queens.
