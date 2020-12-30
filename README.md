@@ -78,9 +78,13 @@ The Project has a simple menu that allows the user to choose to either play agai
 
 In order to train the agent, it is needed to change the scene in the Scene folder to `Training scene`.
 Then, assuming that all prerequisites are fulfilled, on the terminal it is needed to go to the Project folder and insert one of the following commands depending if it is either the first time, or it is intended to resume the training or overwrite the training done until now.
+
 `mlagents-learn`
+
 `mlagents-learn --resume`
+
 `mlagents-learn --force`
+
 After that, all is left is to press the play button on Unity.
 There are some variables in the Inspector to adjust the training for the agent:
 ![Capture](https://user-images.githubusercontent.com/44201826/103316721-44962980-4a21-11eb-9d45-3790bd8b12bf.PNG)
