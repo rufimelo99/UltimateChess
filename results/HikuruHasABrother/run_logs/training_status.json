@@ -1,0 +1,30 @@
+{
+    "Hikaru": {
+        "checkpoints": [
+            {
+                "steps": 92998,
+                "file_path": "results\\HikuruHasABrother\\Hikaru\\Hikaru-92998.onnx",
+                "reward": null,
+                "creation_time": 1609385137.5463119
+            },
+            {
+                "steps": 104344,
+                "file_path": "results\\HikuruHasABrother\\Hikaru\\Hikaru-104344.onnx",
+                "reward": null,
+                "creation_time": 1609386980.289959
+            }
+        ],
+        "final_checkpoint": {
+            "steps": 104344,
+            "file_path": "results\\HikuruHasABrother\\Hikaru.onnx",
+            "reward": null,
+            "creation_time": 1609386980.289959
+        }
+    },
+    "metadata": {
+        "stats_format_version": "0.2.0",
+        "mlagents_version": "0.23.0",
+        "torch_version": "1.6.0",
+        "tensorflow_version": -1
+    }
+}

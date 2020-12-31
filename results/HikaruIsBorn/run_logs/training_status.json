@@ -2,17 +2,41 @@
     "Hikaru": {
         "checkpoints": [
             {
-                "steps": 310870,
-                "file_path": "results\\HikaruIsBorn\\Hikaru\\Hikaru-310870.onnx",
+                "steps": 449181,
+                "file_path": "results\\HikaruIsBorn\\Hikaru\\Hikaru-449181.onnx",
                 "reward": null,
-                "creation_time": 1609353942.9923825
+                "creation_time": 1609367950.1467917
+            },
+            {
+                "steps": 488013,
+                "file_path": "results\\HikaruIsBorn\\Hikaru\\Hikaru-488013.onnx",
+                "reward": null,
+                "creation_time": 1609376253.8259296
+            },
+            {
+                "steps": 489261,
+                "file_path": "results\\HikaruIsBorn\\Hikaru\\Hikaru-489261.onnx",
+                "reward": null,
+                "creation_time": 1609376315.373643
+            },
+            {
+                "steps": 489709,
+                "file_path": "results\\HikaruIsBorn\\Hikaru\\Hikaru-489709.onnx",
+                "reward": null,
+                "creation_time": 1609376340.5810971
+            },
+            {
+                "steps": 494013,
+                "file_path": "results\\HikaruIsBorn\\Hikaru\\Hikaru-494013.onnx",
+                "reward": null,
+                "creation_time": 1609385587.5859892
             }
         ],
         "final_checkpoint": {
-            "steps": 310870,
+            "steps": 494013,
             "file_path": "results\\HikaruIsBorn\\Hikaru.onnx",
             "reward": null,
-            "creation_time": 1609353942.9923825
+            "creation_time": 1609385587.5859892
         }
     },
     "metadata": {

@@ -25,7 +25,7 @@ public class ChessAgent : Agent
     public float validAction = 0.5f;
     public float wonGame = 200.0f;
     public float lostGame = -200.0f;
-    
+    public float doNothing = -1.0f;
     //extra incentive for castling
     public float incentiveToCastling = 1.0f;
 
@@ -417,7 +417,7 @@ public class ChessAgent : Agent
         bool sixOtherPawnTook = false;
         bool sevenOwnPawnTook = false;
         bool sevenOtherPawnTook = false;
-        foreach (ChessPiece cp in BoardManager.Instance.chessPieces)
+            foreach (ChessPiece cp in BoardManager.Instance.chessPieces)
         {
             if (cp != null)
             {
@@ -2170,6 +2170,9 @@ public class ChessAgent : Agent
                 }
 
             }
+
+            AddReward(doNothing);
+        
         }
     }
     /// <summary>
