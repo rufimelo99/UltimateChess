@@ -87,6 +87,11 @@ There are some variables in the Inspector to adjust the training for the agent:
 ![Capture](https://user-images.githubusercontent.com/44201826/103316721-44962980-4a21-11eb-9d45-3790bd8b12bf.PNG)
 
 
+Those agents will have different teams, enabling `selfplay()`. This means that each agent will be playing against a snapshot of itself (with a fixed policy). Knowing this, the way to know if the agent learn is through the [ELO](https://en.wikipedia.org/wiki/Elo_rating_system), which will represent the skill level of the agent. This skill rate is updated in case off victory or loss when facing the older snapshot.
+Some Hyperparameters were twisted to try to improve the selfplay process.
+
+`mlagents-learn --resume UltimateChess.yaml --run-id="HikaruIsBorn"`
+
 <!-- USAGE EXAMPLES -->
 ## Rewards System
 In order to allow the agent to learn sequentially, it needs to receive some rewards and adjust its actions according to the observations made.
