@@ -1,3 +1,4 @@
+
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
@@ -82,15 +83,14 @@ Then, assuming that all prerequisites are fulfilled, on the terminal it is neces
 
 `mlagents-learn --force`
 
-After that, all that is left is to press the play button on Unity.
+After that, all that is left is to press the play button on Unity and there will be two agents against each other.
 There are some variables in the Inspector to adjust the training for the agent:
-![Capture](https://user-images.githubusercontent.com/44201826/103316721-44962980-4a21-11eb-9d45-3790bd8b12bf.PNG)
+![Capture](https://user-images.githubusercontent.com/44201826/103394150-a9837980-4b1e-11eb-8964-98c21bba785d.PNG)
+Those agents will have different teams, enabling `selfplay()`. This means that each agent will be playing against a snapshot of itself (with a fixed policy). Knowing this, one way to know if the agent learn is through the [ELO](https://en.wikipedia.org/wiki/Elo_rating_system), which will represent the skill level of the agent. This skill rate is updated in case off victory or loss when facing the older snapshot.
+Some Hyperparameters were twisted to try to improve the `selfplay()` process.
+![2](https://user-images.githubusercontent.com/44201826/103394209-f8c9aa00-4b1e-11eb-831d-6754f4e127c3.PNG)
 
-
-Those agents will have different teams, enabling `selfplay()`. This means that each agent will be playing against a snapshot of itself (with a fixed policy). Knowing this, the way to know if the agent learn is through the [ELO](https://en.wikipedia.org/wiki/Elo_rating_system), which will represent the skill level of the agent. This skill rate is updated in case off victory or loss when facing the older snapshot.
-Some Hyperparameters were twisted to try to improve the selfplay process.
-
-`mlagents-learn --resume UltimateChess.yaml --run-id="HikaruIsBorn"`
+`mlagents-learn --resume UltimateChess.yaml --run-id="HikaruAsASister"`
 
 <!-- USAGE EXAMPLES -->
 ## Rewards System
@@ -102,31 +102,34 @@ When it comes to generating an action, at the position `0` of the `vectorAction`
 Also, since the size of `vectorAction[0]` must be always the same, this means that, for instance, for a Pawn, there must be always 4 possibilities "stored" in that `vectorAction` position (even if it can only perform one of those movements). All summed up, the result is **676** different possibilities for actions.
 
 There are a bunch of reward values given to the agent throughout its episode:
-`public float invalidAction = -0.1f;`
-`public float validAction = 0.5f`
-`public float wonGame = 200.0f;`
-`public float lostGame = -200.0f;`
-`public float doNothing = -0.1f;`
+`public float invalidAction_or_doNothing= -0.05f;`
+
+`public float validAction = 0.05f`
+
+`public float wonGame = 1.0f;`
+
+`public float lostGame = -1.0f;`
+
 
 `invalidAction` is a reward given in order for the agent to learn that a particular movement is not valid. For instance, if `vectorAction[0]` has a value of 1 while a King is on *a8*, representing that the King should move one tile up and one tile to the left, it is invalid and, consequentially, should penalize the agent. On the other hand, there is a compensation by making a valid move: `validAction`. 
 Ultimately, it receives a larger reward depending if it wins or loses:
 `wonGame` and `lostGame`.
 
 
-`public float strengthPawn        = 1.0f;`
-`public float strengthHorse       = 3.0f;`
-`public float strengthBishop      = 3.0f;`
-`public float strengthRook        = 5.0f;`
-`public float strengthQueen       = 9.0f;`
-`public float strengthKing        = 50.0f;`
+`public float strengthPawn        = 0.001f;`
+`public float strengthHorse       = 0.003f;`
+`public float strengthBishop      = 0.003f;`
+`public float strengthRook        = 0.005f;`
+`public float strengthQueen       = 0.009f;`
+`public float strengthKing        = 0.05f;`
 
 Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece. The rewards of eating a piece of certain strength is divided by 10, in order to incentivize the agent to eat opposite pieces.
 
 
 ## Improved Rewards System
 With the goal of optimizing the learning experience, some extra rewards systems were added.
-The reward `incentiveToCastling` with the value of `1.0f` intends to incentivize the agent to perform the castling movement which is a very powerful movement.
-After a few hundred thousand simulations, the agent already "develops" the knights/horses more frequently, but it also advances the king further in the map. In order to try to control this phenomenom and improve the overall positioning and valorization of the pieces, some bidimensional arrays were added that, combined with a relative value of each piece, allow the agent to learn more correctly. 
+The reward `incentiveToCastling` with the value of `1.0f` intends to incentivize the agent to perform the castling movement which is a very powerful movement. On the same note, since converting a Pawn into a Queen is really good, `incentiveToConverting` was added.
+After a few hundred thousand simulations, the agent already "develops" the knights/horses more frequently, but it also advances the king further in the map. In order to try to control this phenomenon and improve the overall positioning and valorization of the pieces, some bidimensional arrays were added that, combined with a relative value of each piece, allow the agent to learn more correctly. 
 These bidimensional arrays basically give a value for each position of a certain piece on the board. For instance, as referred before, if there is a king on the opposite side of the board, it would be really bad for that player. On the other hand, if it was on the own side of the board, it should be better. 
 **Example:**
 | |  |  |  |	|  |  |  |
@@ -144,12 +147,12 @@ These bidimensional arrays basically give a value for each position of a certain
 *(King Piece's Table)* 
 
 This way, it enables the agent to learn which positions are more helpful or not and returns a reward. Also, it penalizes if the agent lets the opponent have a meaningful piece on a strong position.
-
+Other aspect that was twisted was the fact that the relative strength of each piece on the table is only verified if the agent chooses a valid action. This is important once the agent started to realized it could continuously choose invalid actions and still profit from them.
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-The bididimensional arrays were not designed by me at all. From what I understood it is something used alongside chess engines.
+The bididimensional arrays were not designed by me at all. It is something used alongside chess engines to optimize performances.
 Over the project there might be situations where the Knight is mentioned as Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
 **Limitations**

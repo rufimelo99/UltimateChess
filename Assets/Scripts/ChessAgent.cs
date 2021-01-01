@@ -10,6 +10,7 @@ public class ChessAgent : Agent
     /// boolean editable in the UI inspector
     /// </summary>
     public bool isWhitePlayer;
+    public BoardManager boardCurrentlyPlaying;
     /// <summary>
     /// since this game interacts with two agents, i needed to reward when a king would be eaten
     /// </summary>
@@ -21,25 +22,25 @@ public class ChessAgent : Agent
     /// -penalize for missing pieces ? (except extra queens)
     /// little incentive to castling since it is a powerful move
     /// </summary>
-    public float invalidAction = -0.1f;   //try for now
-    public float validAction = 0.5f;
-    public float wonGame = 200.0f;
-    public float lostGame = -200.0f;
-    public float doNothing = -1.0f;
-    //extra incentive for castling
-    public float incentiveToCastling = 1.0f;
-
+    public float validAction = 0.1f;
+    public float wonGame = 1.0f;
+    public float lostGame = -1.0f;
+    public float invalidAction_or_doNothing = -0.005f;
     //strengths Update at 29-12-2020
-    public float strengthPawn        = 1.0f;
-    public float strengthHorse       = 3.0f;
-    public float strengthBishop      = 3.0f;
-    public float strengthRook        = 5.0f;
-    public float strengthQueen       = 9.0f;
-    public float strengthKing        = 50.0f;
+    public float strengthPawn        = 0.001f;
+    public float strengthHorse       = 0.003f;
+    public float strengthBishop      = 0.003f;
+    public float strengthRook        = 0.005f;
+    public float strengthQueen       = 0.009f;
+    public float strengthKing        = 0.05f;
+    //extra incentive for castling
+    public float incentiveToCastling = 0.1f;
+    public float incentiveToConvert = 0.1f;
 
-    public bool useTables = false;
+    private bool validMove = false;
+    private float tempReward = 0.0f;
 
-    float[,] tableKingWhite = new float[8, 8] {          { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
+    float[,] tableKingWhite = new float[8, 8] {     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
@@ -270,6 +271,15 @@ public class ChessAgent : Agent
     int otherPawnX7;
     int otherPawnZ7;
 
+    private void Awake()
+    {
+
+    }
+
+    void Start()
+    {
+    }
+
     public void getPiecesPositions()
     {
         //initialize Kings Positions
@@ -417,7 +427,7 @@ public class ChessAgent : Agent
         bool sixOtherPawnTook = false;
         bool sevenOwnPawnTook = false;
         bool sevenOtherPawnTook = false;
-            foreach (ChessPiece cp in BoardManager.Instance.chessPieces)
+            foreach (ChessPiece cp in boardCurrentlyPlaying.chessPieces)
         {
             if (cp != null)
             {
@@ -762,129 +772,151 @@ public class ChessAgent : Agent
     }
     public override void OnEpisodeBegin()
     {
+        base.OnEpisodeBegin();
+        //Debug.Log("New Episode");
         KingeatenNextMove = false;
+        //Debug.Log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
+        //Debug.Log("isWhitePlayer: " + isWhitePlayer);
+        //Debug.Log("Episode Begin: "+ GetCumulativeReward());
+        //Debug.Log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<");
     }
     /// <summary>
     /// Observations of all the x and z position of all the pieces (including potencial queens)
     /// </summary>
     /// <param name="sensor"></param>
+    void FixedUpdate()
+    {
+        validMove = false;
+        //Debug.Log("isWhitePlayer: " + isWhitePlayer);
+        //Debug.Log(GetCumulativeReward());
+        //Debug.Log("---------------------------------------");
+
+        if (GetCumulativeReward() < -1.0f)
+        {
+            SetReward(-1.5f);
+            boardCurrentlyPlaying.ResetGame();
+        }
+    }
+
     public override void CollectObservations(VectorSensor sensor)
     {
-        //according to vecotr size
-        getPiecesPositions();
+        
+            //according to vecotr size
+            getPiecesPositions();
 
-        //kings +4
-        sensor.AddObservation(kingX);
-        sensor.AddObservation(kingZ);
-        sensor.AddObservation(otherkingX);
-        sensor.AddObservation(otherkingZ);
+            //kings +4
+            sensor.AddObservation(kingX);
+            sensor.AddObservation(kingZ);
+            sensor.AddObservation(otherkingX);
+            sensor.AddObservation(otherkingZ);
 
-        //rooks +8 observations
-        sensor.AddObservation(rookX0);
-        sensor.AddObservation(rookZ0);
-        sensor.AddObservation(otherRookX0);
-        sensor.AddObservation(otherRookZ0);
-        sensor.AddObservation(rookX1);
-        sensor.AddObservation(rookZ1);
-        sensor.AddObservation(otherRookX1);
-        sensor.AddObservation(otherRookZ1);
+            //rooks +8 observations
+            sensor.AddObservation(rookX0);
+            sensor.AddObservation(rookZ0);
+            sensor.AddObservation(otherRookX0);
+            sensor.AddObservation(otherRookZ0);
+            sensor.AddObservation(rookX1);
+            sensor.AddObservation(rookZ1);
+            sensor.AddObservation(otherRookX1);
+            sensor.AddObservation(otherRookZ1);
 
-        //horses +8 observations
-        sensor.AddObservation(horseX0);
-        sensor.AddObservation(horseZ0);
-        sensor.AddObservation(otherHorseX0);
-        sensor.AddObservation(otherHorseZ0);
-        sensor.AddObservation(horseX1);
-        sensor.AddObservation(horseZ1);
-        sensor.AddObservation(otherHorseX1);
-        sensor.AddObservation(otherHorseZ1);
+            //horses +8 observations
+            sensor.AddObservation(horseX0);
+            sensor.AddObservation(horseZ0);
+            sensor.AddObservation(otherHorseX0);
+            sensor.AddObservation(otherHorseZ0);
+            sensor.AddObservation(horseX1);
+            sensor.AddObservation(horseZ1);
+            sensor.AddObservation(otherHorseX1);
+            sensor.AddObservation(otherHorseZ1);
 
-        //bishops +8 observations
-        sensor.AddObservation(bishopX0);
-        sensor.AddObservation(bishopZ0);
-        sensor.AddObservation(otherBishopX0);
-        sensor.AddObservation(otherBishopZ0);
-        sensor.AddObservation(bishopX1);
-        sensor.AddObservation(bishopZ1);
-        sensor.AddObservation(otherBishopX1);
-        sensor.AddObservation(otherBishopZ1);
+            //bishops +8 observations
+            sensor.AddObservation(bishopX0);
+            sensor.AddObservation(bishopZ0);
+            sensor.AddObservation(otherBishopX0);
+            sensor.AddObservation(otherBishopZ0);
+            sensor.AddObservation(bishopX1);
+            sensor.AddObservation(bishopZ1);
+            sensor.AddObservation(otherBishopX1);
+            sensor.AddObservation(otherBishopZ1);
 
-        //queen +4 observations
-        sensor.AddObservation(queenX);
-        sensor.AddObservation(queenZ);
-        sensor.AddObservation(otherQueenX);
-        sensor.AddObservation(otherQueenZ);
+            //queen +4 observations
+            sensor.AddObservation(queenX);
+            sensor.AddObservation(queenZ);
+            sensor.AddObservation(otherQueenX);
+            sensor.AddObservation(otherQueenZ);
 
-        //extra queens thta may show up +32 observations
-        sensor.AddObservation(extraQueenX0);
-        sensor.AddObservation(extraQueenZ0);
-        sensor.AddObservation(extraQueenX1);
-        sensor.AddObservation(extraQueenZ1);
-        sensor.AddObservation(extraQueenX2);
-        sensor.AddObservation(extraQueenZ2);
-        sensor.AddObservation(extraQueenX3);
-        sensor.AddObservation(extraQueenZ3);
-        sensor.AddObservation(extraQueenX4);
-        sensor.AddObservation(extraQueenZ4);
-        sensor.AddObservation(extraQueenX5);
-        sensor.AddObservation(extraQueenZ5);
-        sensor.AddObservation(extraQueenX6);
-        sensor.AddObservation(extraQueenZ6);
-        sensor.AddObservation(extraQueenX7);
-        sensor.AddObservation(extraQueenZ7);
-        sensor.AddObservation(otherExtraQueenX0);
-        sensor.AddObservation(otherExtraQueenZ0);
-        sensor.AddObservation(otherExtraQueenX1);
-        sensor.AddObservation(otherExtraQueenZ1);
-        sensor.AddObservation(otherExtraQueenX2);
-        sensor.AddObservation(otherExtraQueenZ2);
-        sensor.AddObservation(otherExtraQueenX3);
-        sensor.AddObservation(otherExtraQueenZ3);
-        sensor.AddObservation(otherExtraQueenX4);
-        sensor.AddObservation(otherExtraQueenZ4);
-        sensor.AddObservation(otherExtraQueenX5);
-        sensor.AddObservation(otherExtraQueenZ5);
-        sensor.AddObservation(otherExtraQueenX6);
-        sensor.AddObservation(otherExtraQueenZ6);
-        sensor.AddObservation(otherExtraQueenX7);
-        sensor.AddObservation(otherExtraQueenZ7);
+            //extra queens thta may show up +32 observations
+            sensor.AddObservation(extraQueenX0);
+            sensor.AddObservation(extraQueenZ0);
+            sensor.AddObservation(extraQueenX1);
+            sensor.AddObservation(extraQueenZ1);
+            sensor.AddObservation(extraQueenX2);
+            sensor.AddObservation(extraQueenZ2);
+            sensor.AddObservation(extraQueenX3);
+            sensor.AddObservation(extraQueenZ3);
+            sensor.AddObservation(extraQueenX4);
+            sensor.AddObservation(extraQueenZ4);
+            sensor.AddObservation(extraQueenX5);
+            sensor.AddObservation(extraQueenZ5);
+            sensor.AddObservation(extraQueenX6);
+            sensor.AddObservation(extraQueenZ6);
+            sensor.AddObservation(extraQueenX7);
+            sensor.AddObservation(extraQueenZ7);
+            sensor.AddObservation(otherExtraQueenX0);
+            sensor.AddObservation(otherExtraQueenZ0);
+            sensor.AddObservation(otherExtraQueenX1);
+            sensor.AddObservation(otherExtraQueenZ1);
+            sensor.AddObservation(otherExtraQueenX2);
+            sensor.AddObservation(otherExtraQueenZ2);
+            sensor.AddObservation(otherExtraQueenX3);
+            sensor.AddObservation(otherExtraQueenZ3);
+            sensor.AddObservation(otherExtraQueenX4);
+            sensor.AddObservation(otherExtraQueenZ4);
+            sensor.AddObservation(otherExtraQueenX5);
+            sensor.AddObservation(otherExtraQueenZ5);
+            sensor.AddObservation(otherExtraQueenX6);
+            sensor.AddObservation(otherExtraQueenZ6);
+            sensor.AddObservation(otherExtraQueenX7);
+            sensor.AddObservation(otherExtraQueenZ7);
 
-        //pawns +32 observations
-        sensor.AddObservation(pawnX0);
-        sensor.AddObservation(pawnZ0);
-        sensor.AddObservation(otherPawnX0);
-        sensor.AddObservation(otherPawnZ0);
-        sensor.AddObservation(pawnX1);
-        sensor.AddObservation(pawnZ1);
-        sensor.AddObservation(otherPawnX1);
-        sensor.AddObservation(otherPawnZ1);
-        sensor.AddObservation(pawnX2);
-        sensor.AddObservation(pawnZ2);
-        sensor.AddObservation(otherPawnX2);
-        sensor.AddObservation(otherPawnZ2);
-        sensor.AddObservation(pawnX3);
-        sensor.AddObservation(pawnZ3);
-        sensor.AddObservation(otherPawnX3);
-        sensor.AddObservation(otherPawnZ3);
-        sensor.AddObservation(pawnX4);
-        sensor.AddObservation(pawnZ4);
-        sensor.AddObservation(otherPawnX4);
-        sensor.AddObservation(otherPawnZ4);
-        sensor.AddObservation(pawnX5);
-        sensor.AddObservation(pawnZ5);
-        sensor.AddObservation(otherPawnX5);
-        sensor.AddObservation(otherPawnZ5);
-        sensor.AddObservation(pawnX6);
-        sensor.AddObservation(pawnZ6);
-        sensor.AddObservation(otherPawnX6);
-        sensor.AddObservation(otherPawnZ6);
-        sensor.AddObservation(pawnX7);
-        sensor.AddObservation(pawnZ7);
-        sensor.AddObservation(otherPawnX7);
-        sensor.AddObservation(otherPawnZ7);
+            //pawns +32 observations
+            sensor.AddObservation(pawnX0);
+            sensor.AddObservation(pawnZ0);
+            sensor.AddObservation(otherPawnX0);
+            sensor.AddObservation(otherPawnZ0);
+            sensor.AddObservation(pawnX1);
+            sensor.AddObservation(pawnZ1);
+            sensor.AddObservation(otherPawnX1);
+            sensor.AddObservation(otherPawnZ1);
+            sensor.AddObservation(pawnX2);
+            sensor.AddObservation(pawnZ2);
+            sensor.AddObservation(otherPawnX2);
+            sensor.AddObservation(otherPawnZ2);
+            sensor.AddObservation(pawnX3);
+            sensor.AddObservation(pawnZ3);
+            sensor.AddObservation(otherPawnX3);
+            sensor.AddObservation(otherPawnZ3);
+            sensor.AddObservation(pawnX4);
+            sensor.AddObservation(pawnZ4);
+            sensor.AddObservation(otherPawnX4);
+            sensor.AddObservation(otherPawnZ4);
+            sensor.AddObservation(pawnX5);
+            sensor.AddObservation(pawnZ5);
+            sensor.AddObservation(otherPawnX5);
+            sensor.AddObservation(otherPawnZ5);
+            sensor.AddObservation(pawnX6);
+            sensor.AddObservation(pawnZ6);
+            sensor.AddObservation(otherPawnX6);
+            sensor.AddObservation(otherPawnZ6);
+            sensor.AddObservation(pawnX7);
+            sensor.AddObservation(pawnZ7);
+            sensor.AddObservation(otherPawnX7);
+            sensor.AddObservation(otherPawnZ7);
 
-        //total observations:
-        //96 observations
+            //total observations:
+            //96 observations
+        
     }
     /// <summary>
     /// Function that permits to check if a certain move is possible
@@ -897,32 +929,42 @@ public class ChessAgent : Agent
     private void verifyMove(int initialX, int initialZ, int toX, int toZ)
     {
         //initialX and initialZ corresponds to the position of the particulkar piece that is trying toi move
-        BoardManager.Instance.allowedMoves = BoardManager.Instance.chessPieces[initialX, initialZ].PossibleMove();
-        BoardManager.Instance.activeChessPiece = BoardManager.Instance.chessPieces[initialX, initialZ];
+        boardCurrentlyPlaying.allowedMoves = boardCurrentlyPlaying.chessPieces[initialX, initialZ].PossibleMove();
+        boardCurrentlyPlaying.activeChessPiece = boardCurrentlyPlaying.chessPieces[initialX, initialZ];
         //is it possible move there
         if (toX > -1 && toX < 8 && toZ > -1 && toZ < 8)
         {
-            if (BoardManager.Instance.allowedMoves[toX, toZ])
+            if (boardCurrentlyPlaying.allowedMoves[toX, toZ])
             {
+                validMove = true;
                 checkIfEatsPiece(toX, toZ);
-                BoardManager.Instance.MovePiece(initialX, initialZ, toX, toZ);
-                AddReward(validAction);
+                boardCurrentlyPlaying.MovePiece(initialX, initialZ, toX, toZ);
+                tempReward+=validAction;
                 
+                
+                if(boardCurrentlyPlaying.chessPieces[initialX, initialZ]!=null && boardCurrentlyPlaying.chessPieces[initialX, initialZ].GetType() == typeof(PawnPiece))
+                {
+                    if (toZ == 7 || toZ == 0)
+                    {
+                        tempReward += incentiveToConvert;
+                    }
+                }
 
                 if (KingeatenNextMove)
                 {
-                    EndEpisode();
-                    //BoardManager.Instance.ResetGame();
+                    boardCurrentlyPlaying.ResetGame();
                 }
             }
             else
             {
-                AddReward(invalidAction);
+                validMove = false;
+                AddReward(invalidAction_or_doNothing);
             }
         }
         else
         {
-            AddReward(invalidAction);
+            validMove = false;
+            AddReward(invalidAction_or_doNothing);
         }
     }
 
@@ -1732,13 +1774,13 @@ public class ChessAgent : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        if (BoardManager.Instance.isWhiteTurn == isWhitePlayer)
+        if (boardCurrentlyPlaying.isWhiteTurn == isWhitePlayer)
         {
             //number max of the generated action is the max on the last condition+1 ->675
             //king behavior:            10  different possibilities
             if (vectorAction[0] >= 0 && vectorAction[0] <= 9)
             {   
-                if(kingX != -1 && kingZ != -1 && BoardManager.Instance.hasOnePossibleMove(kingX, kingZ))
+                if(kingX != -1 && kingZ != -1 && boardCurrentlyPlaying.hasOnePossibleMove(kingX, kingZ))
                 {
                     kingBehaviour(vectorAction[0]+1, kingX, kingZ);
                 }
@@ -1746,7 +1788,7 @@ public class ChessAgent : Agent
             //tower 0 behavior:         28  different possibilities
             else if (vectorAction[0] >= 10 && vectorAction[0] <= 37)
             {
-                if (rookX0 != -1 && rookZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(rookX0, rookZ0))
+                if (rookX0 != -1 && rookZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(rookX0, rookZ0))
                 {
                     towerBehaviour(vectorAction[0] - 9, rookX0, rookZ0);
                 }
@@ -1754,7 +1796,7 @@ public class ChessAgent : Agent
             //tower 1 behavior:         28  different possibilities
             else if (vectorAction[0] >= 38 && vectorAction[0] <= 65)
             {
-                if (rookX1 != -1 && rookZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(rookX1, rookZ1))
+                if (rookX1 != -1 && rookZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(rookX1, rookZ1))
                 {
                     towerBehaviour(vectorAction[0] - 37, rookX1, rookZ1);
                 }
@@ -1762,7 +1804,7 @@ public class ChessAgent : Agent
             //horse 0 behavior:         8  different possibilities
             else if (vectorAction[0] >= 66 && vectorAction[0] <= 73)
             {
-                if (horseX0 != -1 && horseZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(horseX0, horseZ0))
+                if (horseX0 != -1 && horseZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(horseX0, horseZ0))
                 {
                     knightBehaviour(vectorAction[0] - 65, horseX0, horseZ0);
                 }
@@ -1770,7 +1812,7 @@ public class ChessAgent : Agent
             //horse 1 behavior:         8  different possibilities
             else if (vectorAction[0] >= 74 && vectorAction[0] <= 81)
             {
-                if (horseX1 != -1 && horseZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(horseX1, horseZ1))
+                if (horseX1 != -1 && horseZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(horseX1, horseZ1))
                 {
                     knightBehaviour(vectorAction[0] - 73, horseX1, horseZ1);
                 }
@@ -1778,7 +1820,7 @@ public class ChessAgent : Agent
             //bishop 0 behavior:        28  different possibilities
             else if (vectorAction[0] >= 82 && vectorAction[0] <= 109)
             {
-                if (bishopX0 != -1 && bishopZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(bishopX0, bishopZ0))
+                if (bishopX0 != -1 && bishopZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(bishopX0, bishopZ0))
                 {
                     bishopBehaviour(vectorAction[0] - 84, bishopX0, bishopZ0);
                 }
@@ -1786,7 +1828,7 @@ public class ChessAgent : Agent
             //bishop 1 behavior:        28  different possibilities
             else if (vectorAction[0] >= 110 && vectorAction[0] <= 137)
             {
-                if (bishopX1 != -1 && bishopZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(bishopX1, bishopZ1))
+                if (bishopX1 != -1 && bishopZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(bishopX1, bishopZ1))
                 {
                     bishopBehaviour(vectorAction[0] - 109, bishopX1, bishopZ1);
                 }
@@ -1794,7 +1836,7 @@ public class ChessAgent : Agent
             //queen behavior:           56  different possibilities
             else if (vectorAction[0] >= 138 && vectorAction[0] <= 193)
             {
-                if (queenX != -1 && queenZ != -1 && BoardManager.Instance.hasOnePossibleMove(queenX, queenZ))
+                if (queenX != -1 && queenZ != -1 && boardCurrentlyPlaying.hasOnePossibleMove(queenX, queenZ))
                 {
                     queenBehaviour(vectorAction[0] - 137, queenX, queenZ);
                 }
@@ -1802,7 +1844,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 194 && vectorAction[0] <= 197)
             {
-                if (pawnX0 != -1 && pawnZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX0, pawnZ0))
+                if (pawnX0 != -1 && pawnZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX0, pawnZ0))
                 {
                     pawnBehaviour(vectorAction[0] - 193, pawnX0, pawnZ0);
                 }
@@ -1810,7 +1852,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 198 && vectorAction[0] <= 201)
             {
-                if (pawnX1 != -1 && pawnZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX1, pawnZ1))
+                if (pawnX1 != -1 && pawnZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX1, pawnZ1))
                 {
                     pawnBehaviour(vectorAction[0] - 197, pawnX1, pawnZ1);
                 }
@@ -1818,7 +1860,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 202 && vectorAction[0] <= 205)
             {
-                if (pawnX2 != -1 && pawnZ2 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX2, pawnZ2))
+                if (pawnX2 != -1 && pawnZ2 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX2, pawnZ2))
                 {
                     pawnBehaviour(vectorAction[0] - 201, pawnX2, pawnZ2);
                 }
@@ -1826,7 +1868,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 206 && vectorAction[0] <= 209)
             {
-                if (pawnX3 != -1 && pawnZ3 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX3, pawnZ3))
+                if (pawnX3 != -1 && pawnZ3 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX3, pawnZ3))
                 {
                     pawnBehaviour(vectorAction[0] - 205, pawnX3, pawnZ3);
                 }
@@ -1834,7 +1876,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 210 && vectorAction[0] <= 213)
             {
-                if (pawnX4 != -1 && pawnZ4 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX4, pawnZ4))
+                if (pawnX4 != -1 && pawnZ4 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX4, pawnZ4))
                 {
                     pawnBehaviour(vectorAction[0] - 209, pawnX4, pawnZ4);
                 }
@@ -1842,7 +1884,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 214 && vectorAction[0] <= 217)
             {
-                if (pawnX5 != -1 && pawnZ5 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX5, pawnZ5))
+                if (pawnX5 != -1 && pawnZ5 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX5, pawnZ5))
                 {
                     pawnBehaviour(vectorAction[0] - 213, pawnX5, pawnZ5);
                 }
@@ -1850,7 +1892,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 218 && vectorAction[0] <= 221)
             {
-                if (pawnX6 != -1 && pawnZ6 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX6, pawnZ6))
+                if (pawnX6 != -1 && pawnZ6 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX6, pawnZ6))
                 {
                     pawnBehaviour(vectorAction[0] - 217, pawnX6, pawnZ6);
                 }
@@ -1858,7 +1900,7 @@ public class ChessAgent : Agent
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 222 && vectorAction[0] <= 225)
             {
-                if (pawnX7 != -1 && pawnZ7 != -1 && BoardManager.Instance.hasOnePossibleMove(pawnX7, pawnZ7))
+                if (pawnX7 != -1 && pawnZ7 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX7, pawnZ7))
                 {
                     pawnBehaviour(vectorAction[0] - 221, pawnX7, pawnZ7);
                 }
@@ -1866,7 +1908,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 226 && vectorAction[0] <= 281)
             {
-                if (extraQueenX0 != -1 && extraQueenZ0 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX0, extraQueenZ0))
+                if (extraQueenX0 != -1 && extraQueenZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX0, extraQueenZ0))
                 {
                     queenBehaviour(vectorAction[0] - 225, extraQueenX0, extraQueenZ0);
                 }
@@ -1874,7 +1916,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 282 && vectorAction[0] <= 337)
             {
-                if (extraQueenX1 != -1 && extraQueenZ1 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX1, extraQueenZ1))
+                if (extraQueenX1 != -1 && extraQueenZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX1, extraQueenZ1))
                 {
                     queenBehaviour(vectorAction[0] - 281, extraQueenX1, extraQueenZ1);
                 }
@@ -1882,7 +1924,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 338 && vectorAction[0] <= 393)
             {
-                if (extraQueenX2 != -1 && extraQueenZ2 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX2, extraQueenZ2))
+                if (extraQueenX2 != -1 && extraQueenZ2 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX2, extraQueenZ2))
                 {
                     queenBehaviour(vectorAction[0] - 337, extraQueenX2, extraQueenZ2);
                 }
@@ -1890,7 +1932,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 394 && vectorAction[0] <= 449)
             {
-                if (extraQueenX3 != -1 && extraQueenZ3 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX3, extraQueenZ3))
+                if (extraQueenX3 != -1 && extraQueenZ3 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX3, extraQueenZ3))
                 {
                     queenBehaviour(vectorAction[0] - 393, extraQueenX3, extraQueenZ3);
                 }
@@ -1898,7 +1940,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 450 && vectorAction[0] <= 505)
             {
-                if (extraQueenX4 != -1 && extraQueenZ4 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX4, extraQueenZ4))
+                if (extraQueenX4 != -1 && extraQueenZ4 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX4, extraQueenZ4))
                 {
                     queenBehaviour(vectorAction[0] - 449, extraQueenX4, extraQueenZ4);
                 }
@@ -1906,7 +1948,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 506 && vectorAction[0] <= 561)
             {
-                if (extraQueenX5 != -1 && extraQueenZ5 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX5, extraQueenZ5))
+                if (extraQueenX5 != -1 && extraQueenZ5 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX5, extraQueenZ5))
                 {
                     queenBehaviour(vectorAction[0] - 505, extraQueenX5, extraQueenZ5);
                 }
@@ -1914,7 +1956,7 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 562 && vectorAction[0] <= 617)
             {
-                if (extraQueenX6 != -1 && extraQueenZ6 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX6, extraQueenZ6))
+                if (extraQueenX6 != -1 && extraQueenZ6 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX6, extraQueenZ6))
                 {
                     queenBehaviour(vectorAction[0] - 561, extraQueenX6, extraQueenZ6);
                 }
@@ -1922,15 +1964,18 @@ public class ChessAgent : Agent
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 618 && vectorAction[0] <= 674)
             {
-                if (extraQueenX7 != -1 && extraQueenZ7 != -1 && BoardManager.Instance.hasOnePossibleMove(extraQueenX7, extraQueenZ7))
+                if (extraQueenX7 != -1 && extraQueenZ7 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX7, extraQueenZ7))
                 {
                     queenBehaviour(vectorAction[0] - 617, extraQueenX7, extraQueenZ7);
                 }
             }
 
             //evaluate positioning of the pieces on the board
-            if (useTables)
+            
+            if (validMove)
             {
+                //reset value
+                SetReward(0.0f);
                 float[,] tableKing = new float[8, 8];
                 float[,] tableOppositeKing = new float[8, 8];
                 float[,] tableQueen = new float[8, 8];
@@ -1966,8 +2011,8 @@ public class ChessAgent : Agent
                     tableOppositeQueen = tableQueenWhite;
                     tableHorse = tableHorseBlack;
                     tableOppositeHorse = tableHorseWhite;
-                    tableRook =  tableRookBlack;
-                    tableOppositeRook =tableRookWhite;
+                    tableRook = tableRookBlack;
+                    tableOppositeRook = tableRookWhite;
                     tableBishop = tableBishopBlack;
                     tableOppositeBishop = tableBishopWhite;
                     tablePawn = tablePawnBlack;
@@ -1978,200 +2023,206 @@ public class ChessAgent : Agent
 
                 if (kingX != -1 && kingZ != -1)
                 {
-                    AddReward(tableKing[kingX, kingZ] * strengthKing );
+                    AddReward(tableKing[kingX, kingZ] * strengthKing);
                 }
                 if (otherkingX != -1 && otherkingZ != -1)
                 {
-                    AddReward(tableOppositeKing[otherkingX, otherkingZ] * -strengthKing );
+                    AddReward(tableOppositeKing[otherkingX, otherkingZ] * -1.0f *strengthKing);
                 }
                 if (rookX0 != -1 && rookZ0 != -1)
                 {
-                    AddReward(tableRook[rookX0, rookZ0] * strengthRook );
+                    AddReward(tableRook[rookX0, rookZ0] * strengthRook);
                 }
                 if (otherRookX0 != -1 && otherRookZ0 != -1)
                 {
-                    AddReward(tableOppositeRook[otherRookX0, otherRookZ0] * -strengthRook );
+                    AddReward(tableOppositeRook[otherRookX0, otherRookZ0] * -1.0f * strengthRook);
                 }
                 if (rookX1 != -1 && rookZ1 != -1)
                 {
-                    AddReward(tableRook[rookX1, rookZ1] * strengthRook );
+                    AddReward(tableRook[rookX1, rookZ1] * strengthRook);
                 }
                 if (otherRookX1 != -1 && otherRookZ1 != -1)
                 {
-                    AddReward(tableOppositeRook[otherRookX1, otherRookZ1] * -strengthRook );
+                    AddReward(tableOppositeRook[otherRookX1, otherRookZ1] * -1.0f * strengthRook);
                 }
                 if (horseX0 != -1 && horseZ0 != -1)
                 {
-                    AddReward(tableHorse[horseX0, horseZ0] * strengthHorse );
+                    AddReward(tableHorse[horseX0, horseZ0] * strengthHorse);
                 }
                 if (otherHorseX0 != -1 && otherHorseZ0 != -1)
                 {
-                    AddReward(tableOppositeHorse[otherHorseX0, otherHorseZ0] * -strengthHorse );
+                    AddReward(tableOppositeHorse[otherHorseX0, otherHorseZ0] * -1.0f * strengthHorse);
                 }
                 if (horseX1 != -1 && horseZ1 != -1)
                 {
-                    AddReward(tableHorse[horseX1, horseZ1] * strengthHorse );
+                    AddReward(tableHorse[horseX1, horseZ1] * strengthHorse);
                 }
                 if (otherHorseX1 != -1 && otherHorseZ1 != -1)
                 {
-                    AddReward(tableOppositeHorse[otherHorseX1, otherHorseZ1] * -strengthHorse );
+                    AddReward(tableOppositeHorse[otherHorseX1, otherHorseZ1] * -1.0f * strengthHorse);
                 }
                 if (bishopX0 != -1 && bishopZ0 != -1)
                 {
-                    AddReward(tableBishop[bishopX0, bishopZ0] * strengthBishop );
+                    AddReward(tableBishop[bishopX0, bishopZ0] * strengthBishop);
                 }
                 if (otherBishopX0 != -1 && otherBishopZ0 != -1)
                 {
-                    AddReward(tableOppositeBishop[otherBishopX0, otherBishopZ0] * -strengthBishop );
+                    AddReward(tableOppositeBishop[otherBishopX0, otherBishopZ0] * -1.0f * strengthBishop);
                 }
                 if (bishopX1 != -1 && bishopZ1 != -1)
                 {
-                    AddReward(tableBishop[bishopX1, bishopZ1] * strengthBishop );
+                    AddReward(tableBishop[bishopX1, bishopZ1] * strengthBishop);
                 }
                 if (otherBishopX1 != -1 && otherBishopZ1 != -1)
                 {
-                    AddReward(tableOppositeBishop[otherBishopX1, otherBishopZ1] * -strengthBishop );
+                    AddReward(tableOppositeBishop[otherBishopX1, otherBishopZ1] * -1.0f * strengthBishop);
                 }
                 if (pawnX0 != -1 && pawnZ0 != -1)
                 {
-                    AddReward(tablePawn[pawnX0, pawnZ0] * strengthPawn );
+                    AddReward(tablePawn[pawnX0, pawnZ0] * strengthPawn);
                 }
                 if (otherPawnX0 != -1 && otherPawnZ0 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX0, otherPawnZ0] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX0, otherPawnZ0] * -1.0f * strengthPawn);
                 }
                 if (pawnX1 != -1 && pawnZ1 != -1)
                 {
-                    AddReward(tablePawn[pawnX1, pawnZ1] * strengthPawn );
+                    AddReward(tablePawn[pawnX1, pawnZ1] * strengthPawn);
                 }
                 if (otherPawnX1 != -1 && otherPawnZ1 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX1, otherPawnZ1] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX1, otherPawnZ1] * -1.0f * strengthPawn);
                 }
                 if (pawnX2 != -1 && pawnZ2 != -1)
                 {
-                    AddReward(tablePawn[pawnX2, pawnZ2] * strengthPawn );
+                    AddReward(tablePawn[pawnX2, pawnZ2] * strengthPawn);
                 }
                 if (otherPawnX2 != -1 && otherPawnZ2 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX2, otherPawnZ2] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX2, otherPawnZ2] * -1.0f * strengthPawn);
                 }
                 if (pawnX3 != -1 && pawnZ3 != -1)
                 {
-                    AddReward(tablePawn[pawnX3, pawnZ3] * strengthPawn );
+                    AddReward(tablePawn[pawnX3, pawnZ3] * strengthPawn);
                 }
                 if (otherPawnX3 != -1 && otherPawnZ3 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX3, otherPawnZ3] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX3, otherPawnZ3] * -1.0f * strengthPawn);
                 }
                 if (pawnX4 != -1 && pawnZ4 != -1)
                 {
-                    AddReward(tablePawn[pawnX4, pawnZ4] * strengthPawn );
+                    AddReward(tablePawn[pawnX4, pawnZ4] * strengthPawn);
                 }
                 if (otherPawnX4 != -1 && otherPawnZ4 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX4, otherPawnZ4] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX4, otherPawnZ4] * -1.0f * strengthPawn);
                 }
                 if (pawnX5 != -1 && pawnZ5 != -1)
                 {
-                    AddReward(tablePawn[pawnX5, pawnZ5] * strengthPawn );
+                    AddReward(tablePawn[pawnX5, pawnZ5] * strengthPawn);
                 }
                 if (otherPawnX5 != -1 && otherPawnZ5 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX5, otherPawnZ5] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX5, otherPawnZ5] * -1.0f * strengthPawn);
                 }
                 if (pawnX6 != -1 && pawnZ6 != -1)
                 {
-                    AddReward(tablePawn[pawnX6, pawnZ6] * strengthPawn );
+                    AddReward(tablePawn[pawnX6, pawnZ6] * strengthPawn);
                 }
                 if (otherPawnX6 != -1 && otherPawnZ6 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX6, otherPawnZ6] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX6, otherPawnZ6] * -1.0f * strengthPawn);
                 }
                 if (pawnX7 != -1 && pawnZ7 != -1)
                 {
-                    AddReward(tablePawn[pawnX7, pawnZ7] * strengthPawn );
+                    AddReward(tablePawn[pawnX7, pawnZ7] * strengthPawn);
                 }
                 if (otherPawnX7 != -1 && otherPawnZ7 != -1)
                 {
-                    AddReward(tableOppositePawn[otherPawnX7, otherPawnZ7] * -strengthPawn );
+                    AddReward(tableOppositePawn[otherPawnX7, otherPawnZ7] * -1.0f * strengthPawn);
                 }
                 if (queenX != -1 && queenZ != -1)
                 {
-                    AddReward(tableQueen[queenX, queenZ] * strengthQueen );
+                    AddReward(tableQueen[queenX, queenZ] * strengthQueen);
                 }
                 if (otherQueenX != -1 && otherQueenZ != -1)
                 {
-                    AddReward(tableOppositeQueen[otherQueenX, otherQueenZ] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherQueenX, otherQueenZ] * -1.0f * strengthQueen);
                 }
                 if (extraQueenX0 != -1 && extraQueenZ0 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX0, extraQueenZ0] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX0, extraQueenZ0] * strengthQueen);
                 }
                 if (extraQueenX1 != -1 && extraQueenZ1 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX1, extraQueenZ1] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX1, extraQueenZ1] * strengthQueen);
                 }
                 if (extraQueenX2 != -1 && extraQueenZ2 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX2, extraQueenZ2] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX2, extraQueenZ2] * strengthQueen);
                 }
                 if (extraQueenX3 != -1 && extraQueenZ3 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX3, extraQueenZ3] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX3, extraQueenZ3] * strengthQueen);
                 }
                 if (extraQueenX4 != -1 && extraQueenZ4 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX4, extraQueenZ4] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX4, extraQueenZ4] * strengthQueen);
                 }
                 if (extraQueenX5 != -1 && extraQueenZ5 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX5, extraQueenZ5] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX5, extraQueenZ5] * strengthQueen);
                 }
                 if (extraQueenX6 != -1 && extraQueenZ6 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX6, extraQueenZ6] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX6, extraQueenZ6] * strengthQueen);
                 }
                 if (extraQueenX7 != -1 && extraQueenZ7 != -1)
                 {
-                    AddReward(tableQueen[extraQueenX7, extraQueenZ7] * strengthQueen );
+                    AddReward(tableQueen[extraQueenX7, extraQueenZ7] * strengthQueen);
                 }
                 if (otherExtraQueenX0 != -1 && otherExtraQueenZ0 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX0, otherExtraQueenZ0] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX0, otherExtraQueenZ0] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX1 != -1 && otherExtraQueenZ1 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX1, otherExtraQueenZ1] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX1, otherExtraQueenZ1] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX2 != -1 && otherExtraQueenZ2 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX2, otherExtraQueenZ2] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX2, otherExtraQueenZ2] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX3 != -1 && otherExtraQueenZ3 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX3, otherExtraQueenZ3] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX3, otherExtraQueenZ3] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX4 != -1 && otherExtraQueenZ4 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX4, otherExtraQueenZ4] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX4, otherExtraQueenZ4] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX5 != -1 && otherExtraQueenZ5 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX5, otherExtraQueenZ5] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX5, otherExtraQueenZ5] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX6 != -1 && otherExtraQueenZ6 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX6, otherExtraQueenZ6] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX6, otherExtraQueenZ6] * -1.0f * strengthQueen);
                 }
                 if (otherExtraQueenX7 != -1 && otherExtraQueenZ7 != -1)
                 {
-                    AddReward(tableOppositeQueen[otherExtraQueenX7, otherExtraQueenZ7] * -strengthQueen );
+                    AddReward(tableOppositeQueen[otherExtraQueenX7, otherExtraQueenZ7] * -1.0f * strengthQueen);
                 }
 
+                AddReward(tempReward);
+                tempReward = 0.0f;
+            }
+            else
+            {
+                AddReward(invalidAction_or_doNothing);
+                tempReward = 0.0f;
             }
 
-            AddReward(doNothing);
         
         }
     }
@@ -2182,33 +2233,37 @@ public class ChessAgent : Agent
     {
         if (toX > -1 && toZ > -1)
         {
-            ChessPiece enemyPiece = BoardManager.Instance.chessPieces[toX, toZ];
+            ChessPiece enemyPiece = boardCurrentlyPlaying.chessPieces[toX, toZ];
             if (enemyPiece != null)
             {
                 if (enemyPiece.GetType() == typeof(KingPiece))
                 {
                     AddReward(wonGame);
+                    if (GetCumulativeReward() < 0)
+                    {
+                        SetReward(wonGame);
+                    }
                     KingeatenNextMove = true;
                 }
                 else if (enemyPiece.GetType() == typeof(TowerPiece))
                 {
-                    AddReward(strengthRook / 10);
+                    AddReward(strengthRook);
                 }
                 else if (enemyPiece.GetType() == typeof(HorsePiece))
                 {
-                    AddReward(strengthHorse / 10);
+                    AddReward(strengthHorse);
                 }
                 else if (enemyPiece.GetType() == typeof(BishopPiece))
                 {
-                    AddReward(strengthBishop / 10);
+                    AddReward(strengthBishop);
                 }
                 else if (enemyPiece.GetType() == typeof(QueenPiece))
                 {
-                    AddReward(strengthQueen / 10);
+                    AddReward(strengthQueen);
                 }
                 else if (enemyPiece.GetType() == typeof(PawnPiece))
                 {
-                    AddReward(strengthPawn / 10);
+                    AddReward(strengthPawn);
                 }
             }
 

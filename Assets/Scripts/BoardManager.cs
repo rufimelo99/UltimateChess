@@ -181,8 +181,8 @@ public class BoardManager : MonoBehaviour
             //white win
             if(blackPlayer != null)
             {
-                blackPlayer.AddReward(-200.0f);
-                blackPlayer.EndEpisode();
+                blackPlayer.AddReward(blackPlayer.lostGame);
+               
             }
         }
         else 
@@ -191,15 +191,11 @@ public class BoardManager : MonoBehaviour
             //black win
             if (whitePlayer != null)
             {
-                whitePlayer.AddReward(-200.0f);
-                whitePlayer.EndEpisode();
+                whitePlayer.SetReward(whitePlayer.lostGame);
+                
             }
         }
-        foreach (GameObject go in activeChessPieceModel) {
-            Destroy(go);
-        }
         ResetGame();
-        
     }
     /// <summary>
     /// Proceeds to reset some vars and delets pieces once again if needed to (need for the training)
@@ -208,6 +204,16 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public void ResetGame()
     {
+        if (whitePlayer != null)
+        {
+            whitePlayer.EndEpisode();
+        }
+        if (blackPlayer != null)
+        {
+            blackPlayer.EndEpisode();
+        }
+
+
         //reset vars
         isWhiteTurn = true;    
         didWhiteRook0EverMoved = false;
@@ -365,6 +371,7 @@ public class BoardManager : MonoBehaviour
                     chessPieces[column + 3, line] = null;
                     rook.setPosition(column + 3 - 2, line);
                     rook.transform.position = GetTileCenter(column + 3 - 2, line);
+                    chessPieces[column +3-2, line] = rook;
                 }
             }
 

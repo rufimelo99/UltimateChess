@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3047147702115530710}
   - component: {fileID: 3047147702115530711}
-  - component: {fileID: 3785796068080760821}
+  - component: {fileID: -7112245166125606383}
   m_Layer: 0
   m_Name: chessAgentWhite
   m_TagString: Untagged
@@ -53,10 +53,10 @@ MonoBehaviour:
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
-  m_BehaviorName: ChessNoob
+  m_BehaviorName: Hikaru
   TeamId: 0
   m_UseChildSensors: 1
---- !u!114 &3785796068080760821
+--- !u!114 &-7112245166125606383
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -73,21 +73,16 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   isWhitePlayer: 1
-  invalidAction: -0.1
-  validAction: 0.5
-  wonGame: 200
-  lostGame: -200
-  doNothing: -0.1
-  ateRook: 0.5
-  ateKnight: 0.3
-  ateBishop: 0.3
-  ateQueen: 0.9
-  atePawn: 0.1
-  incentiveToCastling: 1
-  strengthPawn: 1
-  strengthHorse: 3
-  strengthBishop: 3
-  strengthRook: 5
-  strengthQueen: 9
-  strengthKing: 50
+  validAction: 0.05
+  wonGame: 1
+  lostGame: -1
+  invalidAction_or_doNothing: -0.05
+  strengthPawn: 0.001
+  strengthHorse: 0.003
+  strengthBishop: 0.003
+  strengthRook: 0.005
+  strengthQueen: 0.009
+  strengthKing: 0.05
+  incentiveToCastling: 0.1
+  incentiveToConvert: 0.1
   useTables: 1
