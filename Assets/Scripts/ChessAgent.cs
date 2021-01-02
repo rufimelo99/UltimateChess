@@ -1687,6 +1687,7 @@ public class ChessAgent : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
+        Debug.Log(vectorAction[0]);
         if (boardCurrentlyPlaying.isWhiteTurn == isWhitePlayer)
         {
             //number max of the generated action is the max on the last condition+1 ->675 updtae: 394
@@ -1697,6 +1698,11 @@ public class ChessAgent : Agent
                 {
                     kingBehaviour(vectorAction[0]+1, kingX, kingZ);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //tower 0 behavior:         28  different possibilities
             else if (vectorAction[0] >= 10 && vectorAction[0] <= 37)
@@ -1704,6 +1710,11 @@ public class ChessAgent : Agent
                 if (rookX0 != -1 && rookZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(rookX0, rookZ0))
                 {
                     towerBehaviour(vectorAction[0] - 9, rookX0, rookZ0);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //tower 1 behavior:         28  different possibilities
@@ -1713,6 +1724,11 @@ public class ChessAgent : Agent
                 {
                     towerBehaviour(vectorAction[0] - 37, rookX1, rookZ1);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //horse 0 behavior:         8  different possibilities
             else if (vectorAction[0] >= 66 && vectorAction[0] <= 73)
@@ -1720,6 +1736,11 @@ public class ChessAgent : Agent
                 if (horseX0 != -1 && horseZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(horseX0, horseZ0))
                 {
                     knightBehaviour(vectorAction[0] - 65, horseX0, horseZ0);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //horse 1 behavior:         8  different possibilities
@@ -1729,13 +1750,23 @@ public class ChessAgent : Agent
                 {
                     knightBehaviour(vectorAction[0] - 73, horseX1, horseZ1);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //bishop 0 behavior:        28  different possibilities
             else if (vectorAction[0] >= 82 && vectorAction[0] <= 109)
             {
                 if (bishopX0 != -1 && bishopZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(bishopX0, bishopZ0))
                 {
-                    bishopBehaviour(vectorAction[0] - 84, bishopX0, bishopZ0);
+                    bishopBehaviour(vectorAction[0] - 81, bishopX0, bishopZ0);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //bishop 1 behavior:        28  different possibilities
@@ -1745,6 +1776,11 @@ public class ChessAgent : Agent
                 {
                     bishopBehaviour(vectorAction[0] - 109, bishopX1, bishopZ1);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //queen behavior:           56  different possibilities
             else if (vectorAction[0] >= 138 && vectorAction[0] <= 193)
@@ -1752,6 +1788,11 @@ public class ChessAgent : Agent
                 if (queenX != -1 && queenZ != -1 && boardCurrentlyPlaying.hasOnePossibleMove(queenX, queenZ))
                 {
                     queenBehaviour(vectorAction[0] - 137, queenX, queenZ);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //pawn behavior:            4  different possibilities
@@ -1761,6 +1802,11 @@ public class ChessAgent : Agent
                 {
                     pawnBehaviour(vectorAction[0] - 193, pawnX0, pawnZ0);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 198 && vectorAction[0] <= 201)
@@ -1768,6 +1814,11 @@ public class ChessAgent : Agent
                 if (pawnX1 != -1 && pawnZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX1, pawnZ1))
                 {
                     pawnBehaviour(vectorAction[0] - 197, pawnX1, pawnZ1);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //pawn behavior:            4  different possibilities
@@ -1777,6 +1828,11 @@ public class ChessAgent : Agent
                 {
                     pawnBehaviour(vectorAction[0] - 201, pawnX2, pawnZ2);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 206 && vectorAction[0] <= 209)
@@ -1784,6 +1840,11 @@ public class ChessAgent : Agent
                 if (pawnX3 != -1 && pawnZ3 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX3, pawnZ3))
                 {
                     pawnBehaviour(vectorAction[0] - 205, pawnX3, pawnZ3);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //pawn behavior:            4  different possibilities
@@ -1793,6 +1854,11 @@ public class ChessAgent : Agent
                 {
                     pawnBehaviour(vectorAction[0] - 209, pawnX4, pawnZ4);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 214 && vectorAction[0] <= 217)
@@ -1800,6 +1866,11 @@ public class ChessAgent : Agent
                 if (pawnX5 != -1 && pawnZ5 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX5, pawnZ5))
                 {
                     pawnBehaviour(vectorAction[0] - 213, pawnX5, pawnZ5);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //pawn behavior:            4  different possibilities
@@ -1809,6 +1880,11 @@ public class ChessAgent : Agent
                 {
                     pawnBehaviour(vectorAction[0] - 217, pawnX6, pawnZ6);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //pawn behavior:            4  different possibilities
             else if (vectorAction[0] >= 222 && vectorAction[0] <= 225)
@@ -1816,6 +1892,11 @@ public class ChessAgent : Agent
                 if (pawnX7 != -1 && pawnZ7 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX7, pawnZ7))
                 {
                     pawnBehaviour(vectorAction[0] - 221, pawnX7, pawnZ7);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
             //extra queen behavior:     56  different possibilities
@@ -1825,6 +1906,11 @@ public class ChessAgent : Agent
                 {
                     queenBehaviour(vectorAction[0] - 225, extraQueenX0, extraQueenZ0);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 282 && vectorAction[0] <= 337)
@@ -1833,6 +1919,11 @@ public class ChessAgent : Agent
                 {
                     queenBehaviour(vectorAction[0] - 281, extraQueenX1, extraQueenZ1);
                 }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
+                }
             }
             //extra queen behavior:     56  different possibilities
             else if (vectorAction[0] >= 338 && vectorAction[0] <= 393)
@@ -1840,6 +1931,11 @@ public class ChessAgent : Agent
                 if (extraQueenX2 != -1 && extraQueenZ2 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX2, extraQueenZ2))
                 {
                     queenBehaviour(vectorAction[0] - 337, extraQueenX2, extraQueenZ2);
+                }
+                else
+                {
+                    validMove = false;
+                    AddReward(invalidAction_or_doNothing);
                 }
             }
 
