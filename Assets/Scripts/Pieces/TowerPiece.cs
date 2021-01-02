@@ -12,7 +12,7 @@ public class TowerPiece : ChessPiece
      /// can not jumo over pieces
      /// </summary>
      /// <returns>bidemensional boolean array with the possible moves</returns>
-    public override bool[,] PossibleMove()
+    public override bool[,] PossibleMove(BoardManager instance)
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
@@ -26,7 +26,7 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
+            enemyPiece = instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX, amountOfMovesInXDirection] = true;
@@ -50,7 +50,7 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
+            enemyPiece = instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX, amountOfMovesInXDirection] = true;
@@ -74,7 +74,7 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
+            enemyPiece = instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[amountOfMovesInXDirection,CurrentZ] = true;
@@ -98,7 +98,7 @@ public class TowerPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
+            enemyPiece = instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[amountOfMovesInXDirection, CurrentZ] = true;

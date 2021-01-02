@@ -11,14 +11,14 @@ public class HorsePiece : ChessPiece
     /// can not go into a own piece
     /// </summary>
     /// <returns>bidemensional boolean array with the possible moves</returns>
-    public override bool[,] PossibleMove()
+    public override bool[,] PossibleMove(BoardManager instance)
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
         //diagonal leftup+left
         if (CurrentX - 2 >= 0 && CurrentZ + 1 <= 7)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ + 1];
+            enemyPiece = instance.chessPieces[CurrentX - 2, CurrentZ + 1];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX - 2, CurrentZ + 1] = true;
@@ -34,7 +34,7 @@ public class HorsePiece : ChessPiece
         //diagonal leftup+up
         if (CurrentX - 1 >= 0 && CurrentZ + 2 <= 7)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ + 2];
+            enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ + 2];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX - 1, CurrentZ + 2] = true;
@@ -50,7 +50,7 @@ public class HorsePiece : ChessPiece
         //diagonal leftdown+left
         if (CurrentX - 2 >= 0 && CurrentZ - 1 >= 0)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ - 1];
+            enemyPiece = instance.chessPieces[CurrentX - 2, CurrentZ - 1];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX - 2, CurrentZ - 1] = true;
@@ -66,7 +66,7 @@ public class HorsePiece : ChessPiece
         //diagonal leftdown+down
         if (CurrentX - 1 >= 0 && CurrentZ - 2 >= 0)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 2];
+            enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ - 2];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX - 1, CurrentZ - 2] = true;
@@ -82,7 +82,7 @@ public class HorsePiece : ChessPiece
         //diagonal rightup+right
         if (CurrentX + 2 <= 7 && CurrentZ + 1 <= 7)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ + 1];
+            enemyPiece = instance.chessPieces[CurrentX + 2, CurrentZ + 1];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX + 2, CurrentZ + 1] = true;
@@ -98,7 +98,7 @@ public class HorsePiece : ChessPiece
         //diagonal rightup+up
         if (CurrentX + 1 <= 7 && CurrentZ + 2 <= 7)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 2];
+            enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ + 2];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX + 1, CurrentZ + 2] = true;
@@ -114,7 +114,7 @@ public class HorsePiece : ChessPiece
         //diagonal rightdown+right
         if (CurrentX + 2 <= 7 && CurrentZ - 1 > 0)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ - 1];
+            enemyPiece = instance.chessPieces[CurrentX + 2, CurrentZ - 1];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX + 2, CurrentZ - 1] = true;
@@ -130,7 +130,7 @@ public class HorsePiece : ChessPiece
         //diagonal rightdown+down
         if (CurrentX + 1 <= 7 && CurrentZ - 2 > 0)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 2];
+            enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ - 2];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX + 1, CurrentZ - 2] = true;

@@ -12,7 +12,7 @@ public class QueenPiece : ChessPiece
     /// can not jumo over pieces
     /// </summary>
     /// <returns>bidemensional boolean array with the possible moves</returns>
-    public override bool[,] PossibleMove()
+    public override bool[,] PossibleMove(BoardManager instance)
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
@@ -26,7 +26,7 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
+            enemyPiece = instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX, amountOfMovesInXDirection] = true;
@@ -50,7 +50,7 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX, amountOfMovesInXDirection];
+            enemyPiece = instance.chessPieces[CurrentX, amountOfMovesInXDirection];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX, amountOfMovesInXDirection] = true;
@@ -74,7 +74,7 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
+            enemyPiece = instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[amountOfMovesInXDirection, CurrentZ] = true;
@@ -98,7 +98,7 @@ public class QueenPiece : ChessPiece
             {
                 break;
             }
-            enemyPiece = BoardManager.Instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
+            enemyPiece = instance.chessPieces[amountOfMovesInXDirection, CurrentZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[amountOfMovesInXDirection, CurrentZ] = true;
@@ -124,7 +124,7 @@ public class QueenPiece : ChessPiece
         {
             posX++;
             posZ++;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;
@@ -145,7 +145,7 @@ public class QueenPiece : ChessPiece
         {
             posX--;
             posZ++;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;
@@ -166,7 +166,7 @@ public class QueenPiece : ChessPiece
         {
             posX--;
             posZ--;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;
@@ -187,7 +187,7 @@ public class QueenPiece : ChessPiece
         {
             posX++;
             posZ--;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;

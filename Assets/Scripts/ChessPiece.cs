@@ -26,7 +26,7 @@ public abstract class ChessPiece : MonoBehaviour
     /// <summary>
     /// Function that returns a bidemensional boolean array with the possible moves
     /// </summary>
-    public virtual bool[,] PossibleMove() {
+    public virtual bool[,] PossibleMove(BoardManager instance) {
         return new bool[8,8];
     }
 

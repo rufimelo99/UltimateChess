@@ -11,7 +11,7 @@ public class KingPiece : ChessPiece
     /// can not go into a own piece
     /// </summary>
     /// <returns>bidemensional boolean array with the possible moves</returns>
-    public override bool[,] PossibleMove()
+    public override bool[,] PossibleMove(BoardManager instance)
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
@@ -22,7 +22,7 @@ public class KingPiece : ChessPiece
         {
             if (CurrentZ - 1 >= 0)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 1];
+                enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ - 1];
                 if (enemyPiece == null)
                 {
                     possibleMovesMap[CurrentX - 1, CurrentZ - 1] = true;
@@ -37,7 +37,7 @@ public class KingPiece : ChessPiece
             }
             if (CurrentZ + 1 <= 7)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ + 1];
+                enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ + 1];
                 if (enemyPiece == null)
                 {
                     possibleMovesMap[CurrentX - 1, CurrentZ + 1] = true;
@@ -51,7 +51,7 @@ public class KingPiece : ChessPiece
                 }
             }
             //to the left
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ];
+            enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX - 1, CurrentZ] = true;
@@ -70,7 +70,7 @@ public class KingPiece : ChessPiece
         {
             if (CurrentZ - 1 >= 0)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 1];
+                enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ - 1];
                 if (enemyPiece == null)
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
@@ -85,7 +85,7 @@ public class KingPiece : ChessPiece
             }
             if (CurrentZ + 1 <= 7)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 1];
+                enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ + 1];
                 if (enemyPiece == null)
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
@@ -99,7 +99,7 @@ public class KingPiece : ChessPiece
                 }
             }
             //to the right
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ];
+            enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX + 1, CurrentZ] = true;
@@ -116,7 +116,7 @@ public class KingPiece : ChessPiece
         //up
         if (CurrentZ + 1 <= 7)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX, CurrentZ + 1];
+            enemyPiece = instance.chessPieces[CurrentX, CurrentZ + 1];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX, CurrentZ + 1] = true;
@@ -132,7 +132,7 @@ public class KingPiece : ChessPiece
         //down
         if (CurrentZ -1 > 0)
         {
-            enemyPiece = BoardManager.Instance.chessPieces[CurrentX, CurrentZ - 1];
+            enemyPiece = instance.chessPieces[CurrentX, CurrentZ - 1];
             if (enemyPiece == null)
             {
                 possibleMovesMap[CurrentX, CurrentZ - 1] = true;
@@ -148,22 +148,22 @@ public class KingPiece : ChessPiece
         //castling
         if (isWhite)
         {
-            if (!BoardManager.Instance.didWhiteKingEverMoved && !BoardManager.Instance.didWhiteRook0EverMoved && BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 3, CurrentZ] == null)
+            if (!instance.didWhiteKingEverMoved && !instance.didWhiteRook0EverMoved && instance.chessPieces[CurrentX - 1, CurrentZ] == null && instance.chessPieces[CurrentX - 2, CurrentZ] == null && instance.chessPieces[CurrentX - 3, CurrentZ] == null)
             {
                 possibleMovesMap[CurrentX - 3, CurrentZ] = true;
             }
-            if (!BoardManager.Instance.didWhiteKingEverMoved && !BoardManager.Instance.didWhiteRook1EverMoved && BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ] == null)
+            if (!instance.didWhiteKingEverMoved && !instance.didWhiteRook1EverMoved && instance.chessPieces[CurrentX + 1, CurrentZ] == null && instance.chessPieces[CurrentX + 2, CurrentZ] == null)
             {
                 possibleMovesMap[CurrentX + 2, CurrentZ] = true;
             }
         }
         else
         {
-            if (!BoardManager.Instance.didBlackKingEverMoved && !BoardManager.Instance.didBlackRook0EverMoved && BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 2, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX - 3, CurrentZ] == null)
+            if (!instance.didBlackKingEverMoved && !instance.didBlackRook0EverMoved && instance.chessPieces[CurrentX - 1, CurrentZ] == null && instance.chessPieces[CurrentX - 2, CurrentZ] == null && instance.chessPieces[CurrentX - 3, CurrentZ] == null)
             {
                 possibleMovesMap[CurrentX - 3, CurrentZ] = true;
             }
-            if (!BoardManager.Instance.didBlackKingEverMoved && !BoardManager.Instance.didBlackRook1EverMoved && BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ] == null && BoardManager.Instance.chessPieces[CurrentX + 2, CurrentZ] == null)
+            if (!instance.didBlackKingEverMoved && !instance.didBlackRook1EverMoved && instance.chessPieces[CurrentX + 1, CurrentZ] == null && instance.chessPieces[CurrentX + 2, CurrentZ] == null)
             {
                 possibleMovesMap[CurrentX + 2, CurrentZ] = true;
             }

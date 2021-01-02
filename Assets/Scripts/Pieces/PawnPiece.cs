@@ -12,11 +12,11 @@ public class PawnPiece : ChessPiece
     /// can not go into a own piece
     /// </summary>
     /// <returns>bidemensional boolean array with the possible moves</returns>
-    public override bool[,] PossibleMove() {
+    public override bool[,] PossibleMove(BoardManager instance) {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece, enemyPiece2;
         //check en passant moves
-        int[] e = BoardManager.Instance.EnPassantMove;
+        int[] e = instance.EnPassantMove;
         //White Turn
         if (isWhite)
         {
@@ -29,7 +29,7 @@ public class PawnPiece : ChessPiece
                 {
                     possibleMovesMap[CurrentX - 1, CurrentZ + 1] = true;
                 }
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ + 1];
+                enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
                     possibleMovesMap[CurrentX - 1, CurrentZ + 1] = true;
@@ -43,7 +43,7 @@ public class PawnPiece : ChessPiece
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
                 }
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ + 1];
+                enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ + 1];
                 if (enemyPiece != null && !enemyPiece.isWhite)
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ + 1] = true;
@@ -52,7 +52,7 @@ public class PawnPiece : ChessPiece
             //1 forward
             if(CurrentZ != 7)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX, CurrentZ + 1];
+                enemyPiece = instance.chessPieces[CurrentX, CurrentZ + 1];
                 if (enemyPiece == null)
                 {
                     possibleMovesMap[CurrentX, CurrentZ + 1] = true;
@@ -61,8 +61,8 @@ public class PawnPiece : ChessPiece
                 //in the begining
                 if (CurrentZ == 1)
                 {
-                    enemyPiece = BoardManager.Instance.chessPieces[CurrentX, CurrentZ + 1];
-                    enemyPiece2 = BoardManager.Instance.chessPieces[CurrentX, CurrentZ + 2];
+                    enemyPiece = instance.chessPieces[CurrentX, CurrentZ + 1];
+                    enemyPiece2 = instance.chessPieces[CurrentX, CurrentZ + 2];
                     if (enemyPiece == null && enemyPiece2 == null)
                     {
                         possibleMovesMap[CurrentX, CurrentZ + 2] = true;
@@ -82,7 +82,7 @@ public class PawnPiece : ChessPiece
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
                 }
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX + 1, CurrentZ - 1];
+                enemyPiece = instance.chessPieces[CurrentX + 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)
                 {
                     possibleMovesMap[CurrentX + 1, CurrentZ - 1] = true;
@@ -96,7 +96,7 @@ public class PawnPiece : ChessPiece
                 {
                     possibleMovesMap[CurrentX -  1, CurrentZ - 1] = true;
                 }
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX - 1, CurrentZ - 1];
+                enemyPiece = instance.chessPieces[CurrentX - 1, CurrentZ - 1];
                 if (enemyPiece != null && enemyPiece.isWhite)
                 {
                     possibleMovesMap[CurrentX - 1, CurrentZ - 1] = true;
@@ -105,7 +105,7 @@ public class PawnPiece : ChessPiece
             //1 forward
             if (CurrentZ != 0)
             {
-                enemyPiece = BoardManager.Instance.chessPieces[CurrentX, CurrentZ - 1];
+                enemyPiece = instance.chessPieces[CurrentX, CurrentZ - 1];
                 if (enemyPiece == null)
                 {
                     possibleMovesMap[CurrentX, CurrentZ - 1] = true;
@@ -114,8 +114,8 @@ public class PawnPiece : ChessPiece
                 //in the begining
                 if (CurrentZ == 6)
                 {
-                    enemyPiece = BoardManager.Instance.chessPieces[CurrentX, CurrentZ - 1];
-                    enemyPiece2 = BoardManager.Instance.chessPieces[CurrentX, CurrentZ - 2];
+                    enemyPiece = instance.chessPieces[CurrentX, CurrentZ - 1];
+                    enemyPiece2 = instance.chessPieces[CurrentX, CurrentZ - 2];
                     if (enemyPiece == null && enemyPiece2 == null)
                     {
                         possibleMovesMap[CurrentX, CurrentZ - 2] = true;

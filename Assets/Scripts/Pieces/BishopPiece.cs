@@ -12,7 +12,7 @@ public class BishopPiece : ChessPiece
     /// can not go into a own piece
     /// </summary>
     /// <returns>bidemensional boolean array with the possible moves</returns>
-    public override bool[,] PossibleMove()
+    public override bool[,] PossibleMove(BoardManager instance)
     {
         bool[,] possibleMovesMap = new bool[8, 8];
         ChessPiece enemyPiece;
@@ -26,7 +26,7 @@ public class BishopPiece : ChessPiece
         {
             posX++;
             posZ++;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;
@@ -47,7 +47,7 @@ public class BishopPiece : ChessPiece
         {
             posX--;
             posZ++;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;
@@ -68,7 +68,7 @@ public class BishopPiece : ChessPiece
         {
             posX--;
             posZ--;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;
@@ -89,7 +89,7 @@ public class BishopPiece : ChessPiece
         {
             posX++;
             posZ--;
-            enemyPiece = BoardManager.Instance.chessPieces[posX, posZ];
+            enemyPiece = instance.chessPieces[posX, posZ];
             if (enemyPiece == null)
             {
                 possibleMovesMap[posX, posZ] = true;

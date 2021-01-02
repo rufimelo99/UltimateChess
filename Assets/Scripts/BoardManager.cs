@@ -14,7 +14,14 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public ChessAgent whitePlayer;
     public ChessAgent blackPlayer;
-    public int offsetY = 0;
+    [HideInInspector]
+    public float offsetX = 0;
+    [HideInInspector]
+    public float offsetZ = 0;
+    [HideInInspector]
+    public float offsetY = 0;
+    public bool training_enable = false;
+    
     /// <summary>
     /// Variables used for Castling Movement
     /// Castling consists in almost "swapping" a rook with the king
@@ -85,6 +92,10 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
+
+        offsetX = this.gameObject.transform.position.x;
+        offsetZ = this.gameObject.transform.position.z;
+        offsetY = this.gameObject.transform.position.y;
         activeChessPieceModel = new List<GameObject>();
         chessPieces = new ChessPiece[8, 8];
         EnPassantMove = new int[2] { -1, -1 };
@@ -191,7 +202,7 @@ public class BoardManager : MonoBehaviour
             //black win
             if (whitePlayer != null)
             {
-                whitePlayer.SetReward(whitePlayer.lostGame);
+                whitePlayer.AddReward(whitePlayer.lostGame);
                 
             }
         }
@@ -229,6 +240,7 @@ public class BoardManager : MonoBehaviour
         }
         InitialSpawning();
 
+
     }
     /// <summary>
     /// Updates activeChessPiece in case it has at least one move 
@@ -246,7 +258,7 @@ public class BoardManager : MonoBehaviour
             return;
         }
         bool hasAtLeastOneMove = false;
-        allowedMoves = chessPieces[x, z].PossibleMove();
+        allowedMoves = chessPieces[x, z].PossibleMove(this);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++)
             {
@@ -259,7 +271,7 @@ public class BoardManager : MonoBehaviour
         {
             return;
         }
-        allowedMoves = chessPieces[x, z].PossibleMove();
+        allowedMoves = chessPieces[x, z].PossibleMove(this);
         activeChessPiece = chessPieces[x, z];
         HighligthsManager.Instance.ownTileHighligth(x, z);
         HighligthsManager.Instance.AllowedMovesHighlight(allowedMoves);
@@ -390,39 +402,70 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public void InitialSpawning()
     {
+        if (training_enable)
+        {
+            int index = Random.Range(0, 8);
+            switch (index)
+            {
+                case 0:
+                    PawnsSpawning();
+                    break;
+                case 1:
+                    TowersKnightsSpawning();
+                    break;
+                case 2:
+                    TowersQueensSpawning();
+                    break;
+                case 3:
+                    TowersSpawning();
+                    break;
+                case 4:
+                    QueensSpawning();
+                    break;
+                case 5:
+                    BishopsSpawning();
+                    break;
+                case 6:
+                    BishopsQueensSpawning();
+                    break;
+                case 7:
+                    PawnsSpawning();
+                    break;
+            }
+        }
+        else
+        {
+            standardSpawn();
+        }
+    }
+    public void standardSpawn()
+    {
         //White Pieces
-        
+
         SpawnPiece(0, 0, "R");
         SpawnPiece(7, 0, "R");
-
-        SpawnPiece(1, 0, "N"); 
+        SpawnPiece(1, 0, "N");
         SpawnPiece(6, 0, "N");
-
         SpawnPiece(5, 0, "B");
         SpawnPiece(2, 0, "B");
-
         SpawnPiece(0, 1, "P");
-         SpawnPiece(1, 1, "P");
-         SpawnPiece(2, 1, "P");
-         SpawnPiece(3, 1, "P");
-         SpawnPiece(4, 1, "P");
-         SpawnPiece(5, 1, "P");
-         SpawnPiece(6, 1, "P");
-         SpawnPiece(7, 1, "P");
-         
+        SpawnPiece(1, 1, "P");
+        SpawnPiece(2, 1, "P");
+        SpawnPiece(3, 1, "P");
+        SpawnPiece(4, 1, "P");
+        SpawnPiece(5, 1, "P");
+        SpawnPiece(6, 1, "P");
+        SpawnPiece(7, 1, "P");
         SpawnPiece(3, 0, "Q");
-       SpawnPiece(4, 0, "K");
-
+        SpawnPiece(4, 0, "K");
 
         //Black Pieces
-       
         SpawnPiece(0, 7, "r");
-        SpawnPiece(7, 7, "r"); 
+        SpawnPiece(7, 7, "r");
         SpawnPiece(1, 7, "n");
         SpawnPiece(6, 7, "n");
         SpawnPiece(5, 7, "b");
         SpawnPiece(2, 7, "b");
-        
         SpawnPiece(0, 6, "p");
         SpawnPiece(1, 6, "p");
         SpawnPiece(2, 6, "p");
@@ -431,9 +474,155 @@ public class BoardManager : MonoBehaviour
         SpawnPiece(5, 6, "p");
         SpawnPiece(6, 6, "p");
         SpawnPiece(7, 6, "p");
-        
         SpawnPiece(3, 7, "q");
         SpawnPiece(4, 7, "k");
+    }
+    public void PawnsSpawning()
+    {
+        //White Pieces
+
+        SpawnPiece(0, 1, "P");
+        SpawnPiece(1, 1, "P");
+        SpawnPiece(2, 1, "P");
+        SpawnPiece(3, 1, "P");
+        SpawnPiece(4, 1, "P");
+        SpawnPiece(5, 1, "P");
+        SpawnPiece(6, 1, "P");
+        SpawnPiece(7, 1, "P");
+        SpawnPiece(4, 0, "K");
+
+        //Black Pieces
+        SpawnPiece(0, 6, "p");
+        SpawnPiece(1, 6, "p");
+        SpawnPiece(2, 6, "p");
+        SpawnPiece(3, 6, "p");
+        SpawnPiece(4, 6, "p");
+        SpawnPiece(5, 6, "p");
+        SpawnPiece(6, 6, "p");
+        SpawnPiece(7, 6, "p");
+        SpawnPiece(4, 7, "k");
+    }
+    public void TowersSpawning()
+    {
+        //White Pieces
+        SpawnPiece(0, 0, "R");
+        SpawnPiece(7, 0, "R");
+        SpawnPiece(4, 0, "K");
+
+        //Black Pieces
+        SpawnPiece(0, 7, "r");
+        SpawnPiece(7, 7, "r");
+        SpawnPiece(4, 7, "k");
+    }
+    public void TowersQueensSpawning()
+    {
+        //White Pieces
+        SpawnPiece(0, 0, "R");
+        SpawnPiece(7, 0, "R");
+        SpawnPiece(4, 0, "K");
+        SpawnPiece(3, 0, "Q");
+
+        //Black Pieces
+        SpawnPiece(0, 7, "r");
+        SpawnPiece(7, 7, "r");
+        SpawnPiece(3, 7, "q");
+        SpawnPiece(4, 7, "k");
+    }
+    public void TowersKnightsSpawning()
+    {
+        //White Pieces
+        SpawnPiece(0, 0, "R");
+        SpawnPiece(7, 0, "R");
+        SpawnPiece(4, 0, "K");
+        SpawnPiece(1, 0, "N");
+        SpawnPiece(6, 0, "N");
+
+        //Black Pieces
+        SpawnPiece(0, 7, "r");
+        SpawnPiece(7, 7, "r");
+        SpawnPiece(4, 7, "k");
+        SpawnPiece(1, 7, "n");
+        SpawnPiece(6, 7, "n");
+    }
+    public void QueensSpawning()
+    {
+        //White Pieces
+        SpawnPiece(0, 0, "R");
+        SpawnPiece(7, 0, "R");
+        SpawnPiece(4, 0, "K");
+
+        //Black Pieces
+        SpawnPiece(3, 7, "q");
+        SpawnPiece(4, 7, "k");
+    }
+    public void BishopsSpawning()
+    {
+        //White Pieces
+        SpawnPiece(5, 0, "B");
+        SpawnPiece(2, 0, "B");
+        SpawnPiece(4, 0, "K");
+
+        //Black Pieces
+        SpawnPiece(5, 7, "b");
+        SpawnPiece(2, 7, "b");
+        SpawnPiece(4, 7, "k");
+    }
+    public void BishopsQueensSpawning()
+    {
+        //White Pieces
+        SpawnPiece(5, 0, "B");
+        SpawnPiece(2, 0, "B");
+        SpawnPiece(4, 0, "K");
+        SpawnPiece(3, 0, "Q");
+
+        //Black Pieces
+        SpawnPiece(5, 7, "b");
+        SpawnPiece(2, 7, "b");
+        SpawnPiece(3, 7, "q");
+        SpawnPiece(4, 7, "k");
+    }
+    public void KnightsSpawning()
+    {
+        //White Pieces
+        SpawnPiece(4, 0, "K");
+        SpawnPiece(1, 0, "N");
+        SpawnPiece(6, 0, "N");
+
+        //Black Pieces
+        SpawnPiece(4, 7, "k");
+        SpawnPiece(1, 7, "n");
+        SpawnPiece(6, 7, "n");
+    }
+    /// <summary>
+    /// Scenario from chess.com
+    /// </summary>
+    public void ChessDotCom_0()
+    {
+        //White Pieces
+        SpawnPiece(0, 1, "P");
+        SpawnPiece(1, 1, "P");
+        SpawnPiece(2, 1, "P");
+        SpawnPiece(4, 3, "P");
+        SpawnPiece(6, 2, "P");
+        SpawnPiece(3, 5, "R");
+        SpawnPiece(3, 2, "B");
+        SpawnPiece(5, 3, "B");
+        SpawnPiece(2, 0, "K");
+        SpawnPiece(3, 7, "Q");
+
+        //Black Pieces
+        SpawnPiece(0, 6, "p");
+        SpawnPiece(1, 5, "p");
+        SpawnPiece(2, 3, "p");
+        SpawnPiece(5, 6, "p");
+        SpawnPiece(6, 6, "p");
+        SpawnPiece(7, 6, "p");
+        SpawnPiece(0, 7, "r");
+        SpawnPiece(2, 7, "b");
+        SpawnPiece(1, 6, "q");
+        SpawnPiece(4, 6, "r");
+        SpawnPiece(6, 7, "k");
+        SpawnPiece(5, 0, "n");
     }
     /// <summary>
     /// updates the CurrentX and CurrentZ to the elected tile x and z 
@@ -478,9 +667,9 @@ public class BoardManager : MonoBehaviour
     private Vector3 GetTileCenter(int x, int z)
     {
         Vector3 origin = Vector3.zero;
-        origin.x += (TILE_SIZE * x) + TILE_SIZE / 2;
+        origin.x += (TILE_SIZE * x) + TILE_SIZE / 2 + offsetX;
         origin.y = offsetY;
-        origin.z += (TILE_SIZE * z) + TILE_SIZE / 2;
+        origin.z += (TILE_SIZE * z) + TILE_SIZE / 2 + offsetZ;
         return origin;
     }
     /// <summary>
@@ -535,7 +724,7 @@ public class BoardManager : MonoBehaviour
     public bool hasOnePossibleMove(int x, int z)
     {
         bool hasAtLeastOneMove = false;
-        allowedMoves = chessPieces[x, z].PossibleMove();
+        allowedMoves = chessPieces[x, z].PossibleMove(this);
         for (int i = 0; i < 8; i++)
         {
             for (int j = 0; j < 8; j++)

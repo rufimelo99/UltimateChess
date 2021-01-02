@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 96
-    NumStackedVectorObservations: 1
-    VectorActionSize: a3020000
+    VectorObservationSize: 77
+    NumStackedVectorObservations: 10
+    VectorActionSize: 8a010000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
   m_Model: {fileID: 0}
@@ -55,7 +55,7 @@ MonoBehaviour:
   m_BehaviorType: 0
   m_BehaviorName: Hikaru
   TeamId: 0
-  m_UseChildSensors: 1
+  m_UseChildSensors: 0
 --- !u!114 &-7112245166125606383
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -73,16 +73,17 @@ MonoBehaviour:
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
   isWhitePlayer: 1
-  validAction: 0.05
+  boardCurrentlyPlaying: {fileID: 0}
+  validAction: 0.001
   wonGame: 1
   lostGame: -1
-  invalidAction_or_doNothing: -0.05
-  strengthPawn: 0.001
-  strengthHorse: 0.003
-  strengthBishop: 0.003
-  strengthRook: 0.005
-  strengthQueen: 0.009
-  strengthKing: 0.05
-  incentiveToCastling: 0.1
-  incentiveToConvert: 0.1
-  useTables: 1
+  invalidAction_or_doNothing: -0.000001
+  strengthPawn: 0.00001
+  strengthHorse: 0.00003
+  strengthBishop: 0.00003
+  strengthRook: 0.00005
+  strengthQueen: 0.00009
+  strengthKing: 0.0005
+  incentiveToCastling: 0.001
+  incentiveToConvert: 0.001
+  useTables: 0
