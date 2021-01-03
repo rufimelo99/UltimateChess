@@ -6,12 +6,12 @@ Library/
 Logs/
 
 
-
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #
 ExportedObj/
 obj/
+results/
 *.svd
 *.userprefs
 /*.csproj

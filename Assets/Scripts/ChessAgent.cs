@@ -1687,7 +1687,7 @@ public class ChessAgent : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        Debug.Log(vectorAction[0]);
+        //Debug.Log(vectorAction[0]);
         if (boardCurrentlyPlaying.isWhiteTurn == isWhitePlayer)
         {
             //number max of the generated action is the max on the last condition+1 ->675 updtae: 394
