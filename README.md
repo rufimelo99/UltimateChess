@@ -157,3 +157,7 @@ Over the project there might be situations where the Knight is mentioned as Hors
 
 **Limitations**
 This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). Also ending game conditions are not implemented and pawns can only spawn queens.
+
+
+Note:
+(Learning resumed at step 268679 with 1200 ELO)
