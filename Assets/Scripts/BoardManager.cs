@@ -100,8 +100,15 @@ public class BoardManager : MonoBehaviour
         chessPieces = new ChessPiece[8, 8];
         EnPassantMove = new int[2] { -1, -1 };
         InitialSpawning();
+        if (whitePlayer != null)
+        {
+            whitePlayer.OnEpisodeBegin();
+        }
+        if (blackPlayer != null)
+        {
+            blackPlayer.OnEpisodeBegin();
+        }
         Instance = this;
-
     }
     /// <summary>
     /// Update() is called one per frame
@@ -120,7 +127,6 @@ public class BoardManager : MonoBehaviour
             if (whitePlayer == null)
             {
                 UpdateSelection();
-                //Draw();
 
                 if (Input.GetMouseButtonDown(0))
                 {
@@ -144,6 +150,7 @@ public class BoardManager : MonoBehaviour
             else
             {
                 whitePlayer.RequestDecision();
+
             }
         }
         //Black PLaying
@@ -174,6 +181,7 @@ public class BoardManager : MonoBehaviour
             //AI playing
             else
             {
+                //Debug.Log("Black player should play -.-");
                 blackPlayer.RequestDecision();
             }
         }
@@ -184,7 +192,7 @@ public class BoardManager : MonoBehaviour
     /// if a Human if is playing, it will reset the board in order to play
     /// Otherwise, the AI when simulating, will restart on their own (at least when training)
     /// </summary>
-    private void FinishGame()
+    public void FinishGame()
     {
         if (isWhiteTurn)
         {
@@ -193,7 +201,8 @@ public class BoardManager : MonoBehaviour
             if(blackPlayer != null)
             {
                 blackPlayer.AddReward(blackPlayer.lostGame);
-               
+                blackPlayer.KingeatenNextMove = false;
+
             }
         }
         else 
@@ -203,10 +212,21 @@ public class BoardManager : MonoBehaviour
             if (whitePlayer != null)
             {
                 whitePlayer.AddReward(whitePlayer.lostGame);
-                
+                whitePlayer.KingeatenNextMove = false;
             }
         }
         ResetGame();
+    }
+    public void endEpisodes()
+    {
+        if (whitePlayer != null)
+        {
+            whitePlayer.endAgentEpisode();
+        }
+        if (blackPlayer != null)
+        {
+            blackPlayer.endAgentEpisode();
+        }
     }
     /// <summary>
     /// Proceeds to reset some vars and delets pieces once again if needed to (need for the training)
@@ -215,15 +235,7 @@ public class BoardManager : MonoBehaviour
     /// </summary>
     public void ResetGame()
     {
-        if (whitePlayer != null)
-        {
-            whitePlayer.EndEpisode();
-        }
-        if (blackPlayer != null)
-        {
-            blackPlayer.EndEpisode();
-        }
-
+        endEpisodes();
 
         //reset vars
         isWhiteTurn = true;    
@@ -239,7 +251,14 @@ public class BoardManager : MonoBehaviour
             Destroy(go);
         }
         InitialSpawning();
-
+        if (whitePlayer != null)
+        {
+            whitePlayer.OnEpisodeBegin();
+        }
+        if (blackPlayer != null)
+        {
+            blackPlayer.OnEpisodeBegin();
+        }
 
     }
     /// <summary>
@@ -441,7 +460,6 @@ public class BoardManager : MonoBehaviour
     public void standardSpawn()
     {
         //White Pieces
-
         SpawnPiece(0, 0, "R");
         SpawnPiece(7, 0, "R");
         SpawnPiece(1, 0, "N");
@@ -637,9 +655,9 @@ public class BoardManager : MonoBehaviour
         if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("ChessPlane")))
         {
             //where did the collision happened
-            //Debug.Log(hit.point);
-            CurrentTileX = (int)hit.point.x;
-            CurrentTileZ = (int)hit.point.z;
+            
+            CurrentTileX = (int)(hit.point.x + offsetX);
+            CurrentTileZ = (int)(hit.point.z + offsetZ);
         }
         else
         {
@@ -785,4 +803,6 @@ public class BoardManager : MonoBehaviour
             }
         }
     }
+
+
 }

@@ -14,7 +14,8 @@ public class ChessAgent : Agent
     /// <summary>
     /// since this game interacts with two agents, i needed to reward when a king would be eaten
     /// </summary>
-    private bool KingeatenNextMove = false;
+    [HideInInspector]
+    public bool KingeatenNextMove = false;
     /// <summary>
     /// Reward Values.. changed over time
     /// -actions
@@ -22,23 +23,25 @@ public class ChessAgent : Agent
     /// -penalize for missing pieces ? (except extra queens)
     /// little incentive to castling since it is a powerful move
     /// </summary>
-    public float validAction = 0.001f;
+    public float validAction = 0.01f;
     public float wonGame = 1.0f;
     public float lostGame = -1.0f;
-    public float invalidAction_or_doNothing = -0.000001f;
+    public float invalidAction_or_doNothing = -0.005f;
     //strengths Update at 29-12-2020
-    public float strengthPawn        = 0.00001f;
-    public float strengthHorse       = 0.00003f;
-    public float strengthBishop      = 0.00003f;
-    public float strengthRook        = 0.00005f;
-    public float strengthQueen       = 0.00009f;
-    public float strengthKing        = 0.0005f;
+    public float strengthPawn        = 0.001f;
+    public float strengthHorse       = 0.003f;
+    public float strengthBishop      = 0.003f;
+    public float strengthRook        = 0.005f;
+    public float strengthQueen       = 0.009f;
+    public float strengthKing        = 0.05f;
     //extra incentive for castling
-    public float incentiveToCastling = 0.001f;
-    public float incentiveToConvert = 0.001f;
-    public bool useTables = false;
+    public float incentiveToCastling = 0.1f;
+    public float incentiveToConvert = 0.1f;
     private bool validMove = false;
     private float tempReward = 0.0f;
+    public bool debug = false;
+    private float episodeTime; 
+
 
     float[,] tableKingWhite = new float[8, 8] {     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
@@ -47,9 +50,9 @@ public class ChessAgent : Agent
                                                     { -2.0f, -3.0f , -3.0f , -4.0f , -4.0f , -3.0f , -3.0f , -2.0f },
                                                     { -1.0f, -2.0f , -2.0f , -2.0f , -2.0f , -2.0f , -2.0f , -1.0f },
                                                     {  2.0f,  0.0f,   0.0f,   0.0f,   0.0f,   0.0f,   0.0f ,  2.0f },
-                                                    {  2.0f,  3.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  3.0f ,  2.0f } };
+                                                    {  2.0f,  3.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  3.0f ,  2.0f }};
 
-    float[,] tableQueenWhite = new float[8, 8] {         { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f },
+    float[,] tableQueenWhite = new float[8, 8] {    { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f },
                                                     { -1.0f,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f ,  0.0f , -1.0f },
                                                     { -1.0f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -1.0f },
                                                     { -0.5f,  0.0f ,  0.5f ,  0.5f ,  0.5f ,  0.5f ,  0.0f , -0.5f },
@@ -58,7 +61,7 @@ public class ChessAgent : Agent
                                                     { -1.0f,  0.0f ,  0.5f ,  0.0f ,  0.0f ,  0.0f ,  0.0f , -1.0f },
                                                     { -2.0f, -1.0f , -1.0f , -0.5f , -0.5f , -1.0f , -1.0f , -2.0f }};
 
-    float[,] tableRookWhite = new float[8, 8] {          {  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f},
+    float[,] tableRookWhite = new float[8, 8] {     {  0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f,  0.0f},
                                                     {  0.5f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f,  0.5f},
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
@@ -78,7 +81,7 @@ public class ChessAgent : Agent
                                                     { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f}
                                                     };
 
-    float[,] tableHorseWhite = new float[8, 8] {         { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
+    float[,] tableHorseWhite = new float[8, 8] {    { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
                                                     { -4.0f, -2.0f,  0.0f,  0.0f,  0.0f,  0.0f, -2.0f, -4.0f},
                                                     { -3.0f,  0.0f,  1.0f,  1.5f,  1.5f,  1.0f,  0.0f, -3.0f},
                                                     { -3.0f,  0.5f,  1.5f,  2.0f,  2.0f,  1.5f,  0.5f, -3.0f},
@@ -88,7 +91,7 @@ public class ChessAgent : Agent
                                                     { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f}
                                                     };
 
-    float[,] tablePawnWhite = new float[8, 8] {          { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
+    float[,] tablePawnWhite = new float[8, 8] {     { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
                                                     { 5.0f,  5.0f,  5.0f,  5.0f,  5.0f,  5.0f,  5.0f, 5.0f},
                                                     { 1.0f,  1.0f,  2.0f,  3.0f,  3.0f,  2.0f,  1.0f, 1.0f},
                                                     { 0.5f,  0.5f,  1.0f,  2.5f,  2.5f,  1.0f,  0.5f, 0.5f},
@@ -124,19 +127,16 @@ public class ChessAgent : Agent
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
                                                     { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f},
-                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f}
-                                                    };
+                                                    { -0.5f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f}};
 
-    float[,] tableBishopBlack = new float[8, 8] {   
-                                                    { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
+    float[,] tableBishopBlack = new float[8, 8] {   { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
                                                     { -2.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -2.0f},
                                                     { -1.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, -1.0f},
                                                     { -1.0f,  0.0f,  0.5f,  1.0f,  1.0f,  0.5f,  0.0f, -1.0f},
                                                     { -1.0f,  0.5f,  0.5f,  1.0f,  1.0f,  0.5f,  0.5f, -1.0f},
                                                     { -1.0f,  0.0f,  1.0f,  1.0f,  1.0f,  1.0f,  0.0f, -1.0f},
                                                     { -1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f,  1.0f, -1.0f},
-                                                    { -1.0f,  0.5f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f, -1.0f}
-                                                    };
+                                                    { -1.0f,  0.5f,  0.0f,  0.0f,  0.0f,  0.0f,  0.5f, -1.0f}};
 
     float[,] tableHorseBlack = new float[8, 8] {    { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
                                                     { -5.0f, -4.0f, -3.0f, -3.0f, -3.0f, -3.0f, -4.0f, -5.0f},
@@ -145,8 +145,7 @@ public class ChessAgent : Agent
                                                     { -3.0f,  0.5f,  1.5f,  2.0f,  2.0f,  1.5f,  0.5f, -3.0f},
                                                     { -3.0f,  0.0f,  1.5f,  2.0f,  2.0f,  1.5f,  0.0f, -3.0f},
                                                     { -3.0f,  0.5f,  1.0f,  1.5f,  1.5f,  1.0f,  0.5f, -3.0f},
-                                                    { -4.0f, -2.0f,  0.0f,  0.5f,  0.5f,  0.0f, -2.0f, -4.0f}
-                                                    };
+                                                    { -4.0f, -2.0f,  0.0f,  0.5f,  0.5f,  0.0f, -2.0f, -4.0f}};
 
     float[,] tablePawnBlack = new float[8, 8] {     { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
                                                     { 0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f,  0.0f, 0.0f},
@@ -155,53 +154,49 @@ public class ChessAgent : Agent
                                                     { 0.5f,  0.5f,  1.0f,  2.5f,  2.5f,  1.0f,  0.5f, 0.5f},
                                                     { 0.0f,  0.0f,  0.0f,  2.0f,  2.0f,  0.0f,  0.0f, 0.0f},
                                                     { 0.5f, -0.5f, -1.0f,  0.0f,  0.0f, -1.0f, -0.5f, 0.5f},
-                                                    { 0.5f,  1.0f,  1.0f, -2.0f, -2.0f,  1.0f,  1.0f, 0.5f}
-                                                    };
-
-
-
+                                                    { 0.5f,  1.0f,  1.0f, -2.0f, -2.0f,  1.0f,  1.0f, 0.5f}};
 
     //Kings Positions
     int kingX;
     int kingZ;
-    int otherkingX;
-    int otherkingZ;
+    int enemykingX;
+    int enemykingZ;
 
     //Towers Positions
     int rookX0;
     int rookZ0;
     int rookX1;
     int rookZ1;
-    int otherRookX0;
-    int otherRookZ0;
-    int otherRookX1;
-    int otherRookZ1;
+    int enemyRookX0;
+    int enemyRookZ0;
+    int enemyRookX1;
+    int enemyRookZ1;
 
     //Horses/Knights Positions
     int horseX0;
     int horseZ0;
     int horseX1;
     int horseZ1;
-    int otherHorseX0;
-    int otherHorseZ0;
-    int otherHorseX1;
-    int otherHorseZ1;
+    int enemyHorseX0;
+    int enemyHorseZ0;
+    int enemyHorseX1;
+    int enemyHorseZ1;
 
     //bishops Positions
     int bishopX0;
     int bishopZ0;
-    int otherBishopX0;
-    int otherBishopZ0;
+    int enemyBishopX0;
+    int enemyBishopZ0;
     int bishopX1;
     int bishopZ1;
-    int otherBishopX1;
-    int otherBishopZ1;
+    int enemyBishopX1;
+    int enemyBishopZ1;
 
     //queen positions
     int queenX;
     int queenZ;
-    int otherQueenX;
-    int otherQueenZ;
+    int enemyQueenX;
+    int enemyQueenZ;
 
     //need to add eventual Pieces: extra queens->extreme case 8 extra queens from each +player
     int extraQueenX0;
@@ -211,12 +206,12 @@ public class ChessAgent : Agent
     int extraQueenX2;
     int extraQueenZ2;
 
-    int otherExtraQueenX0;
-    int otherExtraQueenZ0;
-    int otherExtraQueenX1;
-    int otherExtraQueenZ1;
-    int otherExtraQueenX2;
-    int otherExtraQueenZ2;
+    int enemyExtraQueenX0;
+    int enemyExtraQueenZ0;
+    int enemyExtraQueenX1;
+    int enemyExtraQueenZ1;
+    int enemyExtraQueenX2;
+    int enemyExtraQueenZ2;
 
 
     //pawns -.-
@@ -236,22 +231,22 @@ public class ChessAgent : Agent
     int pawnZ6;
     int pawnX7;
     int pawnZ7;
-    int otherPawnX0;
-    int otherPawnZ0;
-    int otherPawnX1;
-    int otherPawnZ1;
-    int otherPawnX2;
-    int otherPawnZ2;
-    int otherPawnX3;
-    int otherPawnZ3;
-    int otherPawnX4;
-    int otherPawnZ4;
-    int otherPawnX5;
-    int otherPawnZ5;
-    int otherPawnX6;
-    int otherPawnZ6;
-    int otherPawnX7;
-    int otherPawnZ7;
+    int enemyPawnX0;
+    int enemyPawnZ0;
+    int enemyPawnX1;
+    int enemyPawnZ1;
+    int enemyPawnX2;
+    int enemyPawnZ2;
+    int enemyPawnX3;
+    int enemyPawnZ3;
+    int enemyPawnX4;
+    int enemyPawnZ4;
+    int enemyPawnX5;
+    int enemyPawnZ5;
+    int enemyPawnX6;
+    int enemyPawnZ6;
+    int enemyPawnX7;
+    int enemyPawnZ7;
 
     private void Awake()
     {
@@ -261,56 +256,46 @@ public class ChessAgent : Agent
     void Start()
     {
     }
-
-    public void getPiecesPositions()
+    private void InitializeVars()
     {
         //initialize Kings Positions
         kingX = -1;
         kingZ = -1;
-        otherkingX = -1;
-        otherkingZ = -1;
+        enemykingX = -1;
+        enemykingZ = -1;
 
         //initialize Towers Positions
         rookX0 = -1;
         rookZ0 = -1;
         rookX1 = -1;
         rookZ1 = -1;
-        otherRookX0 = -1;
-        otherRookZ0 = -1;
-        otherRookX1 = -1;
-        otherRookZ1 = -1;
-        bool oneOwnTowerTook = false;
-        bool oneOtherTowerTook = false;
-
+        enemyRookX0 = -1;
+        enemyRookZ0 = -1;
+        enemyRookX1 = -1;
+        enemyRookZ1 = -1;
         //initialize knights positions
         horseX0 = -1;
         horseZ0 = -1;
         horseX1 = -1;
         horseZ1 = -1;
-        otherHorseX0 = -1;
-        otherHorseZ0 = -1;
-        otherHorseX1 = -1;
-        otherHorseZ1 = -1;
-        bool oneOwnHorseTook = false;
-        bool oneOtherHorseTook = false;
-
+        enemyHorseX0 = -1;
+        enemyHorseZ0 = -1;
+        enemyHorseX1 = -1;
+        enemyHorseZ1 = -1;
         //initialize bishops positions
         bishopX0 = -1;
         bishopZ0 = -1;
         bishopX1 = -1;
         bishopZ1 = -1;
-        otherBishopX0 = -1;
-        otherBishopZ0 = -1;
-        otherBishopX1 = -1;
-        otherBishopZ1 = -1;
-        bool oneOwnBishopTook = false;
-        bool oneOtherBishopTook = false;
-
+        enemyBishopX0 = -1;
+        enemyBishopZ0 = -1;
+        enemyBishopX1 = -1;
+        enemyBishopZ1 = -1;
         //initialize queens
         queenX = -1;
         queenZ = -1;
-        otherQueenX = -1;
-        otherQueenZ = -1;
+        enemyQueenX = -1;
+        enemyQueenZ = -1;
 
         //extra queens
         extraQueenX0 = -1;
@@ -319,21 +304,12 @@ public class ChessAgent : Agent
         extraQueenZ1 = -1;
         extraQueenX2 = -1;
         extraQueenZ2 = -1;
-        otherExtraQueenX0 = -1;
-        otherExtraQueenZ0 = -1;
-        otherExtraQueenX1 = -1;
-        otherExtraQueenZ1 = -1;
-        otherExtraQueenX2 = -1;
-        otherExtraQueenZ2 = -1;
-
-        bool oneOwnQueenTook = false;
-        bool oneOtherQueenTook = false;
-        bool twoOtherQueenTook = false;
-        bool twoOwnQueenTook = false;
-        bool threeOwnQueenTook = false;
-        bool threeOtherQueenTook = false;
-
-
+        enemyExtraQueenX0 = -1;
+        enemyExtraQueenZ0 = -1;
+        enemyExtraQueenX1 = -1;
+        enemyExtraQueenZ1 = -1;
+        enemyExtraQueenX2 = -1;
+        enemyExtraQueenZ2 = -1;
         //pawns  
         pawnX0 = -1;
         pawnZ0 = -1;
@@ -351,22 +327,46 @@ public class ChessAgent : Agent
         pawnZ6 = -1;
         pawnX7 = -1;
         pawnZ7 = -1;
-        otherPawnX0 = -1;
-        otherPawnZ0 = -1;
-        otherPawnX1 = -1;
-        otherPawnZ1 = -1;
-        otherPawnX2 = -1;
-        otherPawnZ2 = -1;
-        otherPawnX3 = -1;
-        otherPawnZ3 = -1;
-        otherPawnX4 = -1;
-        otherPawnZ4 = -1;
-        otherPawnX5 = -1;
-        otherPawnZ5 = -1;
-        otherPawnX6 = -1;
-        otherPawnZ6 = -1;
-        otherPawnX7 = -1;
-        otherPawnZ7 = -1;
+        enemyPawnX0 = -1;
+        enemyPawnZ0 = -1;
+        enemyPawnX1 = -1;
+        enemyPawnZ1 = -1;
+        enemyPawnX2 = -1;
+        enemyPawnZ2 = -1;
+        enemyPawnX3 = -1;
+        enemyPawnZ3 = -1;
+        enemyPawnX4 = -1;
+        enemyPawnZ4 = -1;
+        enemyPawnX5 = -1;
+        enemyPawnZ5 = -1;
+        enemyPawnX6 = -1;
+        enemyPawnZ6 = -1;
+        enemyPawnX7 = -1;
+        enemyPawnZ7 = -1;
+    }
+    public void getPiecesPositions()
+    {
+        InitializeVars();
+        bool oneOwnTowerTook = false;
+        bool oneOtherTowerTook = false;
+
+        
+        bool oneOwnHorseTook = false;
+        bool oneOtherHorseTook = false;
+
+       
+        bool oneOwnBishopTook = false;
+        bool oneOtherBishopTook = false;
+
+        
+
+        bool oneOwnQueenTook = false;
+        bool oneOtherQueenTook = false;
+        bool twoOtherQueenTook = false;
+        bool twoOwnQueenTook = false;
+        bool threeOwnQueenTook = false;
+        bool threeOtherQueenTook = false;
+
         bool oneOwnPawnTook = false;
         bool oneOtherPawnTook = false;
         bool twoOwnPawnTook = false;
@@ -381,7 +381,7 @@ public class ChessAgent : Agent
         bool sixOtherPawnTook = false;
         bool sevenOwnPawnTook = false;
         bool sevenOtherPawnTook = false;
-            foreach (ChessPiece cp in boardCurrentlyPlaying.chessPieces)
+        foreach (ChessPiece cp in boardCurrentlyPlaying.chessPieces)
         {
             if (cp != null)
             {
@@ -394,8 +394,8 @@ public class ChessAgent : Agent
                     }
                     else
                     {
-                        otherkingX = cp.CurrentX;
-                        otherkingZ = cp.CurrentZ;
+                        enemykingX = cp.CurrentX;
+                        enemykingZ = cp.CurrentZ;
                     }
                 }
                 else if (cp.GetType() == typeof(TowerPiece))
@@ -418,14 +418,14 @@ public class ChessAgent : Agent
                     {
                         if (oneOtherTowerTook)
                         {
-                            otherRookX1 = cp.CurrentX;
-                            otherRookZ1 = cp.CurrentZ;
+                            enemyRookX1 = cp.CurrentX;
+                            enemyRookZ1 = cp.CurrentZ;
 
                         }
                         else
                         {
-                            otherRookX0 = cp.CurrentX;
-                            otherRookZ0 = cp.CurrentZ;
+                            enemyRookX0 = cp.CurrentX;
+                            enemyRookZ0 = cp.CurrentZ;
                             oneOtherTowerTook = true;
                         }
                     }
@@ -450,13 +450,13 @@ public class ChessAgent : Agent
                     {
                         if (oneOtherHorseTook)
                         {
-                            otherHorseX1 = cp.CurrentX;
-                            otherHorseZ1 = cp.CurrentZ;
+                            enemyHorseX1 = cp.CurrentX;
+                            enemyHorseZ1 = cp.CurrentZ;
                         }
                         else
                         {
-                            otherHorseX0 = cp.CurrentX;
-                            otherHorseZ0 = cp.CurrentZ;
+                            enemyHorseX0 = cp.CurrentX;
+                            enemyHorseZ0 = cp.CurrentZ;
                             oneOtherHorseTook = true;
                         }
                     }
@@ -481,13 +481,13 @@ public class ChessAgent : Agent
                     {
                         if (oneOtherBishopTook)
                         {
-                            otherBishopX1 = cp.CurrentX;
-                            otherBishopZ1 = cp.CurrentZ;
+                            enemyBishopX1 = cp.CurrentX;
+                            enemyBishopZ1 = cp.CurrentZ;
                         }
                         else
                         {
-                            otherBishopX0 = cp.CurrentX;
-                            otherBishopZ0 = cp.CurrentZ;
+                            enemyBishopX0 = cp.CurrentX;
+                            enemyBishopZ0 = cp.CurrentZ;
                             oneOtherBishopTook = true;
                         }
                     }
@@ -525,25 +525,25 @@ public class ChessAgent : Agent
                     {
                         if (threeOtherQueenTook)
                         {
-                            otherExtraQueenX2 = cp.CurrentX;
-                            otherExtraQueenZ2 = cp.CurrentZ;
+                            enemyExtraQueenX2 = cp.CurrentX;
+                            enemyExtraQueenZ2 = cp.CurrentZ;
                         }
                         else if (twoOtherQueenTook)
                         {
-                            otherExtraQueenX1 = cp.CurrentX;
-                            otherExtraQueenZ1 = cp.CurrentZ;
+                            enemyExtraQueenX1 = cp.CurrentX;
+                            enemyExtraQueenZ1 = cp.CurrentZ;
                             threeOtherQueenTook = true;
                         }
                         else if (oneOtherQueenTook)
                         {
-                            otherExtraQueenX0 = cp.CurrentX;
-                            otherExtraQueenZ0 = cp.CurrentZ;
+                            enemyExtraQueenX0 = cp.CurrentX;
+                            enemyExtraQueenZ0 = cp.CurrentZ;
                             twoOtherQueenTook = true;
                         }
                         else
                         {
-                            otherQueenX = cp.CurrentX;
-                            otherQueenZ = cp.CurrentZ;
+                            enemyQueenX = cp.CurrentX;
+                            enemyQueenZ = cp.CurrentZ;
                             oneOtherQueenTook = true;
 
                         }
@@ -606,49 +606,49 @@ public class ChessAgent : Agent
                     {
                         if (sevenOtherPawnTook)
                         {
-                            otherPawnX7 = cp.CurrentX;
-                            otherPawnZ7 = cp.CurrentZ;
+                            enemyPawnX7 = cp.CurrentX;
+                            enemyPawnZ7 = cp.CurrentZ;
                         }
                         else if (sixOtherPawnTook)
                         {
-                            otherPawnX6 = cp.CurrentX;
-                            otherPawnZ6 = cp.CurrentZ;
+                            enemyPawnX6 = cp.CurrentX;
+                            enemyPawnZ6 = cp.CurrentZ;
                             sevenOtherPawnTook = true;
                         }
                         else if (fiveOtherPawnTook)
                         {
-                            otherPawnX5 = cp.CurrentX;
-                            otherPawnZ5 = cp.CurrentZ;
+                            enemyPawnX5 = cp.CurrentX;
+                            enemyPawnZ5 = cp.CurrentZ;
                             sixOtherPawnTook = true;
                         }
                         else if (fourOtherPawnTook)
                         {
-                            otherPawnX4 = cp.CurrentX;
-                            otherPawnZ4 = cp.CurrentZ;
+                            enemyPawnX4 = cp.CurrentX;
+                            enemyPawnZ4 = cp.CurrentZ;
                             fiveOtherPawnTook = true;
                         }
                         else if (threeOtherPawnTook)
                         {
-                            otherPawnX3 = cp.CurrentX;
-                            otherPawnZ3 = cp.CurrentZ;
+                            enemyPawnX3 = cp.CurrentX;
+                            enemyPawnZ3 = cp.CurrentZ;
                             fourOtherPawnTook = true;
                         }
                         else if (twoOtherPawnTook)
                         {
-                            otherPawnX2 = cp.CurrentX;
-                            otherPawnZ2 = cp.CurrentZ;
+                            enemyPawnX2 = cp.CurrentX;
+                            enemyPawnZ2 = cp.CurrentZ;
                             threeOtherPawnTook = true;
                         }
                         else if (oneOtherPawnTook)
                         {
-                            otherPawnX1 = cp.CurrentX;
-                            otherPawnZ1 = cp.CurrentZ;
+                            enemyPawnX1 = cp.CurrentX;
+                            enemyPawnZ1 = cp.CurrentZ;
                             twoOtherPawnTook = true;
                         }
                         else
                         {
-                            otherPawnX0 = cp.CurrentX;
-                            otherPawnZ0 = cp.CurrentZ;
+                            enemyPawnX0 = cp.CurrentX;
+                            enemyPawnZ0 = cp.CurrentZ;
                             oneOtherPawnTook = true;
                         }
                     }
@@ -666,73 +666,99 @@ public class ChessAgent : Agent
     }
     public override void OnEpisodeBegin()
     {
+        episodeTime = 0.0f;
         base.OnEpisodeBegin();
-        //Debug.Log("New Episode");
-        //Debug.Log("isWhitePlayer: " + isWhitePlayer);
-        KingeatenNextMove = false;
+        if(debug){ 
+            Debug.Log("New Episode");
+            //Debug.Log("isWhitePlayer: " + isWhitePlayer);
+        }
+       
+        
+    }
+    void FixedUpdate()
+    {
+        validMove = false;
+        if (debug)
+        { 
+            //Debug.Log("isWhitePlayer: " + isWhitePlayer);
+            //Debug.Log("turnIsWhite?: " + boardCurrentlyPlaying.isWhiteTurn);
+            Debug.Log("Reward: " + GetCumulativeReward());
+        
+            //Debug.Log("---------------------------------------");
+        }
+        episodeTime += Time.deltaTime;
+        if (episodeTime > 180.0f)
+        {
+            boardCurrentlyPlaying.FinishGame();
+        }
+    }
+    public void endAgentEpisode()
+    {
+        if (debug)
+        {
+            Debug.Log("Final reward: " + GetCumulativeReward());
+            if (isWhitePlayer)
+            {
+                Debug.Log("Episode ended for white player");
+            }
+            else
+            {
+                Debug.Log("Episode ended for black player");
+            }
+        }
+        
+        EndEpisode();
     }
     /// <summary>
     /// Observations of all the x and z position of all the pieces (including potencial queens)
     /// </summary>
     /// <param name="sensor"></param>
-    void FixedUpdate()
-    {
-        validMove = false;
-
-        //Debug.Log("isWhitePlayer: " + isWhitePlayer);
-        //Debug.Log("turnIsWhite?: " + boardCurrentlyPlaying.isWhiteTurn);
-        //Debug.Log(GetCumulativeReward());
-        //Debug.Log("---------------------------------------");
-        
-    }
-
     public override void CollectObservations(VectorSensor sensor)
     {
-            
             //according to vecotr size
             getPiecesPositions();
             sensor.AddObservation(isWhitePlayer);
             //kings +4
             sensor.AddObservation(kingX);
             sensor.AddObservation(kingZ);
-            sensor.AddObservation(otherkingX);
-            sensor.AddObservation(otherkingZ);
+            sensor.AddObservation(enemykingX);
+            sensor.AddObservation(enemykingZ);
 
             //rooks +8 observations
             sensor.AddObservation(rookX0);
             sensor.AddObservation(rookZ0);
-            sensor.AddObservation(otherRookX0);
-            sensor.AddObservation(otherRookZ0);
+            sensor.AddObservation(enemyRookX0);
+            sensor.AddObservation(enemyRookZ0);
             sensor.AddObservation(rookX1);
             sensor.AddObservation(rookZ1);
-            sensor.AddObservation(otherRookX1);
-            sensor.AddObservation(otherRookZ1);
+            sensor.AddObservation(enemyRookX1);
+            sensor.AddObservation(enemyRookZ1);
 
             //horses +8 observations
             sensor.AddObservation(horseX0);
             sensor.AddObservation(horseZ0);
-            sensor.AddObservation(otherHorseX0);
-            sensor.AddObservation(otherHorseZ0);
+            sensor.AddObservation(enemyHorseX0);
+            sensor.AddObservation(enemyHorseZ0);
             sensor.AddObservation(horseX1);
             sensor.AddObservation(horseZ1);
-            sensor.AddObservation(otherHorseX1);
-            sensor.AddObservation(otherHorseZ1);
+            sensor.AddObservation(enemyHorseX1);
+            sensor.AddObservation(enemyHorseZ1);
 
             //bishops +8 observations
             sensor.AddObservation(bishopX0);
             sensor.AddObservation(bishopZ0);
-            sensor.AddObservation(otherBishopX0);
-            sensor.AddObservation(otherBishopZ0);
+            sensor.AddObservation(enemyBishopX0);
+            sensor.AddObservation(enemyBishopZ0);
             sensor.AddObservation(bishopX1);
             sensor.AddObservation(bishopZ1);
-            sensor.AddObservation(otherBishopX1);
-            sensor.AddObservation(otherBishopZ1);
+            sensor.AddObservation(enemyBishopX1);
+            sensor.AddObservation(enemyBishopZ1);
 
             //queen +4 observations
             sensor.AddObservation(queenX);
             sensor.AddObservation(queenZ);
-            sensor.AddObservation(otherQueenX);
-            sensor.AddObservation(otherQueenZ);
+            sensor.AddObservation(enemyQueenX);
+            sensor.AddObservation(enemyQueenZ);
 
             //extra queens thta may show up +32 observations
             sensor.AddObservation(extraQueenX0);
@@ -741,46 +767,46 @@ public class ChessAgent : Agent
             sensor.AddObservation(extraQueenZ1);
             sensor.AddObservation(extraQueenX2);
             sensor.AddObservation(extraQueenZ2);
-            sensor.AddObservation(otherExtraQueenX0);
-            sensor.AddObservation(otherExtraQueenZ0);
-            sensor.AddObservation(otherExtraQueenX1);
-            sensor.AddObservation(otherExtraQueenZ1);
-            sensor.AddObservation(otherExtraQueenX2);
-            sensor.AddObservation(otherExtraQueenZ2);
+            sensor.AddObservation(enemyExtraQueenX0);
+            sensor.AddObservation(enemyExtraQueenZ0);
+            sensor.AddObservation(enemyExtraQueenX1);
+            sensor.AddObservation(enemyExtraQueenZ1);
+            sensor.AddObservation(enemyExtraQueenX2);
+            sensor.AddObservation(enemyExtraQueenZ2);
 
             //pawns +32 observations
             sensor.AddObservation(pawnX0);
             sensor.AddObservation(pawnZ0);
-            sensor.AddObservation(otherPawnX0);
-            sensor.AddObservation(otherPawnZ0);
+            sensor.AddObservation(enemyPawnX0);
+            sensor.AddObservation(enemyPawnZ0);
             sensor.AddObservation(pawnX1);
             sensor.AddObservation(pawnZ1);
-            sensor.AddObservation(otherPawnX1);
-            sensor.AddObservation(otherPawnZ1);
+            sensor.AddObservation(enemyPawnX1);
+            sensor.AddObservation(enemyPawnZ1);
             sensor.AddObservation(pawnX2);
             sensor.AddObservation(pawnZ2);
-            sensor.AddObservation(otherPawnX2);
-            sensor.AddObservation(otherPawnZ2);
+            sensor.AddObservation(enemyPawnX2);
+            sensor.AddObservation(enemyPawnZ2);
             sensor.AddObservation(pawnX3);
             sensor.AddObservation(pawnZ3);
-            sensor.AddObservation(otherPawnX3);
-            sensor.AddObservation(otherPawnZ3);
+            sensor.AddObservation(enemyPawnX3);
+            sensor.AddObservation(enemyPawnZ3);
             sensor.AddObservation(pawnX4);
             sensor.AddObservation(pawnZ4);
-            sensor.AddObservation(otherPawnX4);
-            sensor.AddObservation(otherPawnZ4);
+            sensor.AddObservation(enemyPawnX4);
+            sensor.AddObservation(enemyPawnZ4);
             sensor.AddObservation(pawnX5);
             sensor.AddObservation(pawnZ5);
-            sensor.AddObservation(otherPawnX5);
-            sensor.AddObservation(otherPawnZ5);
+            sensor.AddObservation(enemyPawnX5);
+            sensor.AddObservation(enemyPawnZ5);
             sensor.AddObservation(pawnX6);
             sensor.AddObservation(pawnZ6);
-            sensor.AddObservation(otherPawnX6);
-            sensor.AddObservation(otherPawnZ6);
+            sensor.AddObservation(enemyPawnX6);
+            sensor.AddObservation(enemyPawnZ6);
             sensor.AddObservation(pawnX7);
             sensor.AddObservation(pawnZ7);
-            sensor.AddObservation(otherPawnX7);
-            sensor.AddObservation(otherPawnZ7);
+            sensor.AddObservation(enemyPawnX7);
+            sensor.AddObservation(enemyPawnZ7);
 
             //total observations:
             //96 observations - 10 (5 extra queens from each side removed) + iswhitePLayer=77
@@ -838,27 +864,27 @@ public class ChessAgent : Agent
                 {
                     if (movingPiece.GetType() == typeof(KingPiece))
                     {
-                        tempReward += (strengthKing * tableKing[toX, toZ]/ 10.0f);
+                        tempReward += (strengthKing * tableKing[toX, toZ]);
                     }
                     else if (movingPiece.GetType() == typeof(TowerPiece))
                     {
-                        tempReward += (strengthRook * tableRook[toX, toZ]/ 10.0f);
+                        tempReward += (strengthRook * tableRook[toX, toZ]);
                     }
                     else if (movingPiece.GetType() == typeof(HorsePiece))
                     {
-                        tempReward += (strengthHorse * tableHorse[toX, toZ]/ 10.0f);
+                        tempReward += (strengthHorse * tableHorse[toX, toZ]);
                     }
                     else if (movingPiece.GetType() == typeof(BishopPiece))
                     {
-                        tempReward += (strengthBishop * tableBishop[toX, toZ]/ 10.0f);
+                        tempReward += (strengthBishop * tableBishop[toX, toZ] );
                     }
                     else if (movingPiece.GetType() == typeof(QueenPiece))
                     {
-                        tempReward += (strengthQueen * tableQueen[toX, toZ]/ 10.0f);
+                        tempReward += (strengthQueen * tableQueen[toX, toZ] );
                     }
                     else if (movingPiece.GetType() == typeof(PawnPiece))
                     {
-                        tempReward += (strengthPawn * tablePawn[toX, toZ]/10.0f);
+                        tempReward += (strengthPawn * tablePawn[toX, toZ] );
                     }
                 }
 
@@ -874,7 +900,7 @@ public class ChessAgent : Agent
 
                 if (KingeatenNextMove)
                 {
-                    boardCurrentlyPlaying.ResetGame();
+                    AddReward(wonGame);
                 }
             }
             else
@@ -955,6 +981,11 @@ public class ChessAgent : Agent
                 AddReward(incentiveToCastling);
                 break;
             default:
+                if (debug)
+                {
+                    Debug.Log("No valid action on behavior");
+                }
+               
                 break;
         }
     }
@@ -1106,6 +1137,10 @@ public class ChessAgent : Agent
                     verifyMove(tower_X, tower_Z, toX, toZ);
                     break;
                 default:
+                    if (debug)
+                    {
+                        Debug.Log("No valid action on behavior");
+                    }
                     break;
             }
 
@@ -1159,6 +1194,10 @@ public class ChessAgent : Agent
                     verifyMove(knight_X, knight_Z, toX, toZ);
                     break;
                 default:
+                    if (debug)
+                    {
+                        Debug.Log("No valid action on behavior");
+                    }
                     break;
             }
         }
@@ -1312,6 +1351,10 @@ public class ChessAgent : Agent
                     verifyMove(bishop_X, bishop_Z, toX, toZ);
                     break;
                 default:
+                    if (debug)
+                    {
+                        Debug.Log("No valid action on behavior");
+                    }
                     break;
             }
         }
@@ -1604,6 +1647,10 @@ public class ChessAgent : Agent
                     verifyMove(queen_X, queen_Z, toX, toZ);
                     break;
                 default:
+                    if (debug)
+                    {
+                        Debug.Log("No valid action on behavior");
+                    }
                     break;
             }
         }
@@ -1668,12 +1715,15 @@ public class ChessAgent : Agent
                 verifyMove(pawn_X, pawn_Z, toX, toZ);
                 break;
             default:
+                if (debug)
+                {
+                    Debug.Log("No valid action on behavior");
+                }
                 break;
         }
     }
 
     /// <summary>
-
     /// 3rd iteration:
     ///  branch 0 with all the possibilities
     ///     -> king behavior:          10  different possibilities
@@ -1684,10 +1734,14 @@ public class ChessAgent : Agent
     ///     -> pawn behavior:          4   different possibilities * 8
     ///     -> extra queen behavior:   56  different possibilities * 3
     /// </summary>
-
     public override void OnActionReceived(float[] vectorAction)
     {
-        //Debug.Log(vectorAction[0]);
+        if (debug)
+        {
+            Debug.Log("Action received: " + vectorAction[0]);
+            
+        }
+        
         if (boardCurrentlyPlaying.isWhiteTurn == isWhitePlayer)
         {
             //number max of the generated action is the max on the last condition+1 ->675 updtae: 394
@@ -1700,6 +1754,11 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
+                   
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1713,6 +1772,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1726,6 +1789,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1739,6 +1806,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1752,6 +1823,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1765,6 +1840,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1778,6 +1857,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1791,6 +1874,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1804,6 +1891,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1817,6 +1908,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1830,6 +1925,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1843,6 +1942,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1856,6 +1959,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1869,6 +1976,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1882,6 +1993,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1895,6 +2010,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1908,6 +2027,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1921,6 +2044,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1934,6 +2061,10 @@ public class ChessAgent : Agent
                 }
                 else
                 {
+                    if (debug)
+                    {
+                        Debug.Log("not valid move");
+                    }
                     validMove = false;
                     AddReward(invalidAction_or_doNothing);
                 }
@@ -1943,224 +2074,9 @@ public class ChessAgent : Agent
             //evaluate positioning of the pieces on the board
             if (validMove)
             {
-                //Debug.Log("valid move");
-                if (useTables)
-                {
-                    //reset value
-                    SetReward(0.0f);
-                    float[,] tableKing = new float[8, 8];
-                    float[,] tableOppositeKing = new float[8, 8];
-                    float[,] tableQueen = new float[8, 8];
-                    float[,] tableOppositeQueen = new float[8, 8];
-                    float[,] tableHorse = new float[8, 8];
-                    float[,] tableOppositeHorse = new float[8, 8];
-                    float[,] tableRook = new float[8, 8];
-                    float[,] tableOppositeRook = new float[8, 8];
-                    float[,] tableBishop = new float[8, 8];
-                    float[,] tableOppositeBishop = new float[8, 8];
-                    float[,] tablePawn = new float[8, 8];
-                    float[,] tableOppositePawn = new float[8, 8];
-                    if (isWhitePlayer)
-                    {
-                        tableKing = tableKingWhite;
-                        tableOppositeKing = tableKingBlack;
-                        tableQueen = tableQueenWhite;
-                        tableOppositeQueen = tableQueenBlack;
-                        tableHorse = tableHorseWhite;
-                        tableOppositeHorse = tableHorseBlack;
-                        tableRook = tableRookWhite;
-                        tableOppositeRook = tableRookBlack;
-                        tableBishop = tableBishopWhite;
-                        tableOppositeBishop = tableBishopBlack;
-                        tablePawn = tablePawnWhite;
-                        tableOppositePawn = tablePawnBlack;
-                    }
-                    else
-                    {
-                        tableKing = tableKingBlack;
-                        tableOppositeKing = tableKingWhite;
-                        tableQueen = tableQueenBlack;
-                        tableOppositeQueen = tableQueenWhite;
-                        tableHorse = tableHorseBlack;
-                        tableOppositeHorse = tableHorseWhite;
-                        tableRook = tableRookBlack;
-                        tableOppositeRook = tableRookWhite;
-                        tableBishop = tableBishopBlack;
-                        tableOppositeBishop = tableBishopWhite;
-                        tablePawn = tablePawnBlack;
-                        tableOppositePawn = tablePawnWhite;
-                    }
-
-
-
-                    if (kingX != -1 && kingZ != -1)
-                    {
-                        AddReward(tableKing[kingX, kingZ] * strengthKing);
-                    }
-                    if (otherkingX != -1 && otherkingZ != -1)
-                    {
-                        AddReward(tableOppositeKing[otherkingX, otherkingZ] * -1.0f * strengthKing);
-                    }
-                    if (rookX0 != -1 && rookZ0 != -1)
-                    {
-                        AddReward(tableRook[rookX0, rookZ0] * strengthRook);
-                    }
-                    if (otherRookX0 != -1 && otherRookZ0 != -1)
-                    {
-                        AddReward(tableOppositeRook[otherRookX0, otherRookZ0] * -1.0f * strengthRook);
-                    }
-                    if (rookX1 != -1 && rookZ1 != -1)
-                    {
-                        AddReward(tableRook[rookX1, rookZ1] * strengthRook);
-                    }
-                    if (otherRookX1 != -1 && otherRookZ1 != -1)
-                    {
-                        AddReward(tableOppositeRook[otherRookX1, otherRookZ1] * -1.0f * strengthRook);
-                    }
-                    if (horseX0 != -1 && horseZ0 != -1)
-                    {
-                        AddReward(tableHorse[horseX0, horseZ0] * strengthHorse);
-                    }
-                    if (otherHorseX0 != -1 && otherHorseZ0 != -1)
-                    {
-                        AddReward(tableOppositeHorse[otherHorseX0, otherHorseZ0] * -1.0f * strengthHorse);
-                    }
-                    if (horseX1 != -1 && horseZ1 != -1)
-                    {
-                        AddReward(tableHorse[horseX1, horseZ1] * strengthHorse);
-                    }
-                    if (otherHorseX1 != -1 && otherHorseZ1 != -1)
-                    {
-                        AddReward(tableOppositeHorse[otherHorseX1, otherHorseZ1] * -1.0f * strengthHorse);
-                    }
-                    if (bishopX0 != -1 && bishopZ0 != -1)
-                    {
-                        AddReward(tableBishop[bishopX0, bishopZ0] * strengthBishop);
-                    }
-                    if (otherBishopX0 != -1 && otherBishopZ0 != -1)
-                    {
-                        AddReward(tableOppositeBishop[otherBishopX0, otherBishopZ0] * -1.0f * strengthBishop);
-                    }
-                    if (bishopX1 != -1 && bishopZ1 != -1)
-                    {
-                        AddReward(tableBishop[bishopX1, bishopZ1] * strengthBishop);
-                    }
-                    if (otherBishopX1 != -1 && otherBishopZ1 != -1)
-                    {
-                        AddReward(tableOppositeBishop[otherBishopX1, otherBishopZ1] * -1.0f * strengthBishop);
-                    }
-                    if (pawnX0 != -1 && pawnZ0 != -1)
-                    {
-                        AddReward(tablePawn[pawnX0, pawnZ0] * strengthPawn);
-                    }
-                    if (otherPawnX0 != -1 && otherPawnZ0 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX0, otherPawnZ0] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX1 != -1 && pawnZ1 != -1)
-                    {
-                        AddReward(tablePawn[pawnX1, pawnZ1] * strengthPawn);
-                    }
-                    if (otherPawnX1 != -1 && otherPawnZ1 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX1, otherPawnZ1] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX2 != -1 && pawnZ2 != -1)
-                    {
-                        AddReward(tablePawn[pawnX2, pawnZ2] * strengthPawn);
-                    }
-                    if (otherPawnX2 != -1 && otherPawnZ2 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX2, otherPawnZ2] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX3 != -1 && pawnZ3 != -1)
-                    {
-                        AddReward(tablePawn[pawnX3, pawnZ3] * strengthPawn);
-                    }
-                    if (otherPawnX3 != -1 && otherPawnZ3 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX3, otherPawnZ3] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX4 != -1 && pawnZ4 != -1)
-                    {
-                        AddReward(tablePawn[pawnX4, pawnZ4] * strengthPawn);
-                    }
-                    if (otherPawnX4 != -1 && otherPawnZ4 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX4, otherPawnZ4] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX5 != -1 && pawnZ5 != -1)
-                    {
-                        AddReward(tablePawn[pawnX5, pawnZ5] * strengthPawn);
-                    }
-                    if (otherPawnX5 != -1 && otherPawnZ5 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX5, otherPawnZ5] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX6 != -1 && pawnZ6 != -1)
-                    {
-                        AddReward(tablePawn[pawnX6, pawnZ6] * strengthPawn);
-                    }
-                    if (otherPawnX6 != -1 && otherPawnZ6 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX6, otherPawnZ6] * -1.0f * strengthPawn);
-                    }
-                    if (pawnX7 != -1 && pawnZ7 != -1)
-                    {
-                        AddReward(tablePawn[pawnX7, pawnZ7] * strengthPawn);
-                    }
-                    if (otherPawnX7 != -1 && otherPawnZ7 != -1)
-                    {
-                        AddReward(tableOppositePawn[otherPawnX7, otherPawnZ7] * -1.0f * strengthPawn);
-                    }
-                    if (queenX != -1 && queenZ != -1)
-                    {
-                        AddReward(tableQueen[queenX, queenZ] * strengthQueen);
-                    }
-                    if (otherQueenX != -1 && otherQueenZ != -1)
-                    {
-                        AddReward(tableOppositeQueen[otherQueenX, otherQueenZ] * -1.0f * strengthQueen);
-                    }
-                    if (extraQueenX0 != -1 && extraQueenZ0 != -1)
-                    {
-                        AddReward(tableQueen[extraQueenX0, extraQueenZ0] * strengthQueen);
-                    }
-                    if (extraQueenX1 != -1 && extraQueenZ1 != -1)
-                    {
-                        AddReward(tableQueen[extraQueenX1, extraQueenZ1] * strengthQueen);
-                    }
-                    if (extraQueenX2 != -1 && extraQueenZ2 != -1)
-                    {
-                        AddReward(tableQueen[extraQueenX2, extraQueenZ2] * strengthQueen);
-                    }
-                    if (otherExtraQueenX0 != -1 && otherExtraQueenZ0 != -1)
-                    {
-                        AddReward(tableOppositeQueen[otherExtraQueenX0, otherExtraQueenZ0] * -1.0f * strengthQueen);
-                    }
-                    if (otherExtraQueenX1 != -1 && otherExtraQueenZ1 != -1)
-                    {
-                        AddReward(tableOppositeQueen[otherExtraQueenX1, otherExtraQueenZ1] * -1.0f * strengthQueen);
-                    }
-                    if (otherExtraQueenX2 != -1 && otherExtraQueenZ2 != -1)
-                    {
-                        AddReward(tableOppositeQueen[otherExtraQueenX2, otherExtraQueenZ2] * -1.0f * strengthQueen);
-                    }
-                    AddReward(tempReward);
-                    tempReward = 0.0f;
-                }
-                else
-                {
-                    AddReward(tempReward);
-                    tempReward = 0.0f;
-                }
-            }
-            else
-            {
-                //Debug.Log("Not valid move");
-                AddReward(invalidAction_or_doNothing);
+                AddReward(tempReward);
                 tempReward = 0.0f;
             }
-
         }
     }
     /// <summary>

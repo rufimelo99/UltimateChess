@@ -74,16 +74,16 @@ MonoBehaviour:
   MaxStep: 0
   isWhitePlayer: 0
   boardCurrentlyPlaying: {fileID: 0}
-  validAction: 0.001
+  KingeatenNextMove: 0
+  validAction: 0.01
   wonGame: 1
   lostGame: -1
-  invalidAction_or_doNothing: -0.000001
-  strengthPawn: 0.00001
-  strengthHorse: 0.00003
-  strengthBishop: 0.00003
-  strengthRook: 0.00005
-  strengthQueen: 0.00009
-  strengthKing: 0.0005
-  incentiveToCastling: 0.001
-  incentiveToConvert: 0.001
-  useTables: 0
+  invalidAction_or_doNothing: -0.005
+  strengthPawn: 0.0001
+  strengthHorse: 0.0003
+  strengthBishop: 0.0003
+  strengthRook: 0.0005
+  strengthQueen: 0.0009
+  strengthKing: 0.005
+  incentiveToCastling: 0.1
+  incentiveToConvert: 0.1
