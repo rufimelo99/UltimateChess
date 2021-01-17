@@ -39,9 +39,10 @@ public class ChessAgent : Agent
     public float incentiveToConvert = 0.1f;
     private bool validMove = false;
     private float tempReward = 0.0f;
+    private float episodeTime;
     public bool debug = false;
-    private float episodeTime; 
-
+    public bool resetWithTime = false;
+    public float maxTimeForEpisode = 180.0f;
 
     float[,] tableKingWhite = new float[8, 8] {     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
@@ -678,18 +679,15 @@ public class ChessAgent : Agent
     void FixedUpdate()
     {
         validMove = false;
-        if (debug)
-        { 
-            //Debug.Log("isWhitePlayer: " + isWhitePlayer);
-            //Debug.Log("turnIsWhite?: " + boardCurrentlyPlaying.isWhiteTurn);
-            Debug.Log("Reward: " + GetCumulativeReward());
         
-            //Debug.Log("---------------------------------------");
-        }
         episodeTime += Time.deltaTime;
-        if (episodeTime > 180.0f)
+        if (resetWithTime)
         {
-            boardCurrentlyPlaying.FinishGame();
+            if (episodeTime > maxTimeForEpisode)
+            {
+                boardCurrentlyPlaying.FinishGame();
+            }
+
         }
     }
     public void endAgentEpisode()
@@ -920,7 +918,7 @@ public class ChessAgent : Agent
     /// Behaviors functions that try to check and attribute if a piece of y type can do certain action given an action (number)
     /// </summary>
     //0 -> not move; 1-> left; 2->left+up; ...
-    private void kingBehaviour(float action, int king_X, int king_Z)
+    private void kingBehavior(float action, int king_X, int king_Z)
     {
         switch (action)
         {
@@ -990,7 +988,7 @@ public class ChessAgent : Agent
         }
     }
     //0 -> not move; 1-> left 1unit; 2->left 2 units; ...7-> left 7 units; 8->up 1 unit; ....
-    private void towerBehaviour(float action, int tower_X, int tower_Z)
+    private void towerBehavior(float action, int tower_X, int tower_Z)
     {
         if (tower_X != -1 && tower_Z != -1)
         {
@@ -1147,7 +1145,7 @@ public class ChessAgent : Agent
         }
     }
     //0 -> not move; 1-> 2left+1up; 2->2up+1left; ...
-    private void knightBehaviour(float action, int knight_X, int knight_Z)
+    private void knightBehavior(float action, int knight_X, int knight_Z)
     {
         if (knight_X != -1 && knight_Z != -1)
         {
@@ -1204,7 +1202,7 @@ public class ChessAgent : Agent
         
     }
     //0 -> not move; 1-> 1left+1up; 2->2up+2left; ...
-    private void bishopBehaviour(float action, int bishop_X, int bishop_Z)
+    private void bishopBehavior(float action, int bishop_X, int bishop_Z)
     {
         if (bishop_X != -1 && bishop_Z != -1)
         {
@@ -1360,7 +1358,7 @@ public class ChessAgent : Agent
         }
     }
     //fisrt 28 are the tower movement and the rest corresponds to the bishop
-    private void queenBehaviour(float action, int queen_X, int queen_Z)
+    private void queenBehavior(float action, int queen_X, int queen_Z)
     {
         if (queen_X != -1 && queen_Z != -1)
         {
@@ -1656,7 +1654,7 @@ public class ChessAgent : Agent
         }
     }
     //0 -> not move; 1-> 1up; 2->2up+; 3-> eat left and up;....
-    private void pawnBehaviour(float action, int pawn_X, int pawn_Z)
+    private void pawnBehavior(float action, int pawn_X, int pawn_Z)
     {
         switch (action)
         {
@@ -1736,21 +1734,21 @@ public class ChessAgent : Agent
     /// </summary>
     public override void OnActionReceived(float[] vectorAction)
     {
-        if (debug)
-        {
-            Debug.Log("Action received: " + vectorAction[0]);
-            
-        }
         
         if (boardCurrentlyPlaying.isWhiteTurn == isWhitePlayer)
         {
+            if (debug)
+            {
+                Debug.Log("Action received: " + vectorAction[0]);
+
+            }
             //number max of the generated action is the max on the last condition+1 ->675 updtae: 394
             //king behavior:            10  different possibilities
             if (vectorAction[0] >= 0 && vectorAction[0] <= 9)
             {   
                 if(kingX != -1 && kingZ != -1 && boardCurrentlyPlaying.hasOnePossibleMove(kingX, kingZ))
                 {
-                    kingBehaviour(vectorAction[0]+1, kingX, kingZ);
+                    kingBehavior(vectorAction[0]+1, kingX, kingZ);
                 }
                 else
                 {
@@ -1768,7 +1766,7 @@ public class ChessAgent : Agent
             {
                 if (rookX0 != -1 && rookZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(rookX0, rookZ0))
                 {
-                    towerBehaviour(vectorAction[0] - 9, rookX0, rookZ0);
+                    towerBehavior(vectorAction[0] - 9, rookX0, rookZ0);
                 }
                 else
                 {
@@ -1785,7 +1783,7 @@ public class ChessAgent : Agent
             {
                 if (rookX1 != -1 && rookZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(rookX1, rookZ1))
                 {
-                    towerBehaviour(vectorAction[0] - 37, rookX1, rookZ1);
+                    towerBehavior(vectorAction[0] - 37, rookX1, rookZ1);
                 }
                 else
                 {
@@ -1802,7 +1800,7 @@ public class ChessAgent : Agent
             {
                 if (horseX0 != -1 && horseZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(horseX0, horseZ0))
                 {
-                    knightBehaviour(vectorAction[0] - 65, horseX0, horseZ0);
+                    knightBehavior(vectorAction[0] - 65, horseX0, horseZ0);
                 }
                 else
                 {
@@ -1819,7 +1817,7 @@ public class ChessAgent : Agent
             {
                 if (horseX1 != -1 && horseZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(horseX1, horseZ1))
                 {
-                    knightBehaviour(vectorAction[0] - 73, horseX1, horseZ1);
+                    knightBehavior(vectorAction[0] - 73, horseX1, horseZ1);
                 }
                 else
                 {
@@ -1836,7 +1834,7 @@ public class ChessAgent : Agent
             {
                 if (bishopX0 != -1 && bishopZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(bishopX0, bishopZ0))
                 {
-                    bishopBehaviour(vectorAction[0] - 81, bishopX0, bishopZ0);
+                    bishopBehavior(vectorAction[0] - 81, bishopX0, bishopZ0);
                 }
                 else
                 {
@@ -1853,7 +1851,7 @@ public class ChessAgent : Agent
             {
                 if (bishopX1 != -1 && bishopZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(bishopX1, bishopZ1))
                 {
-                    bishopBehaviour(vectorAction[0] - 109, bishopX1, bishopZ1);
+                    bishopBehavior(vectorAction[0] - 109, bishopX1, bishopZ1);
                 }
                 else
                 {
@@ -1870,7 +1868,7 @@ public class ChessAgent : Agent
             {
                 if (queenX != -1 && queenZ != -1 && boardCurrentlyPlaying.hasOnePossibleMove(queenX, queenZ))
                 {
-                    queenBehaviour(vectorAction[0] - 137, queenX, queenZ);
+                    queenBehavior(vectorAction[0] - 137, queenX, queenZ);
                 }
                 else
                 {
@@ -1887,7 +1885,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX0 != -1 && pawnZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX0, pawnZ0))
                 {
-                    pawnBehaviour(vectorAction[0] - 193, pawnX0, pawnZ0);
+                    pawnBehavior(vectorAction[0] - 193, pawnX0, pawnZ0);
                 }
                 else
                 {
@@ -1904,7 +1902,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX1 != -1 && pawnZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX1, pawnZ1))
                 {
-                    pawnBehaviour(vectorAction[0] - 197, pawnX1, pawnZ1);
+                    pawnBehavior(vectorAction[0] - 197, pawnX1, pawnZ1);
                 }
                 else
                 {
@@ -1921,7 +1919,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX2 != -1 && pawnZ2 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX2, pawnZ2))
                 {
-                    pawnBehaviour(vectorAction[0] - 201, pawnX2, pawnZ2);
+                    pawnBehavior(vectorAction[0] - 201, pawnX2, pawnZ2);
                 }
                 else
                 {
@@ -1938,7 +1936,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX3 != -1 && pawnZ3 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX3, pawnZ3))
                 {
-                    pawnBehaviour(vectorAction[0] - 205, pawnX3, pawnZ3);
+                    pawnBehavior(vectorAction[0] - 205, pawnX3, pawnZ3);
                 }
                 else
                 {
@@ -1955,7 +1953,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX4 != -1 && pawnZ4 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX4, pawnZ4))
                 {
-                    pawnBehaviour(vectorAction[0] - 209, pawnX4, pawnZ4);
+                    pawnBehavior(vectorAction[0] - 209, pawnX4, pawnZ4);
                 }
                 else
                 {
@@ -1972,7 +1970,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX5 != -1 && pawnZ5 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX5, pawnZ5))
                 {
-                    pawnBehaviour(vectorAction[0] - 213, pawnX5, pawnZ5);
+                    pawnBehavior(vectorAction[0] - 213, pawnX5, pawnZ5);
                 }
                 else
                 {
@@ -1989,7 +1987,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX6 != -1 && pawnZ6 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX6, pawnZ6))
                 {
-                    pawnBehaviour(vectorAction[0] - 217, pawnX6, pawnZ6);
+                    pawnBehavior(vectorAction[0] - 217, pawnX6, pawnZ6);
                 }
                 else
                 {
@@ -2006,7 +2004,7 @@ public class ChessAgent : Agent
             {
                 if (pawnX7 != -1 && pawnZ7 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(pawnX7, pawnZ7))
                 {
-                    pawnBehaviour(vectorAction[0] - 221, pawnX7, pawnZ7);
+                    pawnBehavior(vectorAction[0] - 221, pawnX7, pawnZ7);
                 }
                 else
                 {
@@ -2023,7 +2021,7 @@ public class ChessAgent : Agent
             {
                 if (extraQueenX0 != -1 && extraQueenZ0 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX0, extraQueenZ0))
                 {
-                    queenBehaviour(vectorAction[0] - 225, extraQueenX0, extraQueenZ0);
+                    queenBehavior(vectorAction[0] - 225, extraQueenX0, extraQueenZ0);
                 }
                 else
                 {
@@ -2040,7 +2038,7 @@ public class ChessAgent : Agent
             {
                 if (extraQueenX1 != -1 && extraQueenZ1 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX1, extraQueenZ1))
                 {
-                    queenBehaviour(vectorAction[0] - 281, extraQueenX1, extraQueenZ1);
+                    queenBehavior(vectorAction[0] - 281, extraQueenX1, extraQueenZ1);
                 }
                 else
                 {
@@ -2057,7 +2055,7 @@ public class ChessAgent : Agent
             {
                 if (extraQueenX2 != -1 && extraQueenZ2 != -1 && boardCurrentlyPlaying.hasOnePossibleMove(extraQueenX2, extraQueenZ2))
                 {
-                    queenBehaviour(vectorAction[0] - 337, extraQueenX2, extraQueenZ2);
+                    queenBehavior(vectorAction[0] - 337, extraQueenX2, extraQueenZ2);
                 }
                 else
                 {
@@ -2077,7 +2075,19 @@ public class ChessAgent : Agent
                 AddReward(tempReward);
                 tempReward = 0.0f;
             }
+
+
+            if (debug)
+            {
+                //Debug.Log("isWhitePlayer: " + isWhitePlayer);
+                //Debug.Log("turnIsWhite?: " + boardCurrentlyPlaying.isWhiteTurn);
+                Debug.Log("Reward: " + GetCumulativeReward());
+
+                //Debug.Log("---------------------------------------");
+            }
         }
+
+        
     }
     /// <summary>
     /// checks if certain movement will eat a piece so we can reward the agent
@@ -2091,29 +2101,28 @@ public class ChessAgent : Agent
             {
                 if (enemyPiece.GetType() == typeof(KingPiece))
                 {
-                    SetReward(wonGame);
                     
                     KingeatenNextMove = true;
                 }
                 else if (enemyPiece.GetType() == typeof(TowerPiece))
                 {
-                    AddReward(strengthRook);
+                    AddReward(strengthRook*10);
                 }
                 else if (enemyPiece.GetType() == typeof(HorsePiece))
                 {
-                    AddReward(strengthHorse);
+                    AddReward(strengthHorse * 10);
                 }
                 else if (enemyPiece.GetType() == typeof(BishopPiece))
                 {
-                    AddReward(strengthBishop);
+                    AddReward(strengthBishop * 10);
                 }
                 else if (enemyPiece.GetType() == typeof(QueenPiece))
                 {
-                    AddReward(strengthQueen);
+                    AddReward(strengthQueen * 10);
                 }
                 else if (enemyPiece.GetType() == typeof(PawnPiece))
                 {
-                    AddReward(strengthPawn);
+                    AddReward(strengthPawn * 10);
                 }
             }
 

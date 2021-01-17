@@ -351,6 +351,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -7112245166125606383, guid: e443c17b949ea0a4db87cd15e15d3ed0,
         type: 3}
+      propertyPath: debug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7112245166125606383, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
       propertyPath: boardCurrentlyPlaying
       value: 
       objectReference: {fileID: 741314816}
