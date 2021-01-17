@@ -181,8 +181,7 @@ On this second run, some values were changed to check the impact in the long run
 ![11](https://user-images.githubusercontent.com/44201826/103501806-342de680-4e47-11eb-9ed7-49cd621d27da.PNG)
 This approach was not beneficial due to how the evaluation was made, he would profit by standing still.
 
-**3rd Run**
-`mlagents-learn UltimateChess.yaml --run-id="Hikaru_run2"`
+**nth Run**
 
 
 
@@ -192,4 +191,5 @@ The bididimensional arrays are used alongside chess engines to optimize performa
 Over the project there might be situations where the Knight is mentioned as Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
 **Limitations**
-This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). Also ending game conditions are not implemented and pawns can only spawn queens.
+This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). 
+The agent, even though can learn, if there is a situation where the action that it's trying to perform is not valid (not during training), the game will no longer advance since it has a fixed policy.
