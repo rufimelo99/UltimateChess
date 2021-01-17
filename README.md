@@ -98,17 +98,26 @@ For instance, if `vectorAction[0]` has a value of 1 while a King is on *a8*, rep
 
 Ultimately, it receives a larger reward depending if it wins or loses:
 `wonGame` and `lostGame`. According to the documentation, it should be:
+
 `public float wonGame = 1.0f;`
+
 `public float lostGame = -1.0f;`
+
 
 In general, eating an opposite piece should be good helpful and eating a Pawn is different from eating a Queen. Therefore, strengths were added:
 
 `public float strengthPawn        = 0.0001f;`
+
 `public float strengthHorse       = 0.0003f;`
+
 `public float strengthBishop      = 0.0003f;`
+
 `public float strengthRook        = 0.0005f;`
+
 `public float strengthQueen       = 0.0009f;`
+
 `public float strengthKing        = 0.005f;`
+
 
 Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. When eating a certain piece, the agent receives the according strength times 10.
 
