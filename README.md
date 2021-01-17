@@ -110,7 +110,7 @@ In general, eating an opposite piece should be good helpful and eating a Pawn is
 `public float strengthQueen       = 0.0009f;`
 `public float strengthKing        = 0.005f;`
 
-Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. 
+Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. When eating a certain piece, the agent receives the according strength times 10.
 
 ## Improvements
 With the goal of optimizing the learning experience, some extra rewards systems were added.
