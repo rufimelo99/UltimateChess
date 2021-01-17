@@ -156,7 +156,9 @@ There are some variables in the Inspector to adjust the training for the agent:
 
 Some Hyperparameters were twisted to try to improve the `selfplay()` process.
 It is important to point out that my personal computer is not performing at its best and sometimes it would freeze Unity while the training process would be running in the background. This drawback had impact on the learning process and, so, can easily justifies some of the longer runs without significant changes (for instance, from 900k steps until 1.4M on the 1st run) or even smaller ones where it seems that the agent did nothing, which is true.
+
 **1st Run**
+
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run0"`
 ![3](https://user-images.githubusercontent.com/44201826/103449245-86cb9f00-4c9d-11eb-8442-4a668dbdfbe7.PNG)
 
@@ -170,6 +172,7 @@ It is important to point out that my personal computer is not performing at its 
 Note: The process was resumed at around 350k steps, 770k and 1.850M. This affects especially the ELO calculation
 
 **2nd Run**
+
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run1"`
 On this second run, some values were changed to check the impact in the long run. Ideally, the agent should learn which actions are valid or not easily, since `InvalidAction_or_do_Nothing` was `-0.01` instead of the previous `-0.0001`. Also the variable `useTables` was true during this run, which would evaluate the positioning of the pieces on the board during each valid action. Basically, the positioning of the pieces on the board would take a higher impact on the reward system.
 ![Capture2](https://user-images.githubusercontent.com/44201826/103498323-40f90d00-4e3c-11eb-8b14-7f71d8c8d2dd.PNG)
@@ -191,5 +194,6 @@ The bididimensional arrays are used alongside chess engines to optimize performa
 Over the project there might be situations where the Knight is mentioned as Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
 **Limitations**
+
 This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). 
 The agent, even though can learn, if there is a situation where the action that it's trying to perform is not valid (not during training), the game will no longer advance since it has a fixed policy.
