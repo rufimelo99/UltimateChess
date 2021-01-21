@@ -281,7 +281,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -984,7 +984,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -1073,7 +1073,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -5743,7 +5743,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -6121,7 +6121,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -8206,7 +8206,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -9844,7 +9844,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -10708,7 +10708,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -12067,7 +12067,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -12821,7 +12821,7 @@ MonoBehaviour:
   offsetX: 0
   offsetZ: 0
   offsetY: 0
-  training_enable: 1
+  training_enable: 0
   didWhiteRook0EverMoved: 0
   didWhiteRook1EverMoved: 0
   didWhiteKingEverMoved: 0
@@ -13389,7 +13389,7 @@ PrefabInstance:
     - target: {fileID: 8273229203933760562, guid: 86c533f2dd61e634dac8776130ce9538,
         type: 3}
       propertyPath: training_enable
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8273229204397948074, guid: 86c533f2dd61e634dac8776130ce9538,
         type: 3}

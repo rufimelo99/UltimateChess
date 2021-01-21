@@ -192,29 +192,54 @@ public class BoardManager : MonoBehaviour
     /// if a Human if is playing, it will reset the board in order to play
     /// Otherwise, the AI when simulating, will restart on their own (at least when training)
     /// </summary>
-    public void FinishGame()
+    public void FinishGame(bool tooMuchTime)
     {
-        if (isWhiteTurn)
+        if (!tooMuchTime)
         {
-            Debug.Log("White Win");
-            //white win
-            if(blackPlayer != null)
+            if (isWhiteTurn)
             {
-                blackPlayer.AddReward(blackPlayer.lostGame);
-                blackPlayer.KingeatenNextMove = false;
+                Debug.Log("White Win");
+                //white win
+                if(blackPlayer != null)
+                {
+                    blackPlayer.AddReward(blackPlayer.lostGame);
 
+                }
             }
-        }
-        else 
-        {
-            Debug.Log("Black Win");
-            //black win
-            if (whitePlayer != null)
+            else 
             {
-                whitePlayer.AddReward(whitePlayer.lostGame);
-                whitePlayer.KingeatenNextMove = false;
+                Debug.Log("Black Win");
+                //black win
+                if (whitePlayer != null)
+                {
+                    whitePlayer.AddReward(whitePlayer.lostGame);
+                }
             }
         }
+        else
+        {
+            if (isWhiteTurn)
+            {
+                Debug.Log("Black Win");
+                //black win
+                if (whitePlayer != null)
+                {
+                    whitePlayer.AddReward(whitePlayer.lostGame);
+                }
+               
+            }
+            else
+            { 
+                Debug.Log("White Win");
+                //white win
+                if (blackPlayer != null)
+                {
+                    blackPlayer.AddReward(blackPlayer.lostGame);
+
+                }
+            }
+        }
+        
         ResetGame();
     }
     public void endEpisodes()
@@ -319,7 +344,7 @@ public class BoardManager : MonoBehaviour
                 if (enemyPiece.GetType() == typeof(KingPiece))
                 {
                     //gg
-                    FinishGame();
+                    FinishGame(false);
                     return;
                 }
 

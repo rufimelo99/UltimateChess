@@ -74,16 +74,8 @@ MonoBehaviour:
   MaxStep: 0
   isWhitePlayer: 0
   boardCurrentlyPlaying: {fileID: 0}
-  KingeatenNextMove: 0
-  validAction: 0.01
   wonGame: 1
   lostGame: -1
-  invalidAction_or_doNothing: -0.005
-  strengthPawn: 0.0001
-  strengthHorse: 0.0003
-  strengthBishop: 0.0003
-  strengthRook: 0.0005
-  strengthQueen: 0.0009
-  strengthKing: 0.005
-  incentiveToCastling: 0.1
-  incentiveToConvert: 0.1
+  debug: 0
+  resetWithTime: 0
+  maxTimeForEpisode: 300

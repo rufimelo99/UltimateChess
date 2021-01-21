@@ -212,6 +212,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7877002405009257389, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
         type: 3}
+      propertyPath: resetWithTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877002405009257389, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
       propertyPath: strengthHorse
       value: 0.0003
       objectReference: {fileID: 0}
@@ -224,6 +229,11 @@ PrefabInstance:
         type: 3}
       propertyPath: strengthBishop
       value: 0.0003
+      objectReference: {fileID: 0}
+    - target: {fileID: 7877002405009257389, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
+        type: 3}
+      propertyPath: maxTimeForEpisode
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7877002405009257389, guid: c0b42ffe3b5ebb248b559623c1cf2aea,
         type: 3}
@@ -352,7 +362,17 @@ PrefabInstance:
     - target: {fileID: -7112245166125606383, guid: e443c17b949ea0a4db87cd15e15d3ed0,
         type: 3}
       propertyPath: debug
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -7112245166125606383, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: resetWithTime
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7112245166125606383, guid: e443c17b949ea0a4db87cd15e15d3ed0,
+        type: 3}
+      propertyPath: maxTimeForEpisode
+      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: -7112245166125606383, guid: e443c17b949ea0a4db87cd15e15d3ed0,
         type: 3}

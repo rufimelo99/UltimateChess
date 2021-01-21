@@ -12,37 +12,32 @@ public class ChessAgent : Agent
     public bool isWhitePlayer;
     public BoardManager boardCurrentlyPlaying;
     /// <summary>
-    /// since this game interacts with two agents, i needed to reward when a king would be eaten
-    /// </summary>
-    [HideInInspector]
-    public bool KingeatenNextMove = false;
-    /// <summary>
     /// Reward Values.. changed over time
     /// -actions
     /// -eat pieces
     /// -penalize for missing pieces ? (except extra queens)
     /// little incentive to castling since it is a powerful move
     /// </summary>
-    public float validAction = 0.01f;
+    private float validAction = 0.00001f;
     public float wonGame = 1.0f;
     public float lostGame = -1.0f;
-    public float invalidAction_or_doNothing = -0.005f;
+    private float invalidAction_or_doNothing = -0.00005f;
     //strengths Update at 29-12-2020
-    public float strengthPawn        = 0.001f;
-    public float strengthHorse       = 0.003f;
-    public float strengthBishop      = 0.003f;
-    public float strengthRook        = 0.005f;
-    public float strengthQueen       = 0.009f;
-    public float strengthKing        = 0.05f;
+    private float strengthPawn        = 0.000001f;
+    private float strengthHorse       = 0.000003f;
+    private float strengthBishop      = 0.000003f;
+    private float strengthRook        = 0.000005f;
+    private float strengthQueen       = 0.000009f;
+    private float strengthKing        = 0.00005f;
     //extra incentive for castling
-    public float incentiveToCastling = 0.1f;
-    public float incentiveToConvert = 0.1f;
+    private float incentiveToCastling = 0.0001f;
+    private float incentiveToConvert  = 0.0001f;
     private bool validMove = false;
     private float tempReward = 0.0f;
     private float episodeTime;
     public bool debug = false;
     public bool resetWithTime = false;
-    public float maxTimeForEpisode = 180.0f;
+    public float maxTimeForEpisode = 30.0f;
 
     float[,] tableKingWhite = new float[8, 8] {     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
                                                     { -3.0f, -4.0f , -4.0f , -5.0f , -5.0f , -4.0f , -4.0f , -3.0f },
@@ -685,7 +680,17 @@ public class ChessAgent : Agent
         {
             if (episodeTime > maxTimeForEpisode)
             {
-                boardCurrentlyPlaying.FinishGame();
+                if (debug)
+                {
+                    if (isWhitePlayer)
+                    {
+                        Debug.Log("White took too much time");
+                    }
+                    else{
+                        Debug.Log("Black took too much time");
+                    }
+                }
+                boardCurrentlyPlaying.FinishGame(true);
             }
 
         }
@@ -896,10 +901,6 @@ public class ChessAgent : Agent
                     }
                 }
 
-                if (KingeatenNextMove)
-                {
-                    AddReward(wonGame);
-                }
             }
             else
             {
@@ -2101,8 +2102,7 @@ public class ChessAgent : Agent
             {
                 if (enemyPiece.GetType() == typeof(KingPiece))
                 {
-                    
-                    KingeatenNextMove = true;
+                   //gj
                 }
                 else if (enemyPiece.GetType() == typeof(TowerPiece))
                 {
