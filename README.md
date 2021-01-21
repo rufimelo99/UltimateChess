@@ -97,7 +97,7 @@ The first step is to evaluate it a certain movement is valid or not, through che
 For instance, if `vectorAction[0]` has a value of 1 while a King is on *a8*, representing that the King should move one tile up and one tile to the left, it is invalid and, consequentially, should penalize the agent. Note that since the size of `vectorAction[0]` needs to be always the same, it is needed to penalize the agent when it tries to access an inexistent piece.
 
 Ultimately, it receives a larger reward depending if it wins or loses:
-`wonGame` and `lostGame`. According to the documentation, it should be:
+`wonGame` and `lostGame`. According to the documentation, it should be 1 when the agents wins, 0 when draws and -1 when loses. Knowing that, we have:
 
 `public float wonGame = 1.0f;`
 
@@ -106,24 +106,24 @@ Ultimately, it receives a larger reward depending if it wins or loses:
 
 In general, eating an opposite piece should be good helpful and eating a Pawn is different from eating a Queen. Therefore, strengths were added:
 
-`public float strengthPawn        = 0.0001f;`
+`public float strengthPawn        = 0.000001f;`
 
-`public float strengthHorse       = 0.0003f;`
+`public float strengthHorse       = 0.000003f;`
 
-`public float strengthBishop      = 0.0003f;`
+`public float strengthBishop      = 0.000003f;`
 
-`public float strengthRook        = 0.0005f;`
+`public float strengthRook        = 0.000005f;`
 
-`public float strengthQueen       = 0.0009f;`
+`public float strengthQueen       = 0.000009f;`
 
-`public float strengthKing        = 0.005f;`
+`public float strengthKing        = 0.00005f;`
 
 
-Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. When eating a certain piece, the agent receives the according strength times 10.
+Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. When eating a certain piece, the agent receives the according strength times 10. The reason these and other values are so low is for the cumulative reward does not became bigger the 1 or lower than -1.
 
 ## Improvements
 With the goal of optimizing the learning experience, some extra rewards systems were added.
-The reward `incentiveToCastling` with the value of `0.1f` intends to incentivize the agent to perform the castling movement which is a very powerful movement. On the same note, since converting a Pawn into a Queen is really good, `incentiveToConverting` was added.
+The reward `incentiveToCastling` with the value of `0.001f` intends to incentivize the agent to perform the castling movement which is a very powerful movement. On the same note, since converting a Pawn into a Queen is really good, `incentiveToConverting` was added.
 After a few hundred thousand simulations, the agent already "develops" the knights/horses more frequently, but it also advances the king further in the map. In order to try to control this phenomenon and improve the overall positioning and valorization of the pieces, some bidimensional arrays were added that, combined with a relative value of each piece, allow the agent to learn more correctly. 
 These bidimensional arrays basically give a value for each position of a certain piece on the board. For instance, as referred before, if there is a king on the opposite side of the board, it would be really bad for that player. On the other hand, if it was on the own side of the board, it should be better. 
 **Example:**
@@ -164,9 +164,9 @@ There are some variables in the Inspector to adjust the training for the agent:
 ![Capture](https://user-images.githubusercontent.com/44201826/103449236-67347680-4c9d-11eb-8b48-ce5cbfa1822e.PNG)
 
 Some Hyperparameters were twisted to try to improve the `selfplay()` process.
-It is important to point out that my personal computer is not performing at its best and sometimes it would freeze Unity while the training process would be running in the background. This drawback had impact on the learning process and, so, can easily justifies some of the longer runs without significant changes (for instance, from 900k steps until 1.4M on the 1st run) or even smaller ones where it seems that the agent did nothing, which is true.
+It is important to point out that my personal computer is not performing at its best and usually it would freeze Unity while the training process would be running in the background. This drawback had impact on the learning process and, so, can easily justifies some of the longer runs without significant changes (for instance, from 900k steps until 1.4M on the 1st run) or even smaller ones where it seems that the agent did nothing, which is true. One training scene with only one chessboard was also created, but the problem persisted. With this problem, I was not able to fully train any agent once, even giving him a negative reward, it would wrongly learn since the unity freezes.
 
-**1st Run**
+**1st Run** (without time limit)
 
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run0"`
 ![3](https://user-images.githubusercontent.com/44201826/103449245-86cb9f00-4c9d-11eb-8442-4a668dbdfbe7.PNG)
@@ -180,20 +180,17 @@ It is important to point out that my personal computer is not performing at its 
 ![7](https://user-images.githubusercontent.com/44201826/103497061-40f70e00-4e38-11eb-8679-2a884830e169.PNG)
 Note: The process was resumed at around 350k steps, 770k and 1.850M. This affects especially the ELO calculation
 
-**2nd Run**
+**nth Run** 
 
-`mlagents-learn UltimateChess.yaml --run-id="Hikaru_run1"`
-On this second run, some values were changed to check the impact in the long run. Ideally, the agent should learn which actions are valid or not easily, since `InvalidAction_or_do_Nothing` was `-0.01` instead of the previous `-0.0001`. Also the variable `useTables` was true during this run, which would evaluate the positioning of the pieces on the board during each valid action. Basically, the positioning of the pieces on the board would take a higher impact on the reward system.
-![Capture2](https://user-images.githubusercontent.com/44201826/103498323-40f90d00-4e3c-11eb-8b14-7f71d8c8d2dd.PNG)
-
-![10](https://user-images.githubusercontent.com/44201826/103501801-32fcb980-4e47-11eb-921c-c6704c20f23f.PNG)
-![9](https://user-images.githubusercontent.com/44201826/103501803-33955000-4e47-11eb-9cc4-77672476c35f.PNG)
-![8](https://user-images.githubusercontent.com/44201826/103501804-33955000-4e47-11eb-8ab3-762b59fb11f7.PNG)
-![12](https://user-images.githubusercontent.com/44201826/103501805-342de680-4e47-11eb-9337-a071ed0c067d.PNG)
-![11](https://user-images.githubusercontent.com/44201826/103501806-342de680-4e47-11eb-9ed7-49cd621d27da.PNG)
-This approach was not beneficial due to how the evaluation was made, he would profit by standing still.
-
-**nth Run**
+`mlagents-learn UltimateChess.yaml --run-id="Carlsen"`
+In this attempt, it was implemented a way to finish the game early. This was done, because it is benefic for the agent to fail often, but by trying. Knowing that, the agent's episode would finish if he took over 30 seconds (this value can be changed in the Inspector through `Max Time For Episode`. This means that the agent after failing lots of time, the game would end and it would be assumed that it lost, similar to the real games where a clock is involved. In this version, only on chessboard was active at the time (scene `Training1`), to try to avoid the freezing in Unity.
+![1](https://user-images.githubusercontent.com/44201826/105363670-35effc00-5bf4-11eb-8e64-b29a5112ded2.PNG)
+![2](https://user-images.githubusercontent.com/44201826/105363673-36889280-5bf4-11eb-88ae-951eaa83c6d2.PNG)
+![3](https://user-images.githubusercontent.com/44201826/105363674-36889280-5bf4-11eb-98ce-8d486d845b8c.PNG)
+![4](https://user-images.githubusercontent.com/44201826/105363675-37212900-5bf4-11eb-911b-e1c3f52c0431.PNG)
+![5](https://user-images.githubusercontent.com/44201826/105363676-37212900-5bf4-11eb-90c5-ba7c3e561573.PNG)
+![6](https://user-images.githubusercontent.com/44201826/105363678-37212900-5bf4-11eb-9ac3-aef2d7437fdb.PNG)
+Note: The process was resumed at 12774.
 
 
 
@@ -205,4 +202,4 @@ Over the project there might be situations where the Knight is mentioned as Hors
 **Limitations**
 
 This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). 
-The agent, even though can learn, if there is a situation where the action that it's trying to perform is not valid (not during training), the game will no longer advance since it has a fixed policy.
+The agent, even though can learn, if there is a situation where the action that it's trying to perform is not valid (outside training), the game will no longer advance since it has a fixed policy.
