@@ -73,6 +73,7 @@ In order to address some special movements, there exists 3 of them. The first on
 <!-- USAGE EXAMPLES -->
 ## Usage
 The Project has a simple menu that allows the user to choose to either play against another user on the same computer. The game proceeds by simply clicking on a tile and select where to move that piece. Some highlights are shown over the tiles to help the user know where that same piece can, in fact, move. When is desired to switch the neural network, it is done by simply swapping the existing neural network from the agents to the one intended.
+
 ![simple menu](https://user-images.githubusercontent.com/44201826/103315976-07309c80-4a1f-11eb-99cf-dfe677c6378e.PNG)
 
 ![UltimateCHess2](https://user-images.githubusercontent.com/44201826/102122430-5e3e4b00-3e3d-11eb-9814-3c8ebdeb32f3.PNG)
@@ -126,6 +127,7 @@ With the goal of optimizing the learning experience, some extra rewards systems 
 The reward `incentiveToCastling` with the value of `0.001f` intends to incentivize the agent to perform the castling movement which is a very powerful movement. On the same note, since converting a Pawn into a Queen is really good, `incentiveToConverting` was added.
 After a few hundred thousand simulations, the agent already "develops" the knights/horses more frequently, but it also advances the king further in the map. In order to try to control this phenomenon and improve the overall positioning and valorization of the pieces, some bidimensional arrays were added that, combined with a relative value of each piece, allow the agent to learn more correctly. 
 These bidimensional arrays basically give a value for each position of a certain piece on the board. For instance, as referred before, if there is a king on the opposite side of the board, it would be really bad for that player. On the other hand, if it was on the own side of the board, it should be better. 
+
 **Example:**
 | |  |  |  |	|  |  |  |
 |--|--| -- |--  |--|--|--| -- |
@@ -161,6 +163,7 @@ Then, assuming that all prerequisites are fulfilled, on the terminal it is neces
 
 After that, all that is left is to press the play button on Unity and there will be two agents against each other.
 There are some variables in the Inspector to adjust the training for the agent:
+
 ![Capture](https://user-images.githubusercontent.com/44201826/103449236-67347680-4c9d-11eb-8b48-ce5cbfa1822e.PNG)
 
 Some Hyperparameters were twisted to try to improve the `selfplay()` process.
@@ -169,33 +172,47 @@ It is important to point out that my personal computer is not performing at its 
 **1st Run** (without time limit)
 
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run0"`
+
 ![3](https://user-images.githubusercontent.com/44201826/103449245-86cb9f00-4c9d-11eb-8442-4a668dbdfbe7.PNG)
 
 ![1](https://user-images.githubusercontent.com/44201826/103497062-418fa480-4e38-11eb-9854-9391cef67133.PNG)
+
 ![2](https://user-images.githubusercontent.com/44201826/103497054-3fc5e100-4e38-11eb-91d3-fd288f587bbd.PNG)
+
 ![4](https://user-images.githubusercontent.com/44201826/103497058-405e7780-4e38-11eb-8e1d-1ea2caae5375.PNG)
+
 ![3](https://user-images.githubusercontent.com/44201826/103497057-405e7780-4e38-11eb-8b43-bed3780698cf.PNG)
+
 ![5](https://user-images.githubusercontent.com/44201826/103497059-40f70e00-4e38-11eb-8241-956e8b8d08a9.PNG)
+
 ![6](https://user-images.githubusercontent.com/44201826/103497060-40f70e00-4e38-11eb-95f9-ad026bee69e3.PNG)
+
 ![7](https://user-images.githubusercontent.com/44201826/103497061-40f70e00-4e38-11eb-8679-2a884830e169.PNG)
+
 Note: The process was resumed at around 350k steps, 770k and 1.850M. This affects especially the ELO calculation
 
 **nth Run** 
 
 `mlagents-learn UltimateChess.yaml --run-id="Carlsen"`
 In this attempt, it was implemented a way to finish the game early. This was done, because it is benefic for the agent to fail often, but by trying. Knowing that, the agent's episode would finish if he took over 30 seconds (this value can be changed in the Inspector through `Max Time For Episode`. This means that the agent after failing lots of time, the game would end and it would be assumed that it lost, similar to the real games where a clock is involved. In this version, only on chessboard was active at the time (scene `Training1`), to try to avoid the freezing in Unity.
+
 ![1](https://user-images.githubusercontent.com/44201826/105363670-35effc00-5bf4-11eb-8e64-b29a5112ded2.PNG)
+
 ![2](https://user-images.githubusercontent.com/44201826/105363673-36889280-5bf4-11eb-88ae-951eaa83c6d2.PNG)
+
 ![3](https://user-images.githubusercontent.com/44201826/105363674-36889280-5bf4-11eb-98ce-8d486d845b8c.PNG)
+
 ![4](https://user-images.githubusercontent.com/44201826/105363675-37212900-5bf4-11eb-911b-e1c3f52c0431.PNG)
+
 ![5](https://user-images.githubusercontent.com/44201826/105363676-37212900-5bf4-11eb-90c5-ba7c3e561573.PNG)
+
 ![6](https://user-images.githubusercontent.com/44201826/105363678-37212900-5bf4-11eb-9ac3-aef2d7437fdb.PNG)
+
 Note: The process was resumed at 12774.
-
-
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
+
 The bididimensional arrays are used alongside chess engines to optimize performances.
 Over the project there might be situations where the Knight is mentioned as Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
