@@ -98,19 +98,28 @@ For instance, if `vectorAction[0]` has a value of 1 while a King is on *a8*, rep
 
 Ultimately, it receives a larger reward depending if it wins or loses:
 `wonGame` and `lostGame`. According to the documentation, it should be:
+
 `public float wonGame = 1.0f;`
+
 `public float lostGame = -1.0f;`
+
 
 In general, eating an opposite piece should be good helpful and eating a Pawn is different from eating a Queen. Therefore, strengths were added:
 
 `public float strengthPawn        = 0.0001f;`
+
 `public float strengthHorse       = 0.0003f;`
+
 `public float strengthBishop      = 0.0003f;`
+
 `public float strengthRook        = 0.0005f;`
+
 `public float strengthQueen       = 0.0009f;`
+
 `public float strengthKing        = 0.005f;`
 
-Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. 
+
+Those strengths were set according to a [relative value](https://en.wikipedia.org/wiki/Chess_piece_relative_value) of each piece, but can be changed in the Inspector. When eating a certain piece, the agent receives the according strength times 10.
 
 ## Improvements
 With the goal of optimizing the learning experience, some extra rewards systems were added.
@@ -156,7 +165,9 @@ There are some variables in the Inspector to adjust the training for the agent:
 
 Some Hyperparameters were twisted to try to improve the `selfplay()` process.
 It is important to point out that my personal computer is not performing at its best and sometimes it would freeze Unity while the training process would be running in the background. This drawback had impact on the learning process and, so, can easily justifies some of the longer runs without significant changes (for instance, from 900k steps until 1.4M on the 1st run) or even smaller ones where it seems that the agent did nothing, which is true.
+
 **1st Run**
+
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run0"`
 ![3](https://user-images.githubusercontent.com/44201826/103449245-86cb9f00-4c9d-11eb-8442-4a668dbdfbe7.PNG)
 
@@ -170,6 +181,7 @@ It is important to point out that my personal computer is not performing at its 
 Note: The process was resumed at around 350k steps, 770k and 1.850M. This affects especially the ELO calculation
 
 **2nd Run**
+
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run1"`
 On this second run, some values were changed to check the impact in the long run. Ideally, the agent should learn which actions are valid or not easily, since `InvalidAction_or_do_Nothing` was `-0.01` instead of the previous `-0.0001`. Also the variable `useTables` was true during this run, which would evaluate the positioning of the pieces on the board during each valid action. Basically, the positioning of the pieces on the board would take a higher impact on the reward system.
 ![Capture2](https://user-images.githubusercontent.com/44201826/103498323-40f90d00-4e3c-11eb-8b14-7f71d8c8d2dd.PNG)
@@ -181,8 +193,7 @@ On this second run, some values were changed to check the impact in the long run
 ![11](https://user-images.githubusercontent.com/44201826/103501806-342de680-4e47-11eb-9ed7-49cd621d27da.PNG)
 This approach was not beneficial due to how the evaluation was made, he would profit by standing still.
 
-**3rd Run**
-`mlagents-learn UltimateChess.yaml --run-id="Hikaru_run2"`
+**nth Run**
 
 
 
@@ -192,4 +203,6 @@ The bididimensional arrays are used alongside chess engines to optimize performa
 Over the project there might be situations where the Knight is mentioned as Horse and vice versa. The same happens for the Rook that can be called Tower sometimes.
 
 **Limitations**
-This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). Also ending game conditions are not implemented and pawns can only spawn queens.
+
+This game, even though functional, does not verify checks. Movements are not restricted by checking positions (which should not influence the learning process too much). 
+The agent, even though can learn, if there is a situation where the action that it's trying to perform is not valid (not during training), the game will no longer advance since it has a fixed policy.
