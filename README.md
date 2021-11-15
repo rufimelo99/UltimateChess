@@ -74,9 +74,9 @@ In order to address some special movements, there exists 3 of them. The first on
 ## Usage
 The Project has a simple menu that allows the user to choose to either play against another user on the same computer. The game proceeds by simply clicking on a tile and select where to move that piece. Some highlights are shown over the tiles to help the user know where that same piece can, in fact, move. When is desired to switch the neural network, it is done by simply swapping the existing neural network from the agents to the one intended.
 
-![simple menu](https://user-images.githubusercontent.com/44201826/103315976-07309c80-4a1f-11eb-99cf-dfe677c6378e.PNG)
+![simple menu](https://github.com/rufimelo99/UltimateGame/blob/main/images/1.png?raw=true)
 
-![UltimateCHess2](https://user-images.githubusercontent.com/44201826/102122430-5e3e4b00-3e3d-11eb-9814-3c8ebdeb32f3.PNG)
+![UltimateCHess2](https://github.com/rufimelo99/UltimateGame/blob/main/images/2.png?raw=true)
 
 <!-- USAGE EXAMPLES -->
 ## Rewards System
@@ -151,7 +151,7 @@ Finally, some custom initial game disposition was added. Those custom dispositio
 ## Training the Agent
 
 In order to train the agent, it is necessary to change the scene in the Scene folder to `Training scene`.
-![training](https://user-images.githubusercontent.com/44201826/103449331-a616fc00-4c9e-11eb-8845-7e2a664fa2bf.PNG)
+![training](https://github.com/rufimelo99/UltimateGame/blob/main/images/3.png?raw=true)
 
 Then, assuming that all prerequisites are fulfilled, on the terminal it is necessary to go to the Project folder and insert one of the following commands depending if it is either the first time, or it is intended to resume the training or overwrite the training done until now.
 
@@ -164,7 +164,7 @@ Then, assuming that all prerequisites are fulfilled, on the terminal it is neces
 After that, all that is left is to press the play button on Unity and there will be two agents against each other.
 There are some variables in the Inspector to adjust the training for the agent:
 
-![Capture](https://user-images.githubusercontent.com/44201826/103449236-67347680-4c9d-11eb-8b48-ce5cbfa1822e.PNG)
+![Capture](https://github.com/rufimelo99/UltimateGame/blob/main/images/5.png?raw=true)
 
 Some Hyperparameters were twisted to try to improve the `selfplay()` process.
 It is important to point out that my personal computer is not performing at its best and usually it would freeze Unity while the training process would be running in the background. This drawback had impact on the learning process and, so, can easily justifies some of the longer runs without significant changes (for instance, from 900k steps until 1.4M on the 1st run) or even smaller ones where it seems that the agent did nothing, which is true. One training scene with only one chessboard was also created, but the problem persisted. With this problem, I was not able to fully train any agent once, even giving him a negative reward, it would wrongly learn since the unity freezes.
@@ -173,21 +173,21 @@ It is important to point out that my personal computer is not performing at its 
 
 `mlagents-learn UltimateChess.yaml --run-id="Hikaru_run0"`
 
-![3](https://user-images.githubusercontent.com/44201826/103449245-86cb9f00-4c9d-11eb-8442-4a668dbdfbe7.PNG)
+![3](https://github.com/rufimelo99/UltimateGame/blob/main/images/6.png?raw=true)
 
-![1](https://user-images.githubusercontent.com/44201826/103497062-418fa480-4e38-11eb-9854-9391cef67133.PNG)
+![1](https://github.com/rufimelo99/UltimateGame/blob/main/images/7.png?raw=true)
 
-![2](https://user-images.githubusercontent.com/44201826/103497054-3fc5e100-4e38-11eb-91d3-fd288f587bbd.PNG)
+![2](https://github.com/rufimelo99/UltimateGame/blob/main/images/8.png?raw=true)
 
-![4](https://user-images.githubusercontent.com/44201826/103497058-405e7780-4e38-11eb-8e1d-1ea2caae5375.PNG)
+![4](https://github.com/rufimelo99/UltimateGame/blob/main/images/9.png?raw=true)
 
-![3](https://user-images.githubusercontent.com/44201826/103497057-405e7780-4e38-11eb-8b43-bed3780698cf.PNG)
+![3](https://github.com/rufimelo99/UltimateGame/blob/main/images/10.png?raw=true)
 
-![5](https://user-images.githubusercontent.com/44201826/103497059-40f70e00-4e38-11eb-8241-956e8b8d08a9.PNG)
+![5](https://github.com/rufimelo99/UltimateGame/blob/main/images/11.png?raw=true)
 
-![6](https://user-images.githubusercontent.com/44201826/103497060-40f70e00-4e38-11eb-95f9-ad026bee69e3.PNG)
+![6](https://github.com/rufimelo99/UltimateGame/blob/main/images/12.png?raw=true)
 
-![7](https://user-images.githubusercontent.com/44201826/103497061-40f70e00-4e38-11eb-8679-2a884830e169.PNG)
+![7](https://github.com/rufimelo99/UltimateGame/blob/main/images/13.png?raw=true)
 
 Note: The process was resumed at around 350k steps, 770k and 1.850M. This affects especially the ELO calculation
 
@@ -196,17 +196,17 @@ Note: The process was resumed at around 350k steps, 770k and 1.850M. This affect
 `mlagents-learn UltimateChess.yaml --run-id="Carlsen"`
 In this attempt, it was implemented a way to finish the game early. This was done, because it is benefic for the agent to fail often, but by trying. Knowing that, the agent's episode would finish if he took over 30 seconds (this value can be changed in the Inspector through `Max Time For Episode`. This means that the agent after failing lots of time, the game would end and it would be assumed that it lost, similar to the real games where a clock is involved. In this version, only on chessboard was active at the time (scene `Training1`), to try to avoid the freezing in Unity.
 
-![1](https://user-images.githubusercontent.com/44201826/105363670-35effc00-5bf4-11eb-8e64-b29a5112ded2.PNG)
+![1](https://github.com/rufimelo99/UltimateGame/blob/main/images/14.png?raw=true)
 
-![2](https://user-images.githubusercontent.com/44201826/105363673-36889280-5bf4-11eb-88ae-951eaa83c6d2.PNG)
+![2](https://github.com/rufimelo99/UltimateGame/blob/main/images/15.png?raw=true)
 
-![3](https://user-images.githubusercontent.com/44201826/105363674-36889280-5bf4-11eb-98ce-8d486d845b8c.PNG)
+![3](https://github.com/rufimelo99/UltimateGame/blob/main/images/16.png?raw=true)
 
-![4](https://user-images.githubusercontent.com/44201826/105363675-37212900-5bf4-11eb-911b-e1c3f52c0431.PNG)
+![4](https://github.com/rufimelo99/UltimateGame/blob/main/images/17.png?raw=true)
 
-![5](https://user-images.githubusercontent.com/44201826/105363676-37212900-5bf4-11eb-90c5-ba7c3e561573.PNG)
+![5](https://github.com/rufimelo99/UltimateGame/blob/main/images/18.png?raw=true)
 
-![6](https://user-images.githubusercontent.com/44201826/105363678-37212900-5bf4-11eb-9ac3-aef2d7437fdb.PNG)
+![6](https://github.com/rufimelo99/UltimateGame/blob/main/images/19.png?raw=true)
 
 Note: The process was resumed at 12774.
 
